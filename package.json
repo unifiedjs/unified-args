@@ -1,0 +1,65 @@
+{
+  "name": "unified-args",
+  "version": "0.0.0",
+  "description": "Create CLIs for unified processors",
+  "license": "MIT",
+  "keywords": [
+    "unified",
+    "processor",
+    "engine",
+    "cli",
+    "arguments"
+  ],
+  "dependencies": {
+    "camelcase": "^3.0.0",
+    "chalk": "^1.1.3",
+    "chokidar": "^1.5.1",
+    "minimist": "^1.2.0",
+    "text-table": "^0.2.0",
+    "unified-engine": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/unified-args.git"
+  },
+  "bugs": "https://github.com/wooorm/unified-args/issues",
+  "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+  "contributors": [
+    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+  ],
+  "engines": {
+    "node": ">=0.11.0"
+  },
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "devDependencies": {
+    "bail": "^1.0.0",
+    "eslint": "^2.0.0",
+    "execa": "^0.4.0",
+    "jscs": "^3.0.0",
+    "jscs-jsdoc": "^2.0.0",
+    "nyc": "^6.4.4",
+    "remark": "^4.0.0",
+    "remark-comment-config": "^3.0.0",
+    "remark-github": "^4.0.1",
+    "remark-lint": "^4.0.0",
+    "remark-toc": "^3.0.0",
+    "remark-validate-links": "^3.0.0",
+    "tape": "^4.4.0",
+    "touch": "^1.0.0",
+    "unified": "^4.0.1",
+    "xtend": "^4.0.1"
+  },
+  "scripts": {
+    "build-md": "remark . --quiet --frail",
+    "build": "npm run build-md",
+    "lint-api": "eslint .",
+    "lint-style": "jscs --reporter inline .",
+    "lint": "npm run lint-api && npm run lint-style",
+    "test-api": "node test/index.js",
+    "test-coverage": "nyc node test --reporter lcov --report-dir coverage",
+    "test": "npm run build && npm run lint && npm run test-coverage"
+  }
+}
