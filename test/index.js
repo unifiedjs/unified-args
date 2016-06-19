@@ -287,11 +287,9 @@ test('unified-args', function (t) {
                 var cwd = join(fixtures, 'example');
                 var bin = join(cwd, 'cli.js');
 
-                st.plan(2);
+                st.plan(1);
 
                 execa(bin, ['.', flag, 'text', '-e']).then(function (result) {
-                    st.equal(result.stdout, '', 'should not output');
-
                     st.equal(
                         result.stderr,
                         [
@@ -335,7 +333,9 @@ test('unified-args', function (t) {
 
             st.plan(2);
 
-            execa(bin, ['.', flag, 'foo-bar:"baz"']).then(function (result) {
+            execa(bin, [
+                'one.txt', flag, 'foo-bar:"baz"'
+            ]).then(function (result) {
                 /* Parser and Compiler both log stringified settings. */
                 st.equal(
                     result.stdout,
@@ -365,7 +365,7 @@ test('unified-args', function (t) {
 
             st.plan(2);
 
-            execa(bin, ['.', flag, 'plugin']).then(function (result) {
+            execa(bin, ['one.txt', flag, 'plugin']).then(function (result) {
                 /* Attacher logs options, which are `undefined`. */
                 st.equal(
                     result.stdout,
@@ -414,7 +414,7 @@ test('unified-args', function (t) {
 
             st.plan(2);
 
-            execa(bin, ['.', flag, opts]).then(function (result) {
+            execa(bin, ['one.txt', flag, opts]).then(function (result) {
                 /* Attacher log JSON.stringified options. */
                 st.equal(
                     result.stdout,
