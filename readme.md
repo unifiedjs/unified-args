@@ -307,11 +307,11 @@ cli input.txt --use man
 cli input.txt --use 'lint=alpha:"bravo"'
 ```
 
-Plug-in to load by its name, optionally with options, and use on every
-processed file.  Can be set from [configuration files][config-file].
+Plug-in to load by its name or path, optionally with options, and use
+on every processed file.  Can be set from [configuration files][config-file].
 
-To pass options, follow the plugin’s name by an equals sign (`=`) and
-settings, which have the same in syntax as [`--setting <settings>`][setting].
+To pass options, follow the plugin by an equals sign (`=`) and settings,
+which have the same in syntax as [`--setting <settings>`][setting].
 
 Prefers plug-ins prefixed with the [configured `pluginPrefix`][configured].
 
