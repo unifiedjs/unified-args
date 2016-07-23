@@ -36,11 +36,8 @@
   ],
   "devDependencies": {
     "bail": "^1.0.0",
-    "eslint": "^2.0.0",
     "execa": "^0.4.0",
-    "jscs": "^3.0.0",
-    "jscs-jsdoc": "^2.0.0",
-    "nyc": "^6.4.4",
+    "nyc": "^7.0.0",
     "remark-cli": "^1.0.0",
     "remark-comment-config": "^4.0.0",
     "remark-github": "^5.0.0",
@@ -51,16 +48,45 @@
     "tape": "^4.4.0",
     "touch": "^1.0.0",
     "unified": "^4.0.1",
+    "xo": "^0.16.0",
     "xtend": "^4.0.1"
   },
   "scripts": {
     "build-md": "remark . --quiet --frail",
     "build": "npm run build-md",
-    "lint-api": "eslint .",
-    "lint-style": "jscs --reporter inline .",
-    "lint": "npm run lint-api && npm run lint-style",
+    "lint": "xo",
     "test-api": "node test/index.js",
     "test-coverage": "nyc node test --reporter lcov --report-dir coverage",
     "test": "npm run build && npm run lint && npm run test-coverage"
+  },
+  "xo": {
+    "space": true,
+    "rules": {
+      "no-eq-null": "off",
+      "eqeqeq": "off",
+      "guard-for-in": "off",
+      "max-lines": "off"
+    }
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "remarkConfig": {
+    "output": true,
+    "plugins": {
+      "comment-config": null,
+      "github": null,
+      "lint": null,
+      "toc": {
+        "maxDepth": 3
+      },
+      "validate-links": null
+    },
+    "settings": {
+      "bullet": "*"
+    }
   }
 }
