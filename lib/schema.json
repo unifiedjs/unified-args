@@ -17,7 +17,6 @@
     "long": "output",
     "description": "specify output location",
     "short": "o",
-    "default": false,
     "value": "[path]"
   },
   {
