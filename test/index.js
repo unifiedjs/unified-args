@@ -18,6 +18,7 @@ var execa = require('execa');
 var bail = require('bail');
 var test = require('tape');
 var touch = require('touch');
+var strip = require('strip-ansi');
 
 /* Methods. */
 var join = path.join;
@@ -44,7 +45,7 @@ test('unified-args', function (t) {
         execa.stderr(bin, ['missing.txt']).catch(function (result) {
             st.equal(result.code, 1, 'should exit with `1`');
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'missing.txt',
                     '        1:1  error    No such file or directory',
@@ -67,7 +68,7 @@ test('unified-args', function (t) {
             st.equal(result.stdout, 'one', 'should output');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 'one.txt: no issues found',
                 'should report'
             );
@@ -84,7 +85,7 @@ test('unified-args', function (t) {
             st.equal(result.stdout, '', 'should not output');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'one.txt: no issues found',
                     'three/five.txt: no issues found',
@@ -106,7 +107,7 @@ test('unified-args', function (t) {
             st.equal(result.stdout, '', 'should not output');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'one.txt: no issues found',
                     'two.txt: no issues found'
@@ -126,7 +127,7 @@ test('unified-args', function (t) {
             st.equal(result.stdout, '', 'should not output');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'three/five.txt: no issues found',
                     'three/four.txt: no issues found'
@@ -146,7 +147,7 @@ test('unified-args', function (t) {
         execa(bin, ['-n']).catch(function (result) {
             st.equal(result.code, 1, 'should exit with `1`');
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 output,
                 'should report with a list of good short flags'
             );
@@ -163,7 +164,7 @@ test('unified-args', function (t) {
         execa(bin, ['-on']).catch(function (result) {
             st.equal(result.code, 1, 'should exit with `1`');
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 output,
                 'should report with a list of good short flags'
             );
@@ -180,7 +181,7 @@ test('unified-args', function (t) {
         execa(bin, ['--no']).catch(function (result) {
             st.equal(result.code, 1, 'should exit with `1`');
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 output,
                 'should report with a list of good short flags'
             );
@@ -252,7 +253,7 @@ test('unified-args', function (t) {
                 st.equal(result.stdout, '', 'should not output');
 
                 st.equal(
-                    result.stderr,
+                    strip(result.stderr),
                     [
                         'alpha.text: no issues found',
                         'bravo.text: no issues found',
@@ -274,7 +275,7 @@ test('unified-args', function (t) {
                 st.equal(result.code, 1, 'should exit with `1`');
 
                 st.equal(
-                    result.stderr,
+                    strip(result.stderr),
                     'Error: Missing value: -e --ext <extensions> ' +
                     'specify extensions\n',
                     'should report'
@@ -291,7 +292,7 @@ test('unified-args', function (t) {
 
                 execa(bin, ['.', flag, 'text', '-e']).then(function (result) {
                     st.equal(
-                        result.stderr,
+                        strip(result.stderr),
                         [
                             'alpha.text: no issues found',
                             'bravo.text: no issues found',
@@ -348,7 +349,7 @@ test('unified-args', function (t) {
                 );
 
                 st.equal(
-                    result.stderr,
+                    strip(result.stderr),
                     [
                         'one.txt: no issues found'
                     ].join('\n'),
@@ -377,7 +378,7 @@ test('unified-args', function (t) {
                 );
 
                 st.equal(
-                    result.stderr,
+                    strip(result.stderr),
                     [
                         'one.txt: no issues found'
                     ].join('\n'),
@@ -394,7 +395,7 @@ test('unified-args', function (t) {
 
             /* should be quoted */
             execa(bin, ['.', flag, 'plugin=foo:bar']).catch(function (result) {
-                var stderr = result.stderr;
+                var stderr = strip(result.stderr);
 
                 st.equal(result.code, 1, 'should exit with `1`');
 
@@ -426,7 +427,7 @@ test('unified-args', function (t) {
                 );
 
                 st.equal(
-                    result.stderr,
+                    strip(result.stderr),
                     [
                         'one.txt: no issues found'
                     ].join('\n'),
@@ -457,7 +458,7 @@ test('unified-args', function (t) {
             st.equal(result.stdout, '', 'should not output');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'Watching... (press CTRL+C to exit)',
                     'watch.txt: no issues found',
@@ -502,7 +503,7 @@ test('unified-args', function (t) {
             st.equal(result.stdout, '', 'should not output');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'Watching... (press CTRL+C to exit)',
                     'Note: Ignoring `--output` until exit.',
@@ -535,7 +536,7 @@ test('unified-args', function (t) {
         st.plan(2);
 
         execa(bin, ['-w', '-r', 'missing.rc']).catch(function (result) {
-            var stderr = result.stderr;
+            var stderr = strip(result.stderr);
 
             st.equal(result.code, 1, 'should exit with 1');
 
@@ -560,7 +561,7 @@ test('unified-args', function (t) {
             st.equal(result.code, 1, 'should exit with `1`');
 
             st.equal(
-                result.stderr,
+                strip(result.stderr),
                 [
                     'one.txt: no issues found',
                     'foo',
