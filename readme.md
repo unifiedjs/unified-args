@@ -2,10 +2,6 @@
 
 <!--lint disable heading-increment no-duplicate-headings-->
 
-> **unified** recently changed its interface.  These changes have
-> yet to bubble through to the ecosystem before all examples start
-> working.
-
 Interface for creating CLIs around [**unified**][unified] processors.
 Wrapper around the [**engine**][engine] to configure it with command-line
 arguments.  Should be `require`d and configured in an executable script,
