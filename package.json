@@ -79,9 +79,15 @@
     "plugins": {
       "comment-config": null,
       "github": null,
-      "lint": null,
+      "lint": {
+        "heading-increment": false,
+        "no-duplicate-headings": false,
+        "list-item-spacing": false,
+        "no-missing-blank-lines": {"exceptTightLists": true}
+      },
       "toc": {
-        "maxDepth": 3
+        "maxDepth": 3,
+        "tight": true
       },
       "validate-links": null
     },

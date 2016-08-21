@@ -1,7 +1,5 @@
 # unified-args [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-<!--lint disable heading-increment no-duplicate-headings-->
-
 Interface for creating CLIs around [**unified**][unified] processors.
 Wrapper around the [**engine**][engine] to configure it with command-line
 arguments.  Should be `require`d and configured in an executable script,
@@ -50,11 +48,8 @@ start({
 ## Table of Contents
 
 *   [API](#api)
-
     *   [start(configuration)](#startconfiguration)
-
 *   [CLI](#cli)
-
     *   [--help](#--help)
     *   [--version](#--version)
     *   [--output \[path\]](#--output-path)
@@ -75,11 +70,8 @@ start({
     *   [--color](#--color)
     *   [--config](#--config)
     *   [--ignore](#--ignore)
-
 *   [Diagnostics](#diagnostics)
-
 *   [Debugging](#debugging)
-
 *   [License](#license)
 
 ## API
@@ -95,36 +87,31 @@ All options are required.
 *   `processor` ([`Processor`][unified-processor])
     — Processor to transform files
     (engine: [`processor`][engine-processor]).
-
 *   `name` (`string`)
     — Name of executable.
-
 *   `description` (`string`)
     — Description of executable.
-
 *   `version` (`string`)
     — Version of executable.
-
 *   `extensions` (`Array.<string>`)
     — Default file [extensions][ext] to include.
     (engine: [`extensions`][engine-extensions]).
-
 *   `ignoreName` (`string`)
     — Name of [ignore files][ignore-file] to load.
     (engine: [`ignoreName`][engine-ignore-name]).
-
 *   `rcName` (`string`)
     — Name of [configuration files][config-file] to load.
     (engine: [`rcName`][engine-rc-name]).
-
 *   `packageField` (`string`)
     — Property at which [configuration][config-file] can be found in
     `package.json` files.
     (engine: [`packageField`][engine-package-field]).
-
 *   `pluginPrefix` (`string`)
-    — Prefix to use when searching for [plug-ins][use].
-    (engine: [`pluginPrefix`][engine-plugin-prefix]).
+    — Prefix to use when searching for [plug-ins][use]
+    (engine: [`pluginPrefix`][engine-plugin-prefix]);
+*   `presetPrefix` (`string`)
+    — Prefix to use when searching for presets from config files
+    (engine: [`presetPrefix`][engine-preset-prefix]).
 
 ## CLI
 
@@ -176,7 +163,6 @@ All non-options are seen as input and can be:
 
 *   Paths (`cli README.txt`) and [globs][glob] (`cli *.txt`) pointing
     to files to load.
-
 *   Paths (`cli test`) and globs (`cli fixtures/{in,out}`) pointing to
     directories.  These are searched for files with known [extensions][ext]
     which are not ignored by patterns in [ignore files][ignore-file].
@@ -222,13 +208,10 @@ Whether to write successfully processed files, and where to.  Can be
 set from [configuration files][config-file].
 
 *   If output is **not** given, files are not written to the file-system;
-
 *   If output is given **without** `path`, input files are overwritten when
     successful;
-
 *   If output is given with `path` and it points to an existing directory,
     files are written to that directory;
-
 *   If output is given with `path`, the parent directory of that path
     exists, and one file is processed, the file is written to the given
     path.
@@ -285,7 +268,6 @@ The given settings are JSON, with two exceptions:
 
 *   Surrounding braces must not be used: `"foo": 1, "bar": "baz"`
     is valid;
-
 *   Keys do not need to be quoted: both `"foo": "bar"` and
     `foo: "bar"` are considered equal.
 
@@ -458,7 +440,6 @@ Whether to write a processed file to **stdout**(4).
 
 *   **Default**: off if [`--output`][output] or [`--watch`][watch] are given,
     or if multiple files are processed;
-
 *   **Engine**: [`out`][engine-out].
 
 ### `--color`
@@ -574,6 +555,8 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 [engine-plugins]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsplugins
 
 [engine-plugin-prefix]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspluginprefix
+
+[engine-preset-prefix]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspresetprefix
 
 [engine-extensions]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsextensions
 
