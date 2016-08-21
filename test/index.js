@@ -48,7 +48,7 @@ test('unified-args', function (t) {
         strip(err.stderr),
         [
           'missing.txt',
-          '        1:1  error    No such file or directory',
+          '  1:1  error  No such file or directory',
           '',
           '✖ 1 error',
           ''
@@ -183,7 +183,7 @@ test('unified-args', function (t) {
       st.equal(
         strip(err.stderr),
         output,
-        'should report with a list of good short flags'
+        'should report with a list of good long flags'
       );
     });
   });
@@ -366,7 +366,7 @@ test('unified-args', function (t) {
 
       st.plan(2);
 
-      execa(bin, ['one.txt', flag, 'plugin']).then(function (result) {
+      execa(bin, ['one.txt', flag, './plugin']).then(function (result) {
         /* Attacher logs options, which are `undefined`. */
         st.equal(
           result.stdout,
@@ -394,7 +394,7 @@ test('unified-args', function (t) {
       st.plan(2);
 
       /* should be quoted */
-      execa(bin, ['.', flag, 'plugin=foo:bar']).catch(function (err) {
+      execa(bin, ['.', flag, './plugin=foo:bar']).catch(function (err) {
         var stderr = strip(err.stderr);
 
         st.equal(err.code, 1, 'should exit with `1`');
@@ -411,7 +411,7 @@ test('unified-args', function (t) {
     t.test('should honour `' + flag + '`', function (st) {
       var cwd = join(fixtures, 'plugins');
       var bin = join(cwd, 'cli.js');
-      var opts = 'plugin=foo:{bar:"baz",qux:1,quux:true}';
+      var opts = './plugin=foo:{bar:"baz",qux:1,quux:true}';
 
       st.plan(2);
 
@@ -557,7 +557,7 @@ test('unified-args', function (t) {
 
     st.plan(2);
 
-    execa(bin, ['.', '-u', 'plugin']).catch(function (err) {
+    execa(bin, ['.', '-u', './plugin']).catch(function (err) {
       st.equal(err.code, 1, 'should exit with `1`');
 
       st.equal(
