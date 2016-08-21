@@ -40,7 +40,7 @@
     "remark-github": "^5.0.0",
     "remark-lint": "^4.0.0",
     "remark-toc": "^3.0.0",
-    "remark-validate-links": "^4.0.0",
+    "remark-validate-links": "^5.0.0",
     "strip-ansi": "^3.0.1",
     "tape": "^4.4.0",
     "touch": "^1.0.0",
@@ -80,7 +80,9 @@
         "heading-increment": false,
         "no-duplicate-headings": false,
         "list-item-spacing": false,
-        "no-missing-blank-lines": {"exceptTightLists": true}
+        "no-missing-blank-lines": {
+          "exceptTightLists": true
+        }
       },
       "toc": {
         "maxDepth": 3,
