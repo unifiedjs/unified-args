@@ -10,18 +10,7 @@
     "cli",
     "arguments"
   ],
-  "dependencies": {
-    "camelcase": "^3.0.0",
-    "chalk": "^1.1.3",
-    "chokidar": "^1.5.1",
-    "minimist": "^1.2.0",
-    "text-table": "^0.2.0",
-    "unified-engine": "^2.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wooorm/unified-args.git"
-  },
+  "repository": "https://github.com/wooorm/unified-args.git",
   "bugs": "https://github.com/wooorm/unified-args/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
@@ -29,6 +18,14 @@
   ],
   "engines": {
     "node": ">=0.11.0"
+  },
+  "dependencies": {
+    "camelcase": "^3.0.0",
+    "chalk": "^1.1.3",
+    "chokidar": "^1.5.1",
+    "minimist": "^1.2.0",
+    "text-table": "^0.2.0",
+    "unified-engine": "^2.0.0"
   },
   "files": [
     "index.js",
