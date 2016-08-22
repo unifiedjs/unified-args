@@ -36,11 +36,7 @@
     "execa": "^0.4.0",
     "nyc": "^8.1.0",
     "remark-cli": "^2.0.0",
-    "remark-comment-config": "^4.0.0",
-    "remark-github": "^6.0.0",
-    "remark-lint": "^5.0.0",
-    "remark-toc": "^3.0.0",
-    "remark-validate-links": "^5.0.0",
+    "remark-preset-wooorm": "^1.0.0",
     "strip-ansi": "^3.0.1",
     "tape": "^4.4.0",
     "touch": "^1.0.0",
@@ -73,23 +69,6 @@
   },
   "remarkConfig": {
     "output": true,
-    "plugins": {
-      "comment-config": null,
-      "github": null,
-      "lint": {
-        "heading-increment": false,
-        "no-duplicate-headings": false,
-        "list-item-spacing": false,
-        "no-missing-blank-lines": {"exceptTightLists": true}
-      },
-      "toc": {
-        "maxDepth": 3,
-        "tight": true
-      },
-      "validate-links": null
-    },
-    "settings": {
-      "bullet": "*"
-    }
+    "presets": "wooorm"
   }
 }
