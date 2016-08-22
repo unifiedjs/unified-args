@@ -80,7 +80,9 @@
         "heading-increment": false,
         "no-duplicate-headings": false,
         "list-item-spacing": false,
-        "no-missing-blank-lines": {"exceptTightLists": true}
+        "no-missing-blank-lines": {
+          "exceptTightLists": true
+        }
       },
       "toc": {
         "maxDepth": 3,
