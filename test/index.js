@@ -472,8 +472,8 @@ test('unified-args', function (t) {
         st.equal(resolved, false, 'should still be running (#2)');
 
         proc.kill('SIGINT');
-      }, 2000);
-    }, 2000);
+      }, 3000);
+    }, 3000);
   });
 
   t.test('should not regenerate when watching', function (st) {
@@ -519,8 +519,8 @@ test('unified-args', function (t) {
         st.equal(resolved, false, 'should still be running (#2)');
 
         proc.kill('SIGINT');
-      }, 2000);
-    }, 2000);
+      }, 3000);
+    }, 3000);
   });
 
   t.test('should exit on fatal errors when watching', function (st) {
