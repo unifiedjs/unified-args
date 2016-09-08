@@ -57,6 +57,7 @@ start({
     *   [--ignore-path &lt;path>](#--ignore-path-path)
     *   [--setting &lt;settings>](#--setting-settings)
     *   [--use &lt;plugin>](#--use-plugin)
+    *   [--preset &lt;presets>](#--preset-presets)
     *   [--ext &lt;extensions>](#--ext-extensions)
     *   [--watch](#--watch)
     *   [--tree](#--tree)
@@ -134,6 +135,7 @@ Options:
   -s  --setting <settings>  specify settings
   -e  --ext <extensions>    specify extensions
   -u  --use <plugins>       use plugins
+  -p  --preset <presets>    use presets
   -w  --watch               watch for changes and reprocess
   -q  --quiet               output only warnings and errors
   -S  --silent              output only errors
@@ -293,11 +295,28 @@ which have the same in syntax as [`--setting <settings>`][setting].
 
 Prefers plug-ins prefixed with the [configured `pluginPrefix`][configured].
 
-<!-- Options: -->
-
 *   **Default**: none;
 *   **Alias**: `-u`;
 *   **Engine**: [`plugins`][engine-plugins].
+
+### `--preset <presets>`
+
+```sh
+cli input.txt --preset lint-recommended
+cli input.txt --preset 'minify=force:true'
+```
+
+Preset to load by its name or path, optionally with options.  Can be set
+from [configuration files][config-file].
+
+To pass options, follow the plugin by an equals sign (`=`) and settings,
+which have the same in syntax as [`--setting <settings>`][setting].
+
+Prefers presets prefixed with the [configured `presetPrefix`][configured].
+
+*   **Default**: none;
+*   **Alias**: `-p`;
+*   **Engine**: [`presets`][engine-presets].
 
 ### `--ext <extensions>`
 
@@ -553,6 +572,8 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 [engine-settings]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsettings
 
 [engine-plugins]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsplugins
+
+[engine-presets]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspresets
 
 [engine-plugin-prefix]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspluginprefix
 

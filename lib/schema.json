@@ -55,6 +55,13 @@
     "value": "<plugins>"
   },
   {
+    "long": "preset",
+    "description": "use presets",
+    "short": "p",
+    "type": "string",
+    "value": "<presets>"
+  },
+  {
     "long": "watch",
     "description": "watch for changes and reprocess",
     "short": "w",
