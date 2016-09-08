@@ -3,17 +3,13 @@
  * @copyright 2016 Titus Wormer
  * @license MIT
  * @module foo
- * @fileoverview Example plugin, logging its configuration!
+ * @fileoverview Example plugin, throwing an uncaught exception.
  */
 
 'use strict';
 
-/* eslint-env node */
-/* jscs:disable jsDoc */
-
-/* Dependencies */
 module.exports = function () {};
 
 setTimeout(function () {
-    throw 'foo';
+  throw 'foo';
 }, 1000);

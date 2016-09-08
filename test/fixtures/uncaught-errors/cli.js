@@ -9,8 +9,6 @@
 
 'use strict';
 
-/* eslint-env node */
-
 /* Dependencies */
 var extend = require('xtend')
 var start = require('../../..');
@@ -18,6 +16,6 @@ var config = require('../config')
 var processor = require('../processor')
 
 start(extend(config, {
-    'cwd': __dirname,
-    'processor': processor
+  cwd: __dirname,
+  processor: processor
 }));

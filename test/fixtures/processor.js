@@ -8,29 +8,29 @@
 
 'use strict';
 
-/* eslint-env node */
-/* jscs:disable jsDoc */
-
 var unified = require('unified');
 
 module.exports = unified()
-    .use(function (processor) {
-        processor.Parser = function (file) {
-            this.value = file.toString();
-        };
+  .use(function (processor) {
+    processor.Parser = Parser;
+    Parser.prototype.parse = parse;
 
-        processor.Parser.prototype.parse = function () {
-            return {
-                'type': 'text',
-                'value': this.value
-            };
-        };
-    })
-    .use(function (processor) {
-        processor.Compiler = function () {};
+    function Parser(file) {
+      this.value = String(file);
+    }
 
-        processor.Compiler.prototype.compile = function (tree) {
-            return tree.value;
-        };
-    })
-    .abstract();
+    function parse() {
+      return {type: 'text', value: this.value};
+    }
+  })
+  .use(function (processor) {
+    processor.Compiler = Compiler;
+    Compiler.prototype.compile = compile;
+
+    function Compiler() {}
+
+    function compile(tree) {
+      return tree.value;
+    }
+  })
+  .abstract();

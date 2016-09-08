@@ -8,9 +8,6 @@
 
 'use strict';
 
-/* eslint-env node */
-/* jscs:disable jsDoc */
-
 /* Dependencies. */
 var fs = require('fs');
 var path = require('path');
@@ -30,10 +27,7 @@ var fixtures = join(__dirname, 'fixtures');
 
 process.on('unhandledRejection', bail);
 
-/*
- * Tests.
- */
-
+/* Tests. */
 test('unified-args', function (t) {
   t.plan(34);
 

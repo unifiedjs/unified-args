@@ -9,16 +9,14 @@
 
 'use strict';
 
-/* eslint-env node */
-
 /* Dependencies */
-var extend = require('xtend')
+var extend = require('xtend');
 var start = require('../../..');
-var config = require('../config')
-var processor = require('../processor')
+var config = require('../config');
+var processor = require('../processor');
 
 start(extend(config, {
-    /* Hidden feature, for tests. */
-    'cwd': __dirname,
-    'processor': processor
+  /* Hidden feature, for tests. */
+  cwd: __dirname,
+  processor: processor
 }));

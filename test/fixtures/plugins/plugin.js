@@ -8,10 +8,6 @@
 
 'use strict';
 
-/* eslint-env node */
-/* eslint-disable no-console */
-/* jscs:disable jsDoc */
-
 module.exports = function (processor, options) {
-    console.log(JSON.stringify(options));
+  console.log(JSON.stringify(options));
 };
