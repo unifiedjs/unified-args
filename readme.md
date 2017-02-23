@@ -57,7 +57,6 @@ start({
     *   [--ignore-path &lt;path>](#--ignore-path-path)
     *   [--setting &lt;settings>](#--setting-settings)
     *   [--use &lt;plugin>](#--use-plugin)
-    *   [--preset &lt;presets>](#--preset-presets)
     *   [--ext &lt;extensions>](#--ext-extensions)
     *   [--watch](#--watch)
     *   [--tree](#--tree)
@@ -109,10 +108,7 @@ All options are required.
     (engine: [`packageField`][engine-package-field]).
 *   `pluginPrefix` (`string`)
     — Prefix to use when searching for [plug-ins][use]
-    (engine: [`pluginPrefix`][engine-plugin-prefix]);
-*   `presetPrefix` (`string`)
-    — Prefix to use when searching for presets from config files
-    (engine: [`presetPrefix`][engine-preset-prefix]).
+    (engine: [`pluginPrefix`][engine-plugin-prefix]).
 
 ## CLI
 
@@ -135,7 +131,6 @@ Options:
   -s  --setting <settings>  specify settings
   -e  --ext <extensions>    specify extensions
   -u  --use <plugins>       use plugins
-  -p  --preset <presets>    use presets
   -w  --watch               watch for changes and reprocess
   -q  --quiet               output only warnings and errors
   -S  --silent              output only errors
@@ -298,25 +293,6 @@ Prefers plug-ins prefixed with the [configured `pluginPrefix`][configured].
 *   **Default**: none;
 *   **Alias**: `-u`;
 *   **Engine**: [`plugins`][engine-plugins].
-
-### `--preset <presets>`
-
-```sh
-cli input.txt --preset lint-recommended
-cli input.txt --preset 'minify=force:true'
-```
-
-Preset to load by its name or path, optionally with options.  Can be set
-from [configuration files][config-file].
-
-To pass options, follow the plugin by an equals sign (`=`) and settings,
-which have the same in syntax as [`--setting <settings>`][setting].
-
-Prefers presets prefixed with the [configured `presetPrefix`][configured].
-
-*   **Default**: none;
-*   **Alias**: `-p`;
-*   **Engine**: [`presets`][engine-presets].
 
 ### `--ext <extensions>`
 
@@ -573,11 +549,7 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 
 [engine-plugins]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsplugins
 
-[engine-presets]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspresets
-
 [engine-plugin-prefix]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspluginprefix
-
-[engine-preset-prefix]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionspresetprefix
 
 [engine-extensions]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsextensions
 
