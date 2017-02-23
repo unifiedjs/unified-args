@@ -8,6 +8,6 @@
 
 'use strict';
 
-module.exports = function (processor, options) {
+module.exports = function (options) {
   console.log(JSON.stringify(options));
 };

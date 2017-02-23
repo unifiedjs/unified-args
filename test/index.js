@@ -334,7 +334,6 @@ test('unified-args', function (t) {
           result.stdout,
           [
             '{"fooBar":"baz"}',
-            '{"fooBar":"baz"}',
             'one'
           ].join('\n'),
           'should pass settings and output'

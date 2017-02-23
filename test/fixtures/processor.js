@@ -11,26 +11,16 @@
 var unified = require('unified');
 
 module.exports = unified()
-  .use(function (processor) {
-    processor.Parser = Parser;
-    Parser.prototype.parse = parse;
+  .use(function () {
+    this.Parser = parser;
+    this.Compiler = compiler;
 
-    function Parser(file) {
-      this.value = String(file);
+    function parser(doc) {
+      return {type: 'text', value: doc};
     }
 
-    function parse() {
-      return {type: 'text', value: this.value};
-    }
-  })
-  .use(function (processor) {
-    processor.Compiler = Compiler;
-    Compiler.prototype.compile = compile;
-
-    function Compiler() {}
-
-    function compile(tree) {
+    function compiler(tree) {
       return tree.value;
     }
   })
-  .abstract();
+  .freeze();
