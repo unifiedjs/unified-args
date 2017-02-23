@@ -29,8 +29,6 @@ process.on('unhandledRejection', bail);
 
 /* Tests. */
 test('unified-args', function (t) {
-  t.plan(34);
-
   t.test('should fail on missing files', function (st) {
     var bin = join(fixtures, 'example', 'cli.js');
 
@@ -529,16 +527,16 @@ test('unified-args', function (t) {
 
     st.plan(2);
 
-    execa(bin, ['-w', '-r', 'missing.rc']).catch(function (err) {
+    execa(bin, ['-w']).catch(function (err) {
       var stderr = strip(err.stderr);
 
       st.equal(err.code, 1, 'should exit with 1');
 
       st.equal(
-        stderr.slice(0, stderr.indexOf('/')),
+        stderr.split('\n').slice(0, 2).join('\n'),
         [
           'Watching... (press CTRL+C to exit)',
-          'Error: Cannot read configuration file: '
+          'Error: No input'
         ].join('\n'),
         'should show the error'
       );
@@ -565,4 +563,6 @@ test('unified-args', function (t) {
       );
     });
   });
+
+  t.end();
 });
