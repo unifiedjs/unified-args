@@ -169,7 +169,7 @@ All non-options are seen as input and can be:
 <!-- Options: -->
 
 *   **Default**: none;
-*   **Engine**: [`globs`][engine-globs].
+*   **Engine**: [`files`][engine-files].
 
 ### `--help`
 
@@ -531,7 +531,7 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 
 [engine-processor]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsprocessor
 
-[engine-globs]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsglobs
+[engine-files]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsfiles
 
 [engine-output]: https://github.com/wooorm/unified-engine/blob/master/doc/options.md#optionsoutput
 
