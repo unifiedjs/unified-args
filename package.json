@@ -10,8 +10,8 @@
     "cli",
     "arguments"
   ],
-  "repository": "https://github.com/wooorm/unified-args.git",
-  "bugs": "https://github.com/wooorm/unified-args/issues",
+  "repository": "https://github.com/unifiedjs/unified-args",
+  "bugs": "https://github.com/unifiedjs/unified-args/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
