@@ -33,15 +33,15 @@ var pack = require('remark/package.json');
 var name = pack.name;
 
 start({
-  'processor': remark,
-  'name': name,
-  'description': pack.description,
-  'version': pack.version,
-  'pluginPrefix': name,
-  'extensions': extensions,
-  'packageField': name + 'Config',
-  'rcName': '.' + name + 'rc',
-  'ignoreName': '.' + name + 'ignore'
+  processor: remark,
+  name: name,
+  description: pack.description,
+  version: pack.version,
+  pluginPrefix: name,
+  extensions: extensions,
+  packageField: name + 'Config',
+  rcName: '.' + name + 'rc',
+  ignoreName: '.' + name + 'ignore'
 });
 ```
 
@@ -86,29 +86,29 @@ All options are required.
 
 *   `processor` ([`Processor`][unified-processor])
     — Processor to transform files
-    (engine: [`processor`][engine-processor]).
+    (engine: [`processor`][engine-processor])
 *   `name` (`string`)
-    — Name of executable.
+    — Name of executable
 *   `description` (`string`)
-    — Description of executable.
+    — Description of executable
 *   `version` (`string`)
-    — Version of executable.
+    — Version of executable
 *   `extensions` (`Array.<string>`)
-    — Default file [extensions][ext] to include.
-    (engine: [`extensions`][engine-extensions]).
+    — Default file [extensions][ext] to include
+    (engine: [`extensions`][engine-extensions])
 *   `ignoreName` (`string`)
-    — Name of [ignore files][ignore-file] to load.
-    (engine: [`ignoreName`][engine-ignore-name]).
+    — Name of [ignore files][ignore-file] to load
+    (engine: [`ignoreName`][engine-ignore-name])
 *   `rcName` (`string`)
-    — Name of [configuration files][config-file] to load.
-    (engine: [`rcName`][engine-rc-name]).
+    — Name of [configuration files][config-file] to load
+    (engine: [`rcName`][engine-rc-name])
 *   `packageField` (`string`)
     — Property at which [configuration][config-file] can be found in
-    `package.json` files.
-    (engine: [`packageField`][engine-package-field]).
+    `package.json` files
+    (engine: [`packageField`][engine-package-field])
 *   `pluginPrefix` (`string`)
     — Prefix to use when searching for [plug-ins][use]
-    (engine: [`pluginPrefix`][engine-plugin-prefix]).
+    (engine: [`pluginPrefix`][engine-plugin-prefix])
 
 ## CLI
 
@@ -159,17 +159,17 @@ Examples:
 All non-options are seen as input and can be:
 
 *   Paths (`cli README.txt`) and [globs][glob] (`cli *.txt`) pointing
-    to files to load.
+    to files to load
 *   Paths (`cli test`) and globs (`cli fixtures/{in,out}`) pointing to
     directories.  These are searched for files with known [extensions][ext]
     which are not ignored by patterns in [ignore files][ignore-file].
     The default behaviour is to exclude files in `node_modules`
-    and hidden directories (those starting with a dot: `.`).
+    and hidden directories (those starting with a dot: `.`)
 
 <!-- Options: -->
 
-*   **Default**: none;
-*   **Engine**: [`files`][engine-files].
+*   **Default**: none
+*   **Engine**: [`files`][engine-files]
 
 ### `--help`
 
@@ -179,8 +179,8 @@ cli --help
 
 Output short usage information.
 
-*   **Default**: off;
-*   **Alias**: `-h`.
+*   **Default**: off
+*   **Alias**: `-h`
 
 ### `--version`
 
@@ -190,8 +190,8 @@ cli --version
 
 Output version number.
 
-*   **Default**: off;
-*   **Alias**: `-v`.
+*   **Default**: off
+*   **Alias**: `-v`
 
 ### `--output [path]`
 
@@ -204,20 +204,20 @@ cli input.txt --output doc/output.text
 Whether to write successfully processed files, and where to.  Can be
 set from [configuration files][config-file].
 
-*   If output is **not** given, files are not written to the file-system;
+*   If output is **not** given, files are not written to the file-system
 *   If output is given **without** `path`, input files are overwritten when
-    successful;
+    successful
 *   If output is given with `path` and it points to an existing directory,
-    files are written to that directory;
+    files are written to that directory
 *   If output is given with `path`, the parent directory of that path
     exists, and one file is processed, the file is written to the given
-    path.
+    path
 
 <!-- Options: -->
 
-*   **Default**: off;
-*   **Alias**: `-o`;
-*   **Engine**: [`output`][engine-output].
+*   **Default**: off
+*   **Alias**: `-o`
+*   **Engine**: [`output`][engine-output]
 
 ### `--rc-path <path>`
 
@@ -232,9 +232,9 @@ of [`--config`][config].
 >
 > **Note**: Do not pass `package.json` files or `.js` files.
 
-*   **Default**: none;
-*   **Alias**: `-r`;
-*   **Engine**: [`rcPath`][engine-rc-path].
+*   **Default**: none
+*   **Alias**: `-r`
+*   **Engine**: [`rcPath`][engine-rc-path]
 
 ### `--ignore-path <path>`
 
@@ -245,9 +245,9 @@ cli . --ignore-path .gitignore
 File-path to an [ignore file][ignore-file] to load, regardless of
 [`--ignore`][ignore].
 
-*   **Default**: none;
-*   **Alias**: `-i`;
-*   **Engine**: [`ignorePath`][engine-ignore-path].
+*   **Default**: none
+*   **Alias**: `-i`
+*   **Engine**: [`ignorePath`][engine-ignore-path]
 
 ### `--setting <settings>`
 
@@ -264,16 +264,16 @@ from [configuration files][config-file].
 The given settings are JSON, with two exceptions:
 
 *   Surrounding braces must not be used: `"foo": 1, "bar": "baz"`
-    is valid;
+    is valid
 *   Keys do not need to be quoted: both `"foo": "bar"` and
-    `foo: "bar"` are considered equal.
+    `foo: "bar"` are considered equal
 
 Keys are camel-cased: `foo-bar: true` and `fooBar: true` are treated
 the same.
 
-*   **Default**: none;
-*   **Alias**: `-s`;
-*   **Engine**: [`settings`][engine-settings].
+*   **Default**: none
+*   **Alias**: `-s`
+*   **Engine**: [`settings`][engine-settings]
 
 ### `--use <plugin>`
 
@@ -290,9 +290,9 @@ which have the same in syntax as [`--setting <settings>`][setting].
 
 Prefers plug-ins prefixed with the [configured `pluginPrefix`][configured].
 
-*   **Default**: none;
-*   **Alias**: `-u`;
-*   **Engine**: [`plugins`][engine-plugins].
+*   **Default**: none
+*   **Alias**: `-u`
+*   **Engine**: [`plugins`][engine-plugins]
 
 ### `--ext <extensions>`
 
@@ -305,9 +305,9 @@ Specify one or more extensions to include when searching for files.
 
 If no extensions are given, uses the [configured `extensions`][configured].
 
-*   **Default**: Configured [`extensions`][configured];
-*   **Alias**: `-e`;
-*   **Engine**: [`extensions`][engine-extensions].
+*   **Default**: Configured [`extensions`][configured]
+*   **Alias**: `-e`
+*   **Engine**: [`extensions`][engine-extensions]
 
 ### `--watch`
 
@@ -335,8 +335,8 @@ Watching... (press CTRL+C to exit)
 Note: Ignoring `--output` until exit.
 ```
 
-*   **Default**: off;
-*   **Alias**: `-w`.
+*   **Default**: off
+*   **Alias**: `-w`
 
 ### `--tree`
 
@@ -348,9 +348,9 @@ Treat input as a syntax tree in JSON and output the transformed syntax
 tree.  This runs neither the [parsing nor the compilation
 phase][description].
 
-*   **Default**: off;
-*   **Alias**: `-t`;
-*   **Engine**: [`tree`][engine-tree].
+*   **Default**: off
+*   **Alias**: `-t`
+*   **Engine**: [`tree`][engine-tree]
 
 ### `--tree-in`
 
@@ -361,8 +361,8 @@ cli --tree-in < input.json > input.txt
 Treat input as a syntax tree in JSON.  This does not run the [parsing
 phase][description].
 
-*   **Default**: off;
-*   **Engine**: [`treeIn`][engine-tree-in].
+*   **Default**: off
+*   **Engine**: [`treeIn`][engine-tree-in]
 
 ### `--tree-out`
 
@@ -373,8 +373,8 @@ cli --tree-out < input.txt > output.json
 Output the transformed syntax tree.  This does not run the [compilation
 phase][description].
 
-*   **Default**: off;
-*   **Engine**: [`treeOut`][engine-tree-out].
+*   **Default**: off
+*   **Engine**: [`treeOut`][engine-tree-out]
 
 ### `--quiet`
 
@@ -385,9 +385,9 @@ cli input.txt --quiet
 Ignore files without any messages in the report.  The default behaviour
 is to show a success message.
 
-*   **Default**: off;
-*   **Alias**: `-q`;
-*   **Engine**: [`quiet`][engine-quiet].
+*   **Default**: off
+*   **Alias**: `-q`
+*   **Engine**: [`quiet`][engine-quiet]
 
 ### `--silent`
 
@@ -397,9 +397,9 @@ cli input.txt --silent
 
 Show only fatal errors in the report.  Turns [`--quiet`][quiet] on.
 
-*   **Default**: off;
-*   **Alias**: `-S`;
-*   **Engine**: [`silent`][engine-silent].
+*   **Default**: off
+*   **Alias**: `-S`
+*   **Engine**: [`silent`][engine-silent]
 
 ### `--frail`
 
@@ -410,9 +410,9 @@ cli input.txt --frail
 Exit with a status code of `1` if warnings or errors occur.  The default
 behaviour is to exit with `1` on errors.
 
-*   **Default**: off;
-*   **Alias**: `-f`;
-*   **Engine**: [`frail`][engine-frail].
+*   **Default**: off
+*   **Alias**: `-f`
+*   **Engine**: [`frail`][engine-frail]
 
 ### `--file-path <path>`
 
@@ -422,8 +422,8 @@ cli --file-path input.txt < input.txt > doc/output.txt
 
 File path to process the given file on **stdin**(4) as, if any.
 
-*   **Default**: none;
-*   **Engine**: [`filePath`][engine-file-path].
+*   **Default**: none
+*   **Engine**: [`filePath`][engine-file-path]
 
 ### `--stdout`
 
@@ -434,8 +434,8 @@ cli input.txt --no-stdout
 Whether to write a processed file to **stdout**(4).
 
 *   **Default**: off if [`--output`][output] or [`--watch`][watch] are given,
-    or if multiple files are processed;
-*   **Engine**: [`out`][engine-out].
+    or if multiple files are processed
+*   **Engine**: [`out`][engine-out]
 
 ### `--color`
 
@@ -445,8 +445,8 @@ cli input.txt --no-color
 
 Whether to output ANSI codes in the report.
 
-*   **Default**: whether the terminal [supports colour][supports-color];
-*   **Engine**: [`color`][engine-color].
+*   **Default**: whether the terminal [supports colour][supports-color]
+*   **Engine**: [`color`][engine-color]
 
 ### `--config`
 
@@ -460,8 +460,8 @@ Searches for files with the [configured `rcName`][configured]
 (`$rcName` and `$rcName.js`) and looks for the [configured
 `packageField`][configured] in `package.json` files.
 
-*   **Default**: on;
-*   **Engine**: [`detectConfig`][engine-detect-config].
+*   **Default**: on
+*   **Engine**: [`detectConfig`][engine-detect-config]
 
 ### `--ignore`
 
@@ -473,16 +473,16 @@ Whether to load [ignore files][ignore-file].
 
 Searches for files with named [`ignoreName`][configured].
 
-*   **Default**: on;
-*   **Engine**: [`detectIgnore`][engine-detect-ignore].
+*   **Default**: on
+*   **Engine**: [`detectIgnore`][engine-detect-ignore]
 
 ## Diagnostics
 
 CLIs created with **unified-args** exit with:
 
-*   `1` on fatal errors;
-*   `1` on warnings in [`--frail`][frail] mode;
-*   `0` on success.
+*   `1` on fatal errors
+*   `1` on warnings in [`--frail`][frail] mode, `0` on warnings otherwise
+*   `0` on success
 
 ## Debugging
 
