@@ -5,6 +5,10 @@ Wrapper around the [**engine**][engine] to configure it with command-line
 arguments.  Should be `require`d and configured in an executable script,
 on its own, as it handles the whole process.
 
+[`unifiedjs.github.io`][site], the website for **unified** provides a good
+overview about what unified can do.  Make sure to visit it and try its
+introductionary [Guides][].
+
 ## Installation
 
 [npm][npm-install]:
@@ -590,3 +594,7 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 [quiet]: #--quiet
 
 [frail]: #--frail
+
+[site]: https://unifiedjs.github.io
+
+[guides]: https://unifiedjs.github.io/#guides
