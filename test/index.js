@@ -305,7 +305,7 @@ test('unified-args', function (t) {
 
       st.plan(2);
 
-      /* should be quoted */
+      /* Should be quoted. */
       execa(bin, ['.', flag, 'foo:bar']).catch(function (err) {
         var stderr = err.stderr;
 
@@ -384,7 +384,7 @@ test('unified-args', function (t) {
 
       st.plan(2);
 
-      /* should be quoted */
+      /* Should be quoted. */
       execa(bin, ['.', flag, './plugin=foo:bar']).catch(function (err) {
         var stderr = strip(err.stderr);
 
