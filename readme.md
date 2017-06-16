@@ -19,7 +19,7 @@ This example creates a CLI for [**remark**][remark], loading
 `remark-` plugins, searching for markdown files, and loading
 [configuration][config-file] and [ignore][ignore-file] files.
 
-`cli` (executable: `chmod +x cli`):
+`cli` (you can make it runnable with: `chmod +x cli`):
 
 ```js
 #!/usr/bin/env node
