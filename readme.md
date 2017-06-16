@@ -228,10 +228,6 @@ cli . --rc-path config.json
 File-path to a JSON [configuration file][config-file] to load, regardless
 of [`--config`][config].
 
-> **Note**: Be careful not to pass a file which is also detected.
->
-> **Note**: Do not pass `package.json` files or `.js` files.
-
 *   **Default**: none
 *   **Alias**: `-r`
 *   **Engine**: [`rcPath`][engine-rc-path]
