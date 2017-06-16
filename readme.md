@@ -164,7 +164,8 @@ All non-options are seen as input and can be:
     directories.  These are searched for files with known [extensions][ext]
     which are not ignored by patterns in [ignore files][ignore-file].
     The default behaviour is to exclude files in `node_modules`
-    and hidden directories (those starting with a dot: `.`)
+    and hidden directories (those starting with a dot: `.`) unless explicitly
+    given
 
 <!-- Options: -->
 
@@ -208,7 +209,8 @@ set from [configuration files][config-file].
 *   If output is given **without** `path`, input files are overwritten when
     successful
 *   If output is given with `path` and it points to an existing directory,
-    files are written to that directory
+    files are written to that directory (intermediate directories are not
+    created)
 *   If output is given with `path`, the parent directory of that path
     exists, and one file is processed, the file is written to the given
     path
@@ -264,7 +266,7 @@ The given settings are JSON, with two exceptions:
 *   Keys do not need to be quoted: both `"foo": "bar"` and
     `foo: "bar"` are considered equal
 
-Keys are camel-cased: `foo-bar: true` and `fooBar: true` are treated
+Top-level keys are camel-cased: `foo-bar: true` and `fooBar: true` are treated
 the same.
 
 *   **Default**: none
@@ -275,7 +277,7 @@ the same.
 
 ```sh
 cli input.txt --use man
-cli input.txt --use 'lint=alpha:"bravo"'
+cli input.txt --use 'toc=max-depth:3'
 ```
 
 Plug-in to load by its name or path, optionally with options, and use
@@ -284,7 +286,8 @@ on every processed file.  Can be set from [configuration files][config-file].
 To pass options, follow the plugin by an equals sign (`=`) and settings,
 which have the same in syntax as [`--setting <settings>`][setting].
 
-Prefers plug-ins prefixed with the [configured `pluginPrefix`][configured].
+Plug-ins prefixed with the [configured `pluginPrefix`][configured] are
+preferred over modules without prefix.
 
 *   **Default**: none
 *   **Alias**: `-u`
@@ -308,7 +311,14 @@ If no extensions are given, uses the [configured `extensions`][configured].
 ### `--watch`
 
 ```sh
-cli . -w
+cli . -qwo
+```
+
+Yields:
+
+```txt
+Watching... (press CTRL+C to exit)
+Note: Ignoring `--output` until exit.
 ```
 
 Process as normal, then watch found files and reprocess when they change.
@@ -320,17 +330,6 @@ If [`--output`][output] is given **without** `path` it is not honoured,
 to prevent an infinite loop.  When the watch closes, a final process
 runs including `--output`.
 
-```sh
-cli . -oqw
-```
-
-Yields:
-
-```txt
-Watching... (press CTRL+C to exit)
-Note: Ignoring `--output` until exit.
-```
-
 *   **Default**: off
 *   **Alias**: `-w`
 
@@ -341,8 +340,7 @@ cli --tree < input.json > output.json
 ```
 
 Treat input as a syntax tree in JSON and output the transformed syntax
-tree.  This runs neither the [parsing nor the compilation
-phase][description].
+tree.  This runs neither the [parsing nor the compilation phase][description].
 
 *   **Default**: off
 *   **Alias**: `-t`
@@ -430,7 +428,7 @@ cli input.txt --no-stdout
 Whether to write a processed file to **stdout**(4).
 
 *   **Default**: off if [`--output`][output] or [`--watch`][watch] are given,
-    or if multiple files are processed
+    or if multiple files could be processed
 *   **Engine**: [`out`][engine-out]
 
 ### `--color`
@@ -439,7 +437,7 @@ Whether to write a processed file to **stdout**(4).
 cli input.txt --no-color
 ```
 
-Whether to output ANSI codes in the report.
+Whether to output ANSI color codes in the report.
 
 *   **Default**: whether the terminal [supports colour][supports-color]
 *   **Engine**: [`color`][engine-color]
@@ -452,9 +450,9 @@ cli input.txt --no-config
 
 Whether to load [configuration files][config-file].
 
-Searches for files with the [configured `rcName`][configured]
-(`$rcName` and `$rcName.js`) and looks for the [configured
-`packageField`][configured] in `package.json` files.
+Searches for files with the [configured `rcName`][configured]: `$rcName` (JSON),
+`$rcName.js` (JavaScript), `$rcName.yml` (YAML), and `$rcName.yaml` (YAML); and
+looks for the [configured `packageField`][configured] in `package.json` files.
 
 *   **Default**: on
 *   **Engine**: [`detectConfig`][engine-detect-config]
@@ -467,7 +465,7 @@ cli . --no-ignore
 
 Whether to load [ignore files][ignore-file].
 
-Searches for files with named [`ignoreName`][configured].
+Searches for files named [`$ignoreName`][configured].
 
 *   **Default**: on
 *   **Engine**: [`detectIgnore`][engine-detect-ignore]
