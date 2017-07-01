@@ -37,9 +37,9 @@
     "nyc": "^11.0.0",
     "remark-cli": "^3.0.0",
     "remark-preset-wooorm": "^3.0.0",
-    "strip-ansi": "^3.0.1",
+    "strip-ansi": "^4.0.0",
     "tape": "^4.4.0",
-    "touch": "^1.0.0",
+    "touch": "^3.0.0",
     "unified": "^6.0.0",
     "xo": "^0.18.0",
     "xtend": "^4.0.1"
