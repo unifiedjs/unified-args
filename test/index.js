@@ -314,7 +314,7 @@ test('unified-args', function (t) {
         st.equal(
           stderr.slice(0, stderr.indexOf(' in ')),
           'Error: Cannot parse `foo:bar` as JSON: ' +
-          'Unexpected token b',
+          'Unexpected token f',
           'should report'
         );
       });
@@ -347,6 +347,18 @@ test('unified-args', function (t) {
           'should report'
         );
       });
+    });
+  });
+
+  t.test('shouldn’t fail on property-like settings', function (st) {
+    var cwd = join(fixtures, 'settings');
+    var bin = join(cwd, 'cli.js');
+
+    st.plan(1);
+
+    /* Should be quoted. */
+    execa(bin, ['.', '--setting', 'foo:"https://example.com"']).then(function (result) {
+      st.equal(result.stdout, '{"foo":"https://example.com"}', 'should work');
     });
   });
 
@@ -393,7 +405,7 @@ test('unified-args', function (t) {
         st.equal(
           stderr.slice(0, stderr.indexOf(' in ')),
           'Error: Cannot parse `foo:bar` as JSON: ' +
-          'Unexpected token b',
+          'Unexpected token f',
           'should report'
         );
       });
