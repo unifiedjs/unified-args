@@ -1,14 +1,5 @@
-/**
- * @author Titus Wormer
- * @copyright 2016 Titus Wormer
- * @license MIT
- * @module unified:args
- * @fileoverview Test suite for `unified-args`.
- */
-
 'use strict';
 
-/* Dependencies. */
 var fs = require('fs');
 var path = require('path');
 var execa = require('execa');
@@ -17,17 +8,14 @@ var test = require('tape');
 var touch = require('touch');
 var strip = require('strip-ansi');
 
-/* Methods. */
 var join = path.join;
 var read = fs.readFileSync;
 var rm = fs.unlinkSync;
 
-/* Constants. */
 var fixtures = join(__dirname, 'fixtures');
 
 process.on('unhandledRejection', bail);
 
-/* Tests. */
 test('unified-args', function (t) {
   t.test('should fail on missing files', function (st) {
     var bin = join(fixtures, 'example', 'cli.js');

@@ -1,13 +1,7 @@
-/**
- * @author Titus Wormer
- * @copyright 2016 Titus Wormer
- * @license MIT
- * @module foo
- * @fileoverview Example plugin, logging its configuration!
- */
-
 'use strict';
 
-module.exports = function (options) {
+module.exports = plugin;
+
+function plugin(options) {
   console.log(JSON.stringify(options));
-};
+}

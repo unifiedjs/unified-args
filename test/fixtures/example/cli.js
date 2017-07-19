@@ -1,15 +1,6 @@
 #!/usr/bin/env node
-/**
- * @author Titus Wormer
- * @copyright 2016 Titus Wormer
- * @license MIT
- * @module foo
- * @fileoverview The foo compiler!
- */
-
 'use strict';
 
-/* Dependencies */
 var extend = require('xtend');
 var start = require('../../..');
 var config = require('../config');
