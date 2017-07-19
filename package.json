@@ -10,11 +10,15 @@
     "cli",
     "arguments"
   ],
-  "repository": "https://github.com/unifiedjs/unified-args",
+  "repository": "unifiedjs/unified-args",
   "bugs": "https://github.com/unifiedjs/unified-args/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+  ],
+  "files": [
+    "index.js",
+    "lib/"
   ],
   "dependencies": {
     "camelcase": "^4.0.0",
@@ -24,10 +28,6 @@
     "text-table": "^0.2.0",
     "unified-engine": "^4.0.0"
   },
-  "files": [
-    "index.js",
-    "lib/"
-  ],
   "devDependencies": {
     "bail": "^1.0.0",
     "execa": "^0.7.0",
@@ -46,7 +46,7 @@
     "build-md": "remark . --quiet --frail",
     "build": "npm run build-md",
     "lint": "xo",
-    "test-api": "node test/index.js",
+    "test-api": "node test",
     "test-coverage": "nyc --reporter lcov tape test/index.js",
     "test": "npm run build && npm run lint && npm run test-coverage"
   },
@@ -54,10 +54,7 @@
     "space": true,
     "esnext": false,
     "rules": {
-      "no-eq-null": "off",
-      "eqeqeq": "off",
-      "guard-for-in": "off",
-      "max-lines": "off"
+      "guard-for-in": "off"
     }
   },
   "nyc": {
