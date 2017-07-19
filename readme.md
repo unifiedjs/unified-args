@@ -60,6 +60,7 @@ start({
     *   [--rc-path &lt;path>](#--rc-path-path)
     *   [--ignore-path &lt;path>](#--ignore-path-path)
     *   [--setting &lt;settings>](#--setting-settings)
+    *   [--report &lt;reporter>](#--report-reporter)
     *   [--use &lt;plugin>](#--use-plugin)
     *   [--ext &lt;extensions>](#--ext-extensions)
     *   [--watch](#--watch)
