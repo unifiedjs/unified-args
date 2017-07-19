@@ -90,6 +90,12 @@
     "default": false
   },
   {
+    "long": "report",
+    "description": "specify reporter",
+    "type": "string",
+    "value": "<reporter>"
+  },
+  {
     "long": "file-path",
     "description": "specify path to process as",
     "type": "string",

@@ -11,7 +11,7 @@ introductionary [Guides][].
 
 ## Installation
 
-[npm][npm-install]:
+[npm][]:
 
 ```bash
 npm install unified-args
@@ -140,6 +140,7 @@ Options:
   -S  --silent              output only errors
   -f  --frail               exit with 1 on warnings
   -t  --tree                specify input and output as syntax tree
+      --report <reporter>   specify reporter
       --file-path <path>    specify path to process as
       --tree-in             specify input as syntax tree
       --tree-out            output syntax tree
@@ -277,6 +278,38 @@ the same.
 *   **Alias**: `-s`
 *   **Engine**: [`settings`][engine-settings]
 
+### `--report <reporter>`
+
+```sh
+cli input.txt --report ./reporter.js
+cli input.txt --report vfile-reporter-json
+cli input.txt --report json
+cli input.txt --report json=pretty:2
+cli input.txt --report 'json=pretty:"\t"'
+cli input.txt --report pretty --report json # only last one is used
+```
+
+[Reporter][] to load by its name or path, optionally with options, and use
+to report metadata about eevery processed file.
+
+To pass options, follow the name by an equals sign (`=`) and settings,
+which have the same in syntax as [`--setting <settings>`][setting].
+
+The prefix `vfile-reporter-` can be omitted.  Prefixed reporters are preferred
+over modules without prefix.
+
+If multiple reporters are given, the last one is used.
+
+*   **Default**: none, which uses [`vfile-reporter`][vfile-reporter].
+*   **Engine**: [`reporter`][engine-reporter] and
+    [`reporterOptions`][engine-reporter-options].
+
+###### Note
+
+The [`quiet`][quiet], [`silent`][silent], and [`color`][color] options may not
+work with the used reporter.  If they are given, they are preferred over the
+same properties in reporter settings.
+
 ### `--use <plugin>`
 
 ```sh
@@ -387,6 +420,16 @@ is to show a success message.
 *   **Alias**: `-q`
 *   **Engine**: [`quiet`][engine-quiet]
 
+###### Note
+
+This option may not work depending on the reporter given in
+[`--report`][report].
+
+###### Note
+
+The [`quiet`][quiet], [`silent`][silent], and [`color`][color] options may not
+work with the used reporter.
+
 ### `--silent`
 
 ```sh
@@ -398,6 +441,11 @@ Show only fatal errors in the report.  Turns [`--quiet`][quiet] on.
 *   **Default**: off
 *   **Alias**: `-S`
 *   **Engine**: [`silent`][engine-silent]
+
+###### Note
+
+This option may not work depending on the reporter given in
+[`--report`][report].
 
 ### `--frail`
 
@@ -445,6 +493,11 @@ Whether to output ANSI color codes in the report.
 
 *   **Default**: whether the terminal [supports colour][supports-color]
 *   **Engine**: [`color`][engine-color]
+
+###### Note
+
+This option may not work depending on the reporter given in
+[`--report`][report].
 
 ### `--config`
 
@@ -501,7 +554,7 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 
 [codecov]: https://codecov.io/github/unifiedjs/unified-args
 
-[npm-install]: https://docs.npmjs.com/cli/install
+[npm]: https://docs.npmjs.com/cli/install
 
 [license]: LICENSE
 
@@ -543,7 +596,11 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 
 [engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepath
 
-[engine-settings]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsettings
+[engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsreporter
+
+[engine-reporter-options]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsreporteroptions
+
+[engine-settings]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionssettings
 
 [engine-plugins]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsplugins
 
@@ -591,10 +648,20 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 
 [setting]: #--setting-settings
 
+[report]: #--report-reporter
+
 [quiet]: #--quiet
+
+[silent]: #--silent
+
+[color]: #--color
 
 [frail]: #--frail
 
 [site]: https://unifiedjs.github.io
 
 [guides]: https://unifiedjs.github.io/#guides
+
+[reporter]: https://github.com/vfile/vfile#reporters
+
+[vfile-reporter]: https://github.com/vfile/vfile-reporter

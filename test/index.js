@@ -428,6 +428,60 @@ test('unified-args', function (t) {
     });
   });
 
+  t.test('should honour `--report`', function (st) {
+    var cwd = join(fixtures, 'example');
+    var bin = join(cwd, 'cli.js');
+
+    st.plan(2);
+
+    execa(bin, ['alpha.text', '--report', 'json']).then(function (result) {
+      st.deepEqual(
+        [result.stdout, result.stderr],
+        [
+          'alpha',
+          JSON.stringify([{
+            path: 'alpha.text',
+            cwd: cwd,
+            history: ['alpha.text'],
+            messages: []
+          }])
+        ],
+        'should support the flag'
+      );
+    });
+
+    execa(bin, ['alpha.text', '--report', 'json=pretty:"\\t"']).then(function (result) {
+      st.deepEqual(
+        [result.stdout, result.stderr],
+        [
+          'alpha',
+          JSON.stringify([{
+            path: 'alpha.text',
+            cwd: cwd,
+            history: ['alpha.text'],
+            messages: []
+          }], null, '\t')
+        ],
+        'should support settings'
+      );
+    });
+  });
+
+  t.test('should fail on `--report` without value', function (st) {
+    var cwd = join(fixtures, 'example');
+    var bin = join(cwd, 'cli.js');
+
+    st.plan(1);
+
+    execa(bin, ['.', '--report']).catch(function (err) {
+      st.deepEqual(
+        [err.code, err.stderr],
+        [1, 'Error: Missing value:  --report <reporter> specify reporter\n'],
+        'should fail'
+      );
+    });
+  });
+
   t.test('should honour `--watch`', function (st) {
     var cwd = join(fixtures, 'example');
     var bin = join(cwd, 'cli.js');
