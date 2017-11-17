@@ -265,15 +265,8 @@ cli input.txt --setting 'golf: false, hotel-india: ["juliet", 1]'
 Configuration for the parser and compiler of the processor.  Can be set
 from [configuration files][config-file].
 
-The given settings are JSON, with two exceptions:
-
-*   Surrounding braces must not be used: `"foo": 1, "bar": "baz"`
-    is valid
-*   Keys do not need to be quoted: both `"foo": "bar"` and
-    `foo: "bar"` are considered equal
-
-Top-level keys are camel-cased: `foo-bar: true` and `fooBar: true` are treated
-the same.
+The given settings are [JSON5][], with one exceptions: surrounding braces must
+not be used: `"foo": 1, "bar": "baz"` is valid
 
 *   **Default**: none
 *   **Alias**: `-s`
@@ -666,3 +659,5 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 [reporter]: https://github.com/vfile/vfile#reporters
 
 [vfile-reporter]: https://github.com/vfile/vfile-reporter
+
+[json5]: https://github.com/json5/json5

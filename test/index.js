@@ -301,8 +301,8 @@ test('unified-args', function (t) {
 
         st.equal(
           stderr.slice(0, stderr.indexOf(' in ')),
-          'Error: Cannot parse `foo:bar` as JSON: ' +
-          'Unexpected token f',
+          'Error: Cannot parse `foo:bar` as JSON: Unexpected \'b\' at line 1 ' +
+          'column 7 of the JSON5 data. Still to read: "bar}"',
           'should report'
         );
       });
@@ -315,7 +315,7 @@ test('unified-args', function (t) {
       st.plan(2);
 
       execa(bin, [
-        'one.txt', flag, 'foo-bar:"baz"'
+        'one.txt', flag, '"foo-bar":"baz"'
       ]).then(function (result) {
         /* Parser and Compiler both log stringified settings. */
         st.equal(
@@ -392,8 +392,8 @@ test('unified-args', function (t) {
 
         st.equal(
           stderr.slice(0, stderr.indexOf(' in ')),
-          'Error: Cannot parse `foo:bar` as JSON: ' +
-          'Unexpected token f',
+          'Error: Cannot parse `foo:bar` as JSON: Unexpected \'b\' at line 1 ' +
+          'column 7 of the JSON5 data. Still to read: "bar}"',
           'should report'
         );
       });
