@@ -77,6 +77,7 @@ start({
     *   [--ignore](#--ignore)
 *   [Diagnostics](#diagnostics)
 *   [Debugging](#debugging)
+*   [Contribute](#contribute)
 *   [License](#license)
 
 ## API
@@ -534,6 +535,14 @@ CLIs created with **unified-args** exit with:
 CLIs can be debugged by setting the [`DEBUG`][debug] environment
 variable to `*`, such as `DEBUG="*" cli example.txt`.
 
+## Contribute
+
+See [`contribute.md` in `unifiedjs/unified`][contribute] for ways to get
+started.
+
+This organisation has a [Code of Conduct][coc].  By interacting with this
+repository, organisation, or community you agree to abide by its terms.
+
 ## License
 
 [MIT][license] © [Titus Wormer][author]
@@ -661,3 +670,7 @@ variable to `*`, such as `DEBUG="*" cli example.txt`.
 [vfile-reporter]: https://github.com/vfile/vfile-reporter
 
 [json5]: https://github.com/json5/json5
+
+[contribute]: https://github.com/unifiedjs/unified/blob/master/contributing.md
+
+[coc]: https://github.com/unifiedjs/unified/blob/master/code-of-conduct.md
