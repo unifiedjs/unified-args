@@ -112,6 +112,11 @@
     "type": "boolean"
   },
   {
+    "long": "inspect",
+    "description": "output formatted syntax tree",
+    "type": "boolean"
+  },
+  {
     "long": "stdout",
     "description": "specify writing to stdout",
     "type": "boolean",

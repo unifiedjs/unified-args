@@ -67,6 +67,7 @@ start({
     *   [--tree](#--tree)
     *   [--tree-in](#--tree-in)
     *   [--tree-out](#--tree-out)
+    *   [--inspect](#--inspect)
     *   [--quiet](#--quiet)
     *   [--silent](#--silent)
     *   [--frail](#--frail)
@@ -146,6 +147,7 @@ Options:
       --file-path <path>    specify path to process as
       --tree-in             specify input as syntax tree
       --tree-out            output syntax tree
+      --inspect             output formatted syntax tree
       --[no-]stdout         specify writing to stdout (on by default)
       --[no-]color          specify color in report (on by default)
       --[no-]config         search for configuration files (on by default)
@@ -402,6 +404,19 @@ phase][description].
 *   **Default**: off
 *   **Engine**: [`treeOut`][engine-tree-out]
 
+### `--inspect`
+
+```sh
+cli --inspect < input.txt
+```
+
+Output the transformed syntax tree, formatted with
+[`unist-util-inspect`][inspect].
+This does not run the [compilation phase][description].
+
+*   **Default**: off
+*   **Engine**: [`inspect`][engine-inspect]
+
 ### `--quiet`
 
 ```sh
@@ -617,6 +632,8 @@ repository, organisation, or community you agree to abide by its terms.
 
 [engine-tree-out]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionstreeout
 
+[engine-inspect]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsinspect
+
 [engine-quiet]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsquiet
 
 [engine-silent]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsilent
@@ -668,6 +685,8 @@ repository, organisation, or community you agree to abide by its terms.
 [reporter]: https://github.com/vfile/vfile#reporters
 
 [vfile-reporter]: https://github.com/vfile/vfile-reporter
+
+[inspect]: https://github.com/syntax-tree/unist-util-inspect
 
 [json5]: https://github.com/json5/json5
 
