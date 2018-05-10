@@ -162,7 +162,7 @@ test('unified-args', function(t) {
       execa(bin, [flag]).then(onsuccess, st.fail)
 
       function onsuccess(res) {
-        st.deepEqual([res.stdout, res.stderr], ['', expected], 'should work')
+        st.deepEqual([res.stdout, res.stderr], [expected, ''], 'should work')
       }
     })
   })
@@ -174,7 +174,7 @@ test('unified-args', function(t) {
       execa(bin, [flag]).then(onsuccess, st.fail)
 
       function onsuccess(res) {
-        st.deepEqual([res.stdout, res.stderr], ['', '0.0.0'], 'should work')
+        st.deepEqual([res.stdout, res.stderr], ['0.0.0', ''], 'should work')
       }
     })
   })
