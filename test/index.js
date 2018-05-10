@@ -1,619 +1,558 @@
-'use strict';
+'use strict'
 
-var fs = require('fs');
-var path = require('path');
-var execa = require('execa');
-var bail = require('bail');
-var test = require('tape');
-var touch = require('touch');
-var strip = require('strip-ansi');
+var fs = require('fs')
+var path = require('path')
+var execa = require('execa')
+var bail = require('bail')
+var test = require('tape')
+var touch = require('touch')
+var strip = require('strip-ansi')
 
-var join = path.join;
-var read = fs.readFileSync;
-var rm = fs.unlinkSync;
+var join = path.join
+var read = fs.readFileSync
+var rm = fs.unlinkSync
 
-var fixtures = join(__dirname, 'fixtures');
+var fixtures = join(__dirname, 'fixtures')
 
-process.on('unhandledRejection', bail);
+var helpFlags = ['-h', '--help']
+var versionFlags = ['-v', '--version']
+var extFlags = ['-e', '--ext']
+var settingsFlags = ['-s', '--setting']
+var useFlags = ['-u', '--use']
 
-test('unified-args', function (t) {
-  t.test('should fail on missing files', function (st) {
-    var bin = join(fixtures, 'example', 'cli.js');
+var cwd = join(fixtures, 'example')
+var bin = join(cwd, 'cli.js')
 
-    st.plan(2);
+process.on('unhandledRejection', bail)
 
-    execa.stderr(bin, ['missing.txt']).catch(function (err) {
-      st.equal(err.code, 1, 'should exit with `1`');
-      st.equal(
-        strip(err.stderr),
-        [
-          'missing.txt',
-          '  1:1  error  No such file or directory',
-          '',
-          '✖ 1 error',
-          ''
-        ].join('\n'),
-        'should report'
-      );
-    });
-  });
+test('unified-args', function(t) {
+  t.test('should fail on missing files', function(st) {
+    var expected = [
+      'missing.txt',
+      '  1:1  error  No such file or directory',
+      '',
+      '✖ 1 error',
+      ''
+    ].join('\n')
 
-  t.test('should accept a path to a file', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
+    st.plan(1)
 
-    st.plan(2);
+    execa(bin, ['missing.txt']).then(st.fail, onfail)
 
-    execa(bin, ['one.txt']).then(function (result) {
-      st.equal(result.stdout, 'one', 'should output');
+    function onfail(res) {
+      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+    }
+  })
 
-      st.equal(
-        strip(result.stderr),
-        'one.txt: no issues found',
-        'should report'
-      );
-    });
-  });
+  t.test('should accept a path to a file', function(st) {
+    st.plan(1)
 
-  t.test('should accept a path to a directory', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
+    execa(bin, ['one.txt']).then(onsuccess, st.fail)
 
-    st.plan(2);
+    function onsuccess(res) {
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['one', 'one.txt: no issues found'],
+        'should work'
+      )
+    }
+  })
 
-    execa(bin, ['.']).then(function (result) {
-      st.equal(result.stdout, '', 'should not output');
+  t.test('should accept a path to a directory', function(st) {
+    var expected = [
+      'one.txt: no issues found',
+      'three/five.txt: no issues found',
+      'three/four.txt: no issues found',
+      'two.txt: no issues found'
+    ].join('\n')
 
-      st.equal(
-        strip(result.stderr),
-        [
-          'one.txt: no issues found',
-          'three/five.txt: no issues found',
-          'three/four.txt: no issues found',
-          'two.txt: no issues found'
-        ].join('\n'),
-        'should report'
-      );
-    });
-  });
+    st.plan(1)
 
-  t.test('should accept a glob to files', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
+    execa(bin, ['.']).then(onsuccess, st.fail)
 
-    st.plan(2);
+    function onsuccess(res) {
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
+  })
 
-    execa(bin, ['*.txt']).then(function (result) {
-      st.equal(result.stdout, '', 'should not output');
+  t.test('should accept a glob to files', function(st) {
+    var expected = [
+      'one.txt: no issues found',
+      'two.txt: no issues found'
+    ].join('\n')
 
-      st.equal(
-        strip(result.stderr),
-        [
-          'one.txt: no issues found',
-          'two.txt: no issues found'
-        ].join('\n'),
-        'should report'
-      );
-    });
-  });
+    st.plan(1)
 
-  t.test('should accept a glob to a directory', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
+    execa(bin, ['*.txt']).then(onsuccess, st.fail)
 
-    st.plan(2);
+    function onsuccess(res) {
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
+  })
 
-    execa(bin, ['thr+(e)']).then(function (result) {
-      st.equal(result.stdout, '', 'should not output');
+  t.test('should accept a glob to a directory', function(st) {
+    var expected = [
+      'three/five.txt: no issues found',
+      'three/four.txt: no issues found'
+    ].join('\n')
 
-      st.equal(
-        strip(result.stderr),
-        [
-          'three/five.txt: no issues found',
-          'three/four.txt: no issues found'
-        ].join('\n'),
-        'should report'
-      );
-    });
-  });
+    st.plan(1)
 
-  t.test('should fail on a bad short flag', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
-    var output = read(join(cwd, 'SHORT_FLAG'), 'utf8');
+    execa(bin, ['thr+(e)']).then(onsuccess, st.fail)
 
-    st.plan(2);
+    function onsuccess(res) {
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
+  })
 
-    execa(bin, ['-n']).catch(function (err) {
-      st.equal(err.code, 1, 'should exit with `1`');
-      st.equal(
-        strip(err.stderr),
-        output,
-        'should report with a list of good short flags'
-      );
-    });
-  });
+  t.test('should fail on a bad short flag', function(st) {
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
 
-  t.test('should fail on a bad grouped short flag', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
-    var output = read(join(cwd, 'SHORT_FLAG'), 'utf8');
+    st.plan(1)
 
-    st.plan(2);
+    execa(bin, ['-n']).then(st.fail, onfail)
 
-    execa(bin, ['-on']).catch(function (err) {
-      st.equal(err.code, 1, 'should exit with `1`');
-      st.equal(
-        strip(err.stderr),
-        output,
-        'should report with a list of good short flags'
-      );
-    });
-  });
+    function onfail(res) {
+      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+    }
+  })
 
-  t.test('should fail on a bad long flag', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
-    var output = read(join(cwd, 'LONG_FLAG'), 'utf8');
+  t.test('should fail on a bad grouped short flag', function(st) {
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
 
-    st.plan(2);
+    st.plan(1)
 
-    execa(bin, ['--no']).catch(function (err) {
-      st.equal(err.code, 1, 'should exit with `1`');
-      st.equal(
-        strip(err.stderr),
-        output,
-        'should report with a list of good long flags'
-      );
-    });
-  });
+    execa(bin, ['-on']).then(st.fail, onfail)
 
-  ['-h', '--help'].forEach(function (flag) {
-    t.test('should show help on `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'example');
-      var bin = join(cwd, 'cli.js');
-      var help = read(join(cwd, 'HELP'), 'utf8').trim();
+    function onfail(res) {
+      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+    }
+  })
 
-      st.plan(1);
+  t.test('should fail on a bad long flag', function(st) {
+    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8')
 
-      execa.stderr(bin, [flag]).then(function (result) {
-        st.equal(result, help, 'should show help');
-      });
-    });
-  });
+    st.plan(1)
 
-  ['-v', '--version'].forEach(function (flag) {
-    t.test('should show help on `' + flag + '`', function (st) {
-      var bin = join(fixtures, 'example', 'cli.js');
+    execa(bin, ['--no']).then(st.fail, onfail)
 
-      st.plan(1);
+    function onfail(res) {
+      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+    }
+  })
 
-      execa.stderr(bin, [flag]).then(function (result) {
-        st.equal(result, '0.0.0', 'should show version');
-      });
-    });
-  });
+  helpFlags.forEach(function(flag) {
+    t.test('should show help on `' + flag + '`', function(st) {
+      var expected = read(join(cwd, 'HELP'), 'utf8').trim()
 
-  t.test('should honour `--color`', function (st) {
-    var bin = join(fixtures, 'example', 'cli.js');
+      st.plan(1)
 
-    st.plan(1);
+      execa(bin, [flag]).then(onsuccess, st.fail)
 
-    execa.stderr(bin, ['--color', 'one.txt']).then(function (result) {
-      st.equal(
-        result,
-        '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found',
-        'should report'
-      );
-    });
-  });
-
-  t.test('should honour `--no-color`', function (st) {
-    var bin = join(fixtures, 'example', 'cli.js');
-
-    st.plan(1);
-
-    execa.stderr(bin, ['--no-color', 'one.txt']).then(function (result) {
-      st.equal(
-        result,
-        'one.txt: no issues found',
-        'should report'
-      );
-    });
-  });
-
-  ['-e', '--ext'].forEach(function (flag) {
-    t.test('should honour `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'example');
-      var bin = join(cwd, 'cli.js');
-
-      st.plan(2);
-
-      execa(bin, ['.', flag, 'text']).then(function (result) {
-        st.equal(result.stdout, '', 'should not output');
-
-        st.equal(
-          strip(result.stderr),
-          [
-            'alpha.text: no issues found',
-            'bravo.text: no issues found',
-            'charlie/delta.text: no issues found',
-            'charlie/echo.text: no issues found'
-          ].join('\n'),
-          'should report'
-        );
-      });
-    });
-
-    t.test('should fail on `' + flag + '` without value', function (st) {
-      var cwd = join(fixtures, 'example');
-      var bin = join(cwd, 'cli.js');
-
-      st.plan(2);
-
-      execa(bin, ['.', flag]).catch(function (err) {
-        st.equal(err.code, 1, 'should exit with `1`');
-
-        st.equal(
-          strip(err.stderr),
-          'Error: Missing value: -e --ext <extensions> ' +
-          'specify extensions\n',
-          'should report'
-        );
-      });
-    });
-
-    t.test('should allow an extra `-e` after `' + flag + '`',
-      function (st) {
-        var cwd = join(fixtures, 'example');
-        var bin = join(cwd, 'cli.js');
-
-        st.plan(1);
-
-        execa(bin, ['.', flag, 'text', '-e']).then(function (result) {
-          st.equal(
-            strip(result.stderr),
-            [
-              'alpha.text: no issues found',
-              'bravo.text: no issues found',
-              'charlie/delta.text: no issues found',
-              'charlie/echo.text: no issues found'
-            ].join('\n'),
-            'should report'
-          );
-        });
+      function onsuccess(res) {
+        st.deepEqual([res.stdout, res.stderr], ['', expected], 'should work')
       }
-    );
-  });
+    })
+  })
 
-  ['-s', '--setting'].forEach(function (flag) {
-    t.test('should catch syntax errors in `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'settings');
-      var bin = join(cwd, 'cli.js');
+  versionFlags.forEach(function(flag) {
+    t.test('should show help on `' + flag + '`', function(st) {
+      st.plan(1)
 
-      st.plan(2);
+      execa(bin, [flag]).then(onsuccess, st.fail)
+
+      function onsuccess(res) {
+        st.deepEqual([res.stdout, res.stderr], ['', '0.0.0'], 'should work')
+      }
+    })
+  })
+
+  t.test('should honour `--color`', function(st) {
+    var expected =
+      '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found'
+
+    st.plan(1)
+
+    execa(bin, ['--color', 'one.txt']).then(onsuccess, st.fail)
+
+    function onsuccess(res) {
+      st.deepEqual([res.stdout, res.stderr], ['one', expected], 'should work')
+    }
+  })
+
+  t.test('should honour `--no-color`', function(st) {
+    var expected = 'one.txt: no issues found'
+
+    st.plan(1)
+
+    execa(bin, ['--no-color', 'one.txt']).then(onsuccess, st.fail)
+
+    function onsuccess(res) {
+      st.deepEqual([res.stdout, res.stderr], ['one', expected], 'should work')
+    }
+  })
+
+  extFlags.forEach(function(flag) {
+    t.test('should honour `' + flag + '`', function(st) {
+      var expected = [
+        'alpha.text: no issues found',
+        'bravo.text: no issues found',
+        'charlie/delta.text: no issues found',
+        'charlie/echo.text: no issues found'
+      ].join('\n')
+
+      st.plan(1)
+
+      execa(bin, ['.', flag, 'text']).then(onsuccess, st.fail)
+
+      function onsuccess(res) {
+        st.deepEqual(
+          [res.stdout, strip(res.stderr)],
+          ['', expected],
+          'should work'
+        )
+      }
+    })
+
+    t.test('should fail on `' + flag + '` without value', function(st) {
+      var expected =
+        'Error: Missing value: -e --ext <extensions> specify extensions\n'
+
+      st.plan(1)
+
+      execa(bin, ['.', flag]).then(st.fail, onfail)
+
+      function onfail(res) {
+        st.deepEqual([res.stdout, res.stderr], ['', expected], 'should fail')
+      }
+    })
+
+    t.test('should allow an extra `-e` after `' + flag + '`', function(st) {
+      var expected = [
+        'alpha.text: no issues found',
+        'bravo.text: no issues found',
+        'charlie/delta.text: no issues found',
+        'charlie/echo.text: no issues found'
+      ].join('\n')
+
+      st.plan(1)
+
+      execa(bin, ['.', flag, 'text', '-e']).then(onsuccess, st.fail)
+
+      function onsuccess(res) {
+        st.deepEqual(
+          [res.stdout, strip(res.stderr)],
+          ['', expected],
+          'should work'
+        )
+      }
+    })
+  })
+
+  settingsFlags.forEach(function(flag) {
+    t.test('should catch syntax errors in `' + flag + '`', function(st) {
+      var expected =
+        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6\n"
+
+      st.plan(1)
 
       /* Should be quoted. */
-      execa(bin, ['.', flag, 'foo:bar']).catch(function (err) {
-        var stderr = err.stderr;
+      execa(bin, ['.', flag, 'foo:bar']).then(st.fail, onfail)
 
-        st.equal(err.code, 1, 'should exit with `1`');
+      function onfail(res) {
+        st.deepEqual(
+          [res.code, strip(res.stderr)],
+          [1, expected],
+          'should fail'
+        )
+      }
+    })
 
-        st.equal(
-          stderr.slice(0, stderr.indexOf(' in ')),
-          'Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character \'b\' at 1:6',
-          'should report'
-        );
-      });
-    });
+    t.test('should honour `' + flag + '`', function(st) {
+      var bin = join(fixtures, 'settings', 'cli.js')
 
-    t.test('should honour `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'settings');
-      var bin = join(cwd, 'cli.js');
+      st.plan(1)
 
-      st.plan(2);
+      execa(bin, ['one.txt', flag, '"foo-bar":"baz"']).then(onsuccess, st.fail)
 
-      execa(bin, [
-        'one.txt', flag, '"foo-bar":"baz"'
-      ]).then(function (result) {
+      function onsuccess(res) {
         /* Parser and Compiler both log stringified settings. */
-        st.equal(
-          result.stdout,
-          [
-            '{"fooBar":"baz"}',
-            'one'
-          ].join('\n'),
-          'should pass settings and output'
-        );
+        st.deepEqual(
+          [res.stdout, strip(res.stderr)],
+          ['{"fooBar":"baz"}\none', 'one.txt: no issues found'],
+          'should work'
+        )
+      }
+    })
+  })
 
-        st.equal(
-          strip(result.stderr),
-          [
-            'one.txt: no issues found'
-          ].join('\n'),
-          'should report'
-        );
-      });
-    });
-  });
+  t.test('shouldn’t fail on property-like settings', function(st) {
+    var expected = '{"foo":"https://example.com"}'
+    var bin = join(fixtures, 'settings', 'cli.js')
+    var setting = 'foo:"https://example.com"'
 
-  t.test('shouldn’t fail on property-like settings', function (st) {
-    var cwd = join(fixtures, 'settings');
-    var bin = join(cwd, 'cli.js');
+    st.plan(1)
 
-    st.plan(1);
+    execa(bin, ['.', '--setting', setting]).then(onsuccess, st.fail)
 
-    /* Should be quoted. */
-    execa(bin, ['.', '--setting', 'foo:"https://example.com"']).then(function (result) {
-      st.equal(result.stdout, '{"foo":"https://example.com"}', 'should work');
-    });
-  });
+    function onsuccess(res) {
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        [expected, 'one.txt: no issues found'],
+        'should work'
+      )
+    }
+  })
 
-  ['-u', '--use'].forEach(function (flag) {
-    t.test('should load a plugin with `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'plugins');
-      var bin = join(cwd, 'cli.js');
+  useFlags.forEach(function(flag) {
+    t.test('should load a plugin with `' + flag + '`', function(st) {
+      var bin = join(fixtures, 'plugins', 'cli.js')
 
-      st.plan(2);
+      st.plan(1)
 
-      execa(bin, ['one.txt', flag, './plugin']).then(function (result) {
+      execa(bin, ['one.txt', flag, './plugin']).then(onsuccess, st.fail)
+
+      function onsuccess(res) {
         /* Attacher logs options, which are `undefined`. */
-        st.equal(
-          result.stdout,
-          [
-            'undefined',
-            'one'
-          ].join('\n'),
-          'should pass settings and output'
-        );
+        st.deepEqual(
+          [res.stdout, strip(res.stderr)],
+          ['undefined\none', 'one.txt: no issues found'],
+          'should work'
+        )
+      }
+    })
 
-        st.equal(
-          strip(result.stderr),
-          [
-            'one.txt: no issues found'
-          ].join('\n'),
-          'should report'
-        );
-      });
-    });
+    t.test('should catch syntax errors in `' + flag + '`', function(st) {
+      var expected =
+        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6\n"
 
-    t.test('should catch syntax errors in `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'plugins');
-      var bin = join(cwd, 'cli.js');
-
-      st.plan(2);
+      st.plan(1)
 
       /* Should be quoted. */
-      execa(bin, ['.', flag, './plugin=foo:bar']).catch(function (err) {
-        var stderr = strip(err.stderr);
+      execa(bin, ['.', flag, './plugin=foo:bar']).then(st.fail, onfail)
 
-        st.equal(err.code, 1, 'should exit with `1`');
+      function onfail(res) {
+        st.deepEqual(
+          [res.code, strip(res.stderr)],
+          [1, expected],
+          'should fail'
+        )
+      }
+    })
 
-        st.equal(
-          stderr.slice(0, stderr.indexOf(' in ')),
-          'Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character \'b\' at 1:6',
-          'should report'
-        );
-      });
-    });
+    t.test('should honour `' + flag + '`', function(st) {
+      var bin = join(fixtures, 'plugins', 'cli.js')
+      var opts = './plugin=foo:{bar:"baz",qux:1,quux:true}'
 
-    t.test('should honour `' + flag + '`', function (st) {
-      var cwd = join(fixtures, 'plugins');
-      var bin = join(cwd, 'cli.js');
-      var opts = './plugin=foo:{bar:"baz",qux:1,quux:true}';
+      st.plan(1)
 
-      st.plan(2);
+      execa(bin, ['one.txt', flag, opts]).then(onsuccess, st.fail)
 
-      execa(bin, ['one.txt', flag, opts]).then(function (result) {
-        /* Attacher log JSON.stringified options. */
-        st.equal(
-          result.stdout,
+      function onsuccess(res) {
+        st.deepEqual(
+          [res.stdout, strip(res.stderr)],
           [
-            '{"foo":{"bar":"baz","qux":1,"quux":true}}',
-            'one'
-          ].join('\n'),
-          'should pass settings and output'
-        );
-
-        st.equal(
-          strip(result.stderr),
-          [
+            '{"foo":{"bar":"baz","qux":1,"quux":true}}\none',
             'one.txt: no issues found'
-          ].join('\n'),
-          'should report'
-        );
-      });
-    });
-  });
+          ],
+          'should fail'
+        )
+      }
+    })
+  })
 
-  t.test('should honour `--report`', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
+  t.test('should honour `--report`', function(st) {
+    var expected = JSON.stringify([
+      {
+        path: 'alpha.text',
+        cwd: cwd,
+        history: ['alpha.text'],
+        messages: []
+      }
+    ])
 
-    st.plan(2);
+    st.plan(1)
 
-    execa(bin, ['alpha.text', '--report', 'json']).then(function (result) {
+    execa(bin, ['alpha.text', '--report', 'json']).then(onsuccess, st.fail)
+
+    function onsuccess(res) {
+      st.deepEqual([res.stdout, res.stderr], ['alpha', expected], 'should work')
+    }
+  })
+
+  t.test('should honour `--report` with options', function(st) {
+    var expected = JSON.stringify(
+      [
+        {
+          path: 'alpha.text',
+          cwd: cwd,
+          history: ['alpha.text'],
+          messages: []
+        }
+      ],
+      null,
+      '\t'
+    )
+
+    var setting = 'json=pretty:"\\t"'
+
+    st.plan(1)
+
+    execa(bin, ['alpha.text', '--report', setting]).then(onsuccess, st.fail)
+
+    function onsuccess(res) {
+      st.deepEqual([res.stdout, res.stderr], ['alpha', expected], 'should work')
+    }
+  })
+
+  t.test('should fail on `--report` without value', function(st) {
+    st.plan(1)
+
+    execa(bin, ['.', '--report']).then(st.fail, onfail)
+
+    function onfail(res) {
       st.deepEqual(
-        [result.stdout, result.stderr],
-        [
-          'alpha',
-          JSON.stringify([{
-            path: 'alpha.text',
-            cwd: cwd,
-            history: ['alpha.text'],
-            messages: []
-          }])
-        ],
-        'should support the flag'
-      );
-    });
-
-    execa(bin, ['alpha.text', '--report', 'json=pretty:"\\t"']).then(function (result) {
-      st.deepEqual(
-        [result.stdout, result.stderr],
-        [
-          'alpha',
-          JSON.stringify([{
-            path: 'alpha.text',
-            cwd: cwd,
-            history: ['alpha.text'],
-            messages: []
-          }], null, '\t')
-        ],
-        'should support settings'
-      );
-    });
-  });
-
-  t.test('should fail on `--report` without value', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
-
-    st.plan(1);
-
-    execa(bin, ['.', '--report']).catch(function (err) {
-      st.deepEqual(
-        [err.code, err.stderr],
+        [res.code, res.stderr],
         [1, 'Error: Missing value:  --report <reporter> specify reporter\n'],
         'should fail'
-      );
-    });
-  });
+      )
+    }
+  })
 
-  t.test('should honour `--watch`', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
-    var doc = join(cwd, 'watch.txt');
-    var resolved = false;
-    var proc;
+  t.test('should honour `--watch`', function(st) {
+    var expected = [
+      'Watching... (press CTRL+C to exit)',
+      'watch.txt: no issues found',
+      'watch.txt: no issues found',
+      ''
+    ].join('\n')
+    var doc = join(cwd, 'watch.txt')
+    var delay = 3000
+    var resolved = false
+    var proc
 
-    st.plan(4);
+    st.plan(3)
 
-    touch.sync(doc);
+    touch.sync(doc)
 
-    proc = execa(bin, ['watch.txt', '-w']);
+    proc = execa(bin, ['watch.txt', '-w'])
+    proc.then(onsuccess, st.fail)
 
-    proc.then(function (result) {
-      rm(doc);
+    setTimeout(seeYouLaterAlligator, delay)
 
-      resolved = true;
+    function onsuccess(res) {
+      resolved = true
+      rm(doc)
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
 
-      st.equal(result.stdout, '', 'should not output');
+    function seeYouLaterAlligator() {
+      st.equal(resolved, false, 'should still be running (#1)')
+      touch.sync(doc)
+      setTimeout(afterAWhileCrocodile, delay)
+    }
 
-      st.equal(
-        strip(result.stderr),
-        [
-          'Watching... (press CTRL+C to exit)',
-          'watch.txt: no issues found',
-          'watch.txt: no issues found',
-          ''
-        ].join('\n'),
-        'should debug and report'
-      );
-    });
+    function afterAWhileCrocodile() {
+      st.equal(resolved, false, 'should still be running (#2)')
+      proc.kill('SIGINT')
+    }
+  })
 
-    setTimeout(function () {
-      st.equal(resolved, false, 'should still be running (#1)');
+  t.test('should not regenerate when watching', function(st) {
+    var expected = [
+      'Watching... (press CTRL+C to exit)',
+      'Note: Ignoring `--output` until exit.',
+      'watch.txt: no issues found',
+      'watch.txt: no issues found',
+      '',
+      'watch.txt: written'
+    ].join('\n')
+    var doc = join(cwd, 'watch.txt')
+    var resolved = false
+    var delay = 3000
+    var proc
 
-      touch.sync(doc);
+    st.plan(3)
 
-      setTimeout(function () {
-        st.equal(resolved, false, 'should still be running (#2)');
+    touch.sync(doc)
 
-        proc.kill('SIGINT');
-      }, 3000);
-    }, 3000);
-  });
+    proc = execa(bin, ['watch.txt', '-wo'])
+    proc.then(onsuccess, st.fail)
 
-  t.test('should not regenerate when watching', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
-    var doc = join(cwd, 'watch.txt');
-    var resolved = false;
-    var proc;
+    setTimeout(seeYouLaterAlligator, delay)
 
-    st.plan(4);
+    function onsuccess(res) {
+      resolved = true
 
-    touch.sync(doc);
+      rm(doc)
 
-    proc = execa(bin, ['watch.txt', '-wo']);
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
 
-    proc.then(function (result) {
-      rm(doc);
+    function seeYouLaterAlligator() {
+      st.equal(resolved, false, 'should still be running (#1)')
+      touch.sync(doc)
+      setTimeout(afterAWhileCrocodile, delay)
+    }
 
-      resolved = true;
+    function afterAWhileCrocodile() {
+      st.equal(resolved, false, 'should still be running (#2)')
+      proc.kill('SIGINT')
+    }
+  })
 
-      st.equal(result.stdout, '', 'should not output');
+  t.test('should exit on fatal errors when watching', function(st) {
+    var expected = [
+      'Watching... (press CTRL+C to exit)',
+      'Error: No input'
+    ].join('\n')
 
-      st.equal(
-        strip(result.stderr),
-        [
-          'Watching... (press CTRL+C to exit)',
-          'Note: Ignoring `--output` until exit.',
-          'watch.txt: no issues found',
-          'watch.txt: no issues found',
-          '',
-          'watch.txt: written'
-        ].join('\n'),
-        'should debug and report'
-      );
-    });
+    st.plan(1)
 
-    setTimeout(function () {
-      st.equal(resolved, false, 'should still be running (#1)');
+    execa(bin, ['-w']).then(st.fail, onfail)
 
-      touch.sync(doc);
+    function onfail(res) {
+      var actual = strip(res.stderr)
+        .split('\n')
+        .slice(0, 2)
+        .join('\n')
 
-      setTimeout(function () {
-        st.equal(resolved, false, 'should still be running (#2)');
+      st.deepEqual([res.code, actual], [1, expected], 'should fail')
+    }
+  })
 
-        proc.kill('SIGINT');
-      }, 3000);
-    }, 3000);
-  });
+  t.test('should report uncaught exceptions', function(st) {
+    var bin = join(fixtures, 'uncaught-errors', 'cli.js')
+    var expected = 'one.txt: no issues found\nfoo\n'
 
-  t.test('should exit on fatal errors when watching', function (st) {
-    var cwd = join(fixtures, 'example');
-    var bin = join(cwd, 'cli.js');
+    st.plan(1)
 
-    st.plan(2);
+    execa(bin, ['.', '-u', './plugin']).then(st.fail, onfail)
 
-    execa(bin, ['-w']).catch(function (err) {
-      var stderr = strip(err.stderr);
+    function onfail(res) {
+      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+    }
+  })
 
-      st.equal(err.code, 1, 'should exit with 1');
-
-      st.equal(
-        stderr.split('\n').slice(0, 2).join('\n'),
-        [
-          'Watching... (press CTRL+C to exit)',
-          'Error: No input'
-        ].join('\n'),
-        'should show the error'
-      );
-    });
-  });
-
-  t.test('should report uncaught exceptions', function (st) {
-    var cwd = join(fixtures, 'uncaught-errors');
-    var bin = join(cwd, 'cli.js');
-
-    st.plan(2);
-
-    execa(bin, ['.', '-u', './plugin']).catch(function (err) {
-      st.equal(err.code, 1, 'should exit with `1`');
-
-      st.equal(
-        strip(err.stderr),
-        [
-          'one.txt: no issues found',
-          'foo',
-          ''
-        ].join('\n'),
-        'should report uncaught exceptions'
-      );
-    });
-  });
-
-  t.end();
-});
+  t.end()
+})

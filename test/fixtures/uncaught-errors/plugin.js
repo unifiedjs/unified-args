@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-module.exports = function () {};
+module.exports = function() {}
 
-setTimeout(thrower, 1000);
+setTimeout(thrower, 1000)
 
 function thrower() {
-  throw 'foo';
+  throw 'foo'
 }

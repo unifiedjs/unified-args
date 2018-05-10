@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-module.exports = plugin;
+module.exports = plugin
 
 function plugin(options) {
-  console.log(JSON.stringify(options));
+  console.log(JSON.stringify(options))
 }

@@ -27,14 +27,14 @@ This example creates a CLI for [**remark**][remark], loading
 
 ```js
 #!/usr/bin/env node
-'use strict';
+'use strict'
 
-var start = require('unified-args');
-var extensions = require('markdown-extensions');
-var remark = require('remark');
-var pack = require('remark/package.json');
+var start = require('unified-args')
+var extensions = require('markdown-extensions')
+var remark = require('remark')
+var pack = require('remark/package.json')
 
-var name = pack.name;
+var name = pack.name
 
 start({
   processor: remark,
@@ -46,7 +46,7 @@ start({
   packageField: name + 'Config',
   rcName: '.' + name + 'rc',
   ignoreName: '.' + name + 'ignore'
-});
+})
 ```
 
 ## Table of Contents
