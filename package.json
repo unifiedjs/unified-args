@@ -21,10 +21,10 @@
     "lib/"
   ],
   "dependencies": {
-    "camelcase": "^4.0.0",
+    "camelcase": "^5.0.0",
     "chalk": "^2.0.0",
-    "chokidar": "^1.5.1",
-    "json5": "^0.5.1",
+    "chokidar": "^2.0.0",
+    "json5": "^1.0.0",
     "minimist": "^1.2.0",
     "text-table": "^0.2.0",
     "unified-engine": "^5.1.0"

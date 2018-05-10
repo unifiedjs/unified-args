@@ -301,8 +301,7 @@ test('unified-args', function (t) {
 
         st.equal(
           stderr.slice(0, stderr.indexOf(' in ')),
-          'Error: Cannot parse `foo:bar` as JSON: Unexpected \'b\' at line 1 ' +
-          'column 7 of the JSON5 data. Still to read: "bar}"',
+          'Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character \'b\' at 1:6',
           'should report'
         );
       });
@@ -392,8 +391,7 @@ test('unified-args', function (t) {
 
         st.equal(
           stderr.slice(0, stderr.indexOf(' in ')),
-          'Error: Cannot parse `foo:bar` as JSON: Unexpected \'b\' at line 1 ' +
-          'column 7 of the JSON5 data. Still to read: "bar}"',
+          'Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character \'b\' at 1:6',
           'should report'
         );
       });
