@@ -202,7 +202,7 @@ test('unified-args', function (t) {
     execa.stderr(bin, ['--color', 'one.txt']).then(function (result) {
       st.equal(
         result,
-        '\x1b[4m\x1b[32mone.txt\x1b[39m\x1b[24m: no issues found',
+        '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found',
         'should report'
       );
     });
