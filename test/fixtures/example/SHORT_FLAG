@@ -2,6 +2,7 @@ Error: Unknown short option `-n`, expected:
   -h  --help                output usage information
   -v  --version             output version number
   -o  --output [path]       specify output location
+  -p  --replace             fix and replace file(s)
   -r  --rc-path <path>      specify configuration file
   -i  --ignore-path <path>  specify ignore file
   -s  --setting <settings>  specify settings

@@ -20,6 +20,13 @@
     "value": "[path]"
   },
   {
+    "long": "replace",
+    "description": "fix and replace file(s)",
+    "short": "p",
+    "type": "boolean",
+    "default": false
+  },
+  {
     "long": "rc-path",
     "description": "specify configuration file",
     "short": "r",

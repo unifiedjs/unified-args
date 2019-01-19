@@ -554,5 +554,17 @@ test('unified-args', function(t) {
     }
   })
 
+  t.test('should fail when both replace and output are set', function(st) {
+    var bin = join(fixtures, 'uncaught-errors', 'cli.js')
+    var expected =
+      'Error: `--replace` and `--output` can not be used together\n'
+
+    execa(bin, ['.', '--replace', '--output']).then(st.fail, onfail)
+
+    function onfail(res) {
+      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+    }
+  })
+
   t.end()
 })
