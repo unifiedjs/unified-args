@@ -41,6 +41,7 @@
     "strip-ansi": "^5.0.0",
     "tape": "^4.0.0",
     "touch": "^3.0.0",
+    "tree-kill": "^1.2.1",
     "unified": "^7.0.0",
     "vfile-reporter-json": "^2.0.0",
     "xo": "^0.24.0",

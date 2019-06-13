@@ -8,6 +8,7 @@ var test = require('tape')
 var touch = require('touch')
 var strip = require('strip-ansi')
 var figures = require('figures')
+var kill = require('tree-kill')
 
 var join = path.join
 var read = fs.readFileSync
@@ -474,7 +475,7 @@ test('unified-args', function(t) {
 
     function afterAWhileCrocodile() {
       st.equal(resolved, false, 'should still be running (#2)')
-      proc.kill('SIGINT')
+      kill(proc.pid, 'SIGINT')
     }
   })
 
@@ -521,7 +522,7 @@ test('unified-args', function(t) {
 
     function afterAWhileCrocodile() {
       st.equal(resolved, false, 'should still be running (#2)')
-      proc.kill('SIGINT')
+      kill(proc.pid, 'SIGINT')
     }
   })
 
