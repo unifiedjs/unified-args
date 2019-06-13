@@ -1,27 +1,35 @@
-# unified-args [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
+# unified-args
+
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
 Interface for creating CLIs around [**unified**][unified] processors.
-Wrapper around the [**engine**][engine] to configure it with command-line
-arguments.  Should be `require`d and configured in an executable script,
-on its own, as it handles the whole process.
+Wrapper around [`unifiedjs/unified-engine`][engine] to configure it with
+command-line arguments.
+Should be `require`d and configured in an executable script, on its own, as it
+handles the whole process.
 
 [`unifiedjs.github.io`][site], the website for **unified** provides a good
-overview about what unified can do.  Make sure to visit it and try its
-introductionary [Guides][].
+overview about what unified can do.
+Make sure to visit it and try its introductionary [Guides][].
 
-## Installation
+## Install
 
 [npm][]:
 
-```bash
+```sh
 npm install unified-args
 ```
 
-## Usage
+## Use
 
-This example creates a CLI for [**remark**][remark], loading
-`remark-` plugins, searching for markdown files, and loading
-[configuration][config-file] and [ignore][ignore-file] files.
+This example creates a CLI for [**remark**][remark], loading `remark-` plugins,
+searching for markdown files, and loading [configuration][config-file] and
+[ignore][ignore-file] files.
 
 `cli` (you can make it runnable with: `chmod +x cli`):
 
@@ -119,9 +127,8 @@ All options are required.
 
 ## CLI
 
-CLIs created with **unified-args**, such as the [example][usage] above,
-creates an interface similar to the below (run `cli --help` for accurate
-information):
+CLIs created with **unified-args**, such as the [example][usage] above, creates
+an interface similar to the below (run `cli --help` for accurate information):
 
 ```txt
 Usage: remark [options] [path | glob ...]
@@ -167,14 +174,14 @@ Examples:
 
 All non-options are seen as input and can be:
 
-*   Paths (`cli README.txt`) and [globs][glob] (`cli *.txt`) pointing
-    to files to load
+*   Paths (`cli readme.txt`) and [globs][glob] (`cli *.txt`) pointing to files
+    to load
 *   Paths (`cli test`) and globs (`cli fixtures/{in,out}`) pointing to
-    directories.  These are searched for files with known [extensions][ext]
-    which are not ignored by patterns in [ignore files][ignore-file].
-    The default behaviour is to exclude files in `node_modules`
-    and hidden directories (those starting with a dot: `.`) unless explicitly
-    given
+    directories.
+    These are searched for files with known [extensions][ext] which are not
+    ignored by patterns in [ignore files][ignore-file].
+    The default behaviour is to exclude files in `node_modules` and hidden
+    directories (those starting with a dot: `.`) unless explicitly given
 
 <!-- Options: -->
 
@@ -211,10 +218,10 @@ cli . --output doc
 cli input.txt --output doc/output.text
 ```
 
-Whether to write successfully processed files, and where to.  Can be
-set from [configuration files][config-file].
+Whether to write successfully processed files, and where to.
+Can be set from [configuration files][config-file].
 
-*   If output is **not** given, files are not written to the file-system
+*   If output is **not** given, files are not written to the file system
 *   If output is given **without** `path`, input files are overwritten when
     successful
 *   If output is given with `path` and it points to an existing directory,
@@ -236,8 +243,8 @@ set from [configuration files][config-file].
 cli . --rc-path config.json
 ```
 
-File-path to a JSON [configuration file][config-file] to load, regardless
-of [`--config`][config].
+File path to a JSON [configuration file][config-file] to load, regardless of
+[`--config`][config].
 
 *   **Default**: none
 *   **Alias**: `-r`
@@ -249,7 +256,7 @@ of [`--config`][config].
 cli . --ignore-path .gitignore
 ```
 
-File-path to an [ignore file][ignore-file] to load, regardless of
+File path to an [ignore file][ignore-file] to load, regardless of
 [`--ignore`][ignore].
 
 *   **Default**: none
@@ -265,8 +272,8 @@ cli input.txt --setting echo-foxtrot:-2
 cli input.txt --setting 'golf: false, hotel-india: ["juliet", 1]'
 ```
 
-Configuration for the parser and compiler of the processor.  Can be set
-from [configuration files][config-file].
+Configuration for the parser and compiler of the processor.
+Can be set from [configuration files][config-file].
 
 The given settings are [JSON5][], with one exceptions: surrounding braces must
 not be used: `"foo": 1, "bar": "baz"` is valid
@@ -286,14 +293,14 @@ cli input.txt --report 'json=pretty:"\t"'
 cli input.txt --report pretty --report json # only last one is used
 ```
 
-[Reporter][] to load by its name or path, optionally with options, and use
-to report metadata about eevery processed file.
+[Reporter][] to load by its name or path, optionally with options, and use to
+report metadata about eevery processed file.
 
-To pass options, follow the name by an equals sign (`=`) and settings,
-which have the same in syntax as [`--setting <settings>`][setting].
+To pass options, follow the name by an equals sign (`=`) and settings, which
+have the same in syntax as [`--setting <settings>`][setting].
 
-The prefix `vfile-reporter-` can be omitted.  Prefixed reporters are preferred
-over modules without prefix.
+The prefix `vfile-reporter-` can be omitted.
+Prefixed reporters are preferred over modules without prefix.
 
 If multiple reporters are given, the last one is used.
 
@@ -304,8 +311,9 @@ If multiple reporters are given, the last one is used.
 ###### Note
 
 The [`quiet`][quiet], [`silent`][silent], and [`color`][color] options may not
-work with the used reporter.  If they are given, they are preferred over the
-same properties in reporter settings.
+work with the used reporter.
+If they are given, they are preferred over the same properties in reporter
+settings.
 
 ### `--use <plugin>`
 
@@ -314,14 +322,15 @@ cli input.txt --use man
 cli input.txt --use 'toc=max-depth:3'
 ```
 
-Plug-in to load by its name or path, optionally with options, and use
-on every processed file.  Can be set from [configuration files][config-file].
+Plugin to load by its name or path, optionally with options, and use on every
+processed file.
+Can be set from [configuration files][config-file].
 
-To pass options, follow the plugin by an equals sign (`=`) and settings,
-which have the same in syntax as [`--setting <settings>`][setting].
+To pass options, follow the plugin by an equals sign (`=`) and settings, which
+have the same in syntax as [`--setting <settings>`][setting].
 
-Plug-ins prefixed with the [configured `pluginPrefix`][configured] are
-preferred over modules without prefix.
+Plugins prefixed with the [configured `pluginPrefix`][configured] are preferred
+over modules without prefix.
 
 *   **Default**: none
 *   **Alias**: `-u`
@@ -360,9 +369,9 @@ Process as normal, then watch found files and reprocess when they change.
 The watch is stopped when `SIGINT` is received (usually done by pressing
 `CTRL-C`).
 
-If [`--output`][output] is given **without** `path` it is not honoured,
-to prevent an infinite loop.  When the watch closes, a final process
-runs including `--output`.
+If [`--output`][output] is given **without** `path` it is not honoured, to
+prevent an infinite loop.
+When the watch closes, a final process runs including `--output`.
 
 *   **Default**: off
 *   **Alias**: `-w`
@@ -373,8 +382,8 @@ runs including `--output`.
 cli --tree < input.json > output.json
 ```
 
-Treat input as a syntax tree in JSON and output the transformed syntax
-tree.  This runs neither the [parsing nor the compilation phase][description].
+Treat input as a syntax tree in JSON and output the transformed syntax tree.
+This runs neither the [parsing nor the compilation phase][description].
 
 *   **Default**: off
 *   **Alias**: `-t`
@@ -386,8 +395,8 @@ tree.  This runs neither the [parsing nor the compilation phase][description].
 cli --tree-in < input.json > input.txt
 ```
 
-Treat input as a syntax tree in JSON.  This does not run the [parsing
-phase][description].
+Treat input as a syntax tree in JSON.
+This does not run the [parsing phase][description].
 
 *   **Default**: off
 *   **Engine**: [`treeIn`][engine-tree-in]
@@ -398,8 +407,8 @@ phase][description].
 cli --tree-out < input.txt > output.json
 ```
 
-Output the transformed syntax tree.  This does not run the [compilation
-phase][description].
+Output the transformed syntax tree.
+This does not run the [compilation phase][description].
 
 *   **Default**: off
 *   **Engine**: [`treeOut`][engine-tree-out]
@@ -423,8 +432,8 @@ This does not run the [compilation phase][description].
 cli input.txt --quiet
 ```
 
-Ignore files without any messages in the report.  The default behaviour
-is to show a success message.
+Ignore files without any messages in the report.
+The default behaviour is to show a success message.
 
 *   **Default**: off
 *   **Alias**: `-q`
@@ -446,7 +455,8 @@ work with the used reporter.
 cli input.txt --silent
 ```
 
-Show only fatal errors in the report.  Turns [`--quiet`][quiet] on.
+Show only fatal errors in the report.
+Turns [`--quiet`][quiet] on.
 
 *   **Default**: off
 *   **Alias**: `-S`
@@ -463,8 +473,8 @@ This option may not work depending on the reporter given in
 cli input.txt --frail
 ```
 
-Exit with a status code of `1` if warnings or errors occur.  The default
-behaviour is to exit with `1` on errors.
+Exit with a status code of `1` if warnings or errors occur.
+The default behaviour is to exit with `1` on errors.
 
 *   **Default**: off
 *   **Alias**: `-f`
@@ -489,8 +499,8 @@ cli input.txt --no-stdout
 
 Whether to write a processed file to **stdout**(4).
 
-*   **Default**: off if [`--output`][output] or [`--watch`][watch] are given,
-    or if multiple files could be processed
+*   **Default**: off if [`--output`][output] or [`--watch`][watch] are given, or
+    if multiple files could be processed
 *   **Engine**: [`out`][engine-out]
 
 ### `--color`
@@ -547,16 +557,18 @@ CLIs created with **unified-args** exit with:
 
 ## Debugging
 
-CLIs can be debugged by setting the [`DEBUG`][debug] environment
-variable to `*`, such as `DEBUG="*" cli example.txt`.
+CLIs can be debugged by setting the [`DEBUG`][debug] environment variable to
+`*`, such as `DEBUG="*" cli example.txt`.
 
 ## Contribute
 
-See [`contribute.md` in `unifiedjs/unified`][contribute] for ways to get
-started.
+See [`contributing.md`][contributing] in [`unifiedjs/.github`][health] for ways
+to get started.
+See [`support.md`][support] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -564,15 +576,37 @@ repository, organisation, or community you agree to abide by its terms.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/unifiedjs/unified-args.svg
+[build-badge]: https://img.shields.io/travis/unifiedjs/unified-args.svg
 
-[travis]: https://travis-ci.org/unifiedjs/unified-args
+[build]: https://travis-ci.org/unifiedjs/unified-args
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
+[coverage-badge]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
 
-[codecov]: https://codecov.io/github/unifiedjs/unified-args
+[coverage]: https://codecov.io/github/unifiedjs/unified-args
+
+[downloads-badge]: https://img.shields.io/npm/dm/unified-args.svg
+
+[downloads]: https://www.npmjs.com/package/unified-args
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified
 
 [npm]: https://docs.npmjs.com/cli/install
+
+[health]: https://github.com/unifiedjs/.github
+
+[contributing]: https://github.com/unifiedjs/.github/blob/master/contributing.md
+
+[support]: https://github.com/unifiedjs/.github/blob/master/support.md
+
+[coc]: https://github.com/unifiedjs/.github/blob/master/code-of-conduct.md
 
 [license]: license
 
@@ -652,7 +686,7 @@ repository, organisation, or community you agree to abide by its terms.
 
 [configured]: #startconfiguration
 
-[usage]: #usage
+[usage]: #use
 
 [watch]: #--watch
 
@@ -689,7 +723,3 @@ repository, organisation, or community you agree to abide by its terms.
 [inspect]: https://github.com/syntax-tree/unist-util-inspect
 
 [json5]: https://github.com/json5/json5
-
-[contribute]: https://github.com/unifiedjs/unified/blob/master/contributing.md
-
-[coc]: https://github.com/unifiedjs/unified/blob/master/code-of-conduct.md
