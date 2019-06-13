@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 'use strict'
 
-var extend = require('xtend')
+/* eslint-disable import/no-extraneous-dependencies */
+var xtend = require('xtend')
+/* eslint-enable import/no-extraneous-dependencies */
+
 var start = require('../../..')
 var config = require('../config')
 var processor = require('../processor')
 
 start(
-  extend(config, {
+  xtend(config, {
     cwd: __dirname,
     processor: processor
   })
