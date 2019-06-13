@@ -268,7 +268,7 @@ test('unified-args', function(t) {
 
       st.plan(1)
 
-      /* Should be quoted. */
+      // Should be quoted.
       execa(bin, ['.', flag, 'foo:bar']).then(st.fail, onfail)
 
       function onfail(res) {
@@ -288,7 +288,7 @@ test('unified-args', function(t) {
       execa(bin, ['one.txt', flag, '"foo-bar":"baz"']).then(onsuccess, st.fail)
 
       function onsuccess(res) {
-        /* Parser and Compiler both log stringified settings. */
+        // Parser and Compiler both log stringified settings.
         st.deepEqual(
           [res.stdout, strip(res.stderr)],
           ['{"fooBar":"baz"}\none', 'one.txt: no issues found'],
@@ -325,7 +325,7 @@ test('unified-args', function(t) {
       execa(bin, ['one.txt', flag, './plugin']).then(onsuccess, st.fail)
 
       function onsuccess(res) {
-        /* Attacher logs options, which are `undefined`. */
+        // Attacher logs options, which are `undefined`.
         st.deepEqual(
           [res.stdout, strip(res.stderr)],
           ['undefined\none', 'one.txt: no issues found'],
@@ -340,7 +340,7 @@ test('unified-args', function(t) {
 
       st.plan(1)
 
-      /* Should be quoted. */
+      // Should be quoted.
       execa(bin, ['.', flag, './plugin=foo:bar']).then(st.fail, onfail)
 
       function onfail(res) {
