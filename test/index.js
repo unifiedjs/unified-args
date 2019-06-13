@@ -120,7 +120,7 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad short flag', function(st) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8').replace(/\r/g, '')
 
     st.plan(1)
 
@@ -132,7 +132,7 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad grouped short flag', function(st) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8').replace(/\r/g, '')
 
     st.plan(1)
 
@@ -144,7 +144,7 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad long flag', function(st) {
-    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8')
+    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8').replace(/\r/g, '')
 
     st.plan(1)
 
@@ -157,7 +157,9 @@ test('unified-args', function(t) {
 
   helpFlags.forEach(function(flag) {
     t.test('should show help on `' + flag + '`', function(st) {
-      var expected = read(join(cwd, 'HELP'), 'utf8').trim()
+      var expected = read(join(cwd, 'HELP'), 'utf8')
+        .replace(/\r/g, '')
+        .trim()
 
       st.plan(1)
 
