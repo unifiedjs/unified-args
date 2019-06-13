@@ -7,10 +7,12 @@ var bail = require('bail')
 var test = require('tape')
 var touch = require('touch')
 var strip = require('strip-ansi')
+var figures = require('figures')
 
 var join = path.join
 var read = fs.readFileSync
 var rm = fs.unlinkSync
+var sep = path.sep
 
 var fixtures = join(__dirname, 'fixtures')
 
@@ -31,7 +33,7 @@ test('unified-args', function(t) {
       'missing.txt',
       '  1:1  error  No such file or directory',
       '',
-      '✖ 1 error',
+      figures.cross + ' 1 error',
       ''
     ].join('\n')
 
@@ -61,8 +63,8 @@ test('unified-args', function(t) {
   t.test('should accept a path to a directory', function(st) {
     var expected = [
       'one.txt: no issues found',
-      'three/five.txt: no issues found',
-      'three/four.txt: no issues found',
+      'three' + sep + 'five.txt: no issues found',
+      'three' + sep + 'four.txt: no issues found',
       'two.txt: no issues found'
     ].join('\n')
 
@@ -100,8 +102,8 @@ test('unified-args', function(t) {
 
   t.test('should accept a glob to a directory', function(st) {
     var expected = [
-      'three/five.txt: no issues found',
-      'three/four.txt: no issues found'
+      'three' + sep + 'five.txt: no issues found',
+      'three' + sep + 'four.txt: no issues found'
     ].join('\n')
 
     st.plan(1)
@@ -209,8 +211,8 @@ test('unified-args', function(t) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
-        'charlie/delta.text: no issues found',
-        'charlie/echo.text: no issues found'
+        'charlie' + sep + 'delta.text: no issues found',
+        'charlie' + sep + 'echo.text: no issues found'
       ].join('\n')
 
       st.plan(1)
@@ -243,8 +245,8 @@ test('unified-args', function(t) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
-        'charlie/delta.text: no issues found',
-        'charlie/echo.text: no issues found'
+        'charlie' + sep + 'delta.text: no issues found',
+        'charlie' + sep + 'echo.text: no issues found'
       ].join('\n')
 
       st.plan(1)
