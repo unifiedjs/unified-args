@@ -484,14 +484,20 @@ test('unified-args', function(t) {
   })
 
   t.test('should not regenerate when watching', function(st) {
-    var expected = [
+    var lines = [
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
       'watch.txt: no issues found',
-      'watch.txt: no issues found',
-      '',
-      'watch.txt: written'
-    ].join('\n')
+      'watch.txt: no issues found'
+    ]
+
+    // Windows immediatly quits.
+    // Other OSes support finalising things.
+    if (process.platform !== 'win32') {
+      lines.push('', 'watch.txt: written')
+    }
+
+    var expected = lines.join('\n')
     var doc = join(cwd, 'watch.txt')
     var resolved = false
     var delay = 3000

@@ -371,7 +371,8 @@ The watch is stopped when `SIGINT` is received (usually done by pressing
 
 If [`--output`][output] is given **without** `path` it is not honoured, to
 prevent an infinite loop.
-When the watch closes, a final process runs including `--output`.
+On operating systems other than Windows, when the watch closes, a final process
+runs including `--output`.
 
 *   **Default**: off
 *   **Alias**: `-w`
