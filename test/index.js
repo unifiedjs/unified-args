@@ -8,7 +8,6 @@ var test = require('tape')
 var touch = require('touch')
 var strip = require('strip-ansi')
 var figures = require('figures')
-var kill = require('tree-kill')
 
 var join = path.join
 var read = fs.readFileSync
@@ -453,7 +452,12 @@ test('unified-args', function(t) {
     touch.sync(doc)
 
     proc = execa(bin, ['watch.txt', '-w'])
-    proc.then(onsuccess, st.fail)
+
+    if (process.platform === 'win32') {
+      proc.then(st.fail, onsuccess)
+    } else {
+      proc.then(onsuccess, st.fail)
+    }
 
     setTimeout(seeYouLaterAlligator, delay)
 
@@ -475,7 +479,7 @@ test('unified-args', function(t) {
 
     function afterAWhileCrocodile() {
       st.equal(resolved, false, 'should still be running (#2)')
-      kill(proc.pid, 'SIGINT')
+      proc.kill('SIGINT')
     }
   })
 
@@ -498,7 +502,12 @@ test('unified-args', function(t) {
     touch.sync(doc)
 
     proc = execa(bin, ['watch.txt', '-wo'])
-    proc.then(onsuccess, st.fail)
+
+    if (process.platform === 'win32') {
+      proc.then(st.fail, onsuccess)
+    } else {
+      proc.then(onsuccess, st.fail)
+    }
 
     setTimeout(seeYouLaterAlligator, delay)
 
@@ -522,7 +531,7 @@ test('unified-args', function(t) {
 
     function afterAWhileCrocodile() {
       st.equal(resolved, false, 'should still be running (#2)')
-      kill(proc.pid, 'SIGINT')
+      proc.kill('SIGINT')
     }
   })
 
