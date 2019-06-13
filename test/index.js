@@ -488,13 +488,14 @@ test('unified-args', function(t) {
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
       'watch.txt: no issues found',
-      'watch.txt: no issues found'
+      'watch.txt: no issues found',
+      ''
     ]
 
     // Windows immediatly quits.
     // Other OSes support finalising things.
     if (process.platform !== 'win32') {
-      lines.push('', 'watch.txt: written')
+      lines.push('watch.txt: written')
     }
 
     var expected = lines.join('\n')
