@@ -5,4 +5,8 @@ os:
 node_js:
   - lts/dubnium
   - node
-after_script: bash <(curl -s https://codecov.io/bash)
+script:
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then npm test; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then npm run test-api; fi
+after_script:
+  - bash <(curl -s https://codecov.io/bash)

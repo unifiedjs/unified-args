@@ -7,10 +7,12 @@ var bail = require('bail')
 var test = require('tape')
 var touch = require('touch')
 var strip = require('strip-ansi')
+var figures = require('figures')
 
 var join = path.join
 var read = fs.readFileSync
 var rm = fs.unlinkSync
+var sep = path.sep
 
 var fixtures = join(__dirname, 'fixtures')
 
@@ -31,7 +33,7 @@ test('unified-args', function(t) {
       'missing.txt',
       '  1:1  error  No such file or directory',
       '',
-      '✖ 1 error',
+      figures.cross + ' 1 error',
       ''
     ].join('\n')
 
@@ -61,8 +63,8 @@ test('unified-args', function(t) {
   t.test('should accept a path to a directory', function(st) {
     var expected = [
       'one.txt: no issues found',
-      'three/five.txt: no issues found',
-      'three/four.txt: no issues found',
+      'three' + sep + 'five.txt: no issues found',
+      'three' + sep + 'four.txt: no issues found',
       'two.txt: no issues found'
     ].join('\n')
 
@@ -100,8 +102,8 @@ test('unified-args', function(t) {
 
   t.test('should accept a glob to a directory', function(st) {
     var expected = [
-      'three/five.txt: no issues found',
-      'three/four.txt: no issues found'
+      'three' + sep + 'five.txt: no issues found',
+      'three' + sep + 'four.txt: no issues found'
     ].join('\n')
 
     st.plan(1)
@@ -118,7 +120,7 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad short flag', function(st) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8').replace(/\r/g, '')
 
     st.plan(1)
 
@@ -130,7 +132,7 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad grouped short flag', function(st) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8').replace(/\r/g, '')
 
     st.plan(1)
 
@@ -142,7 +144,7 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad long flag', function(st) {
-    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8')
+    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8').replace(/\r/g, '')
 
     st.plan(1)
 
@@ -155,7 +157,9 @@ test('unified-args', function(t) {
 
   helpFlags.forEach(function(flag) {
     t.test('should show help on `' + flag + '`', function(st) {
-      var expected = read(join(cwd, 'HELP'), 'utf8').trim()
+      var expected = read(join(cwd, 'HELP'), 'utf8')
+        .replace(/\r/g, '')
+        .trim()
 
       st.plan(1)
 
@@ -209,8 +213,8 @@ test('unified-args', function(t) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
-        'charlie/delta.text: no issues found',
-        'charlie/echo.text: no issues found'
+        'charlie' + sep + 'delta.text: no issues found',
+        'charlie' + sep + 'echo.text: no issues found'
       ].join('\n')
 
       st.plan(1)
@@ -243,8 +247,8 @@ test('unified-args', function(t) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
-        'charlie/delta.text: no issues found',
-        'charlie/echo.text: no issues found'
+        'charlie' + sep + 'delta.text: no issues found',
+        'charlie' + sep + 'echo.text: no issues found'
       ].join('\n')
 
       st.plan(1)
@@ -448,7 +452,12 @@ test('unified-args', function(t) {
     touch.sync(doc)
 
     proc = execa(bin, ['watch.txt', '-w'])
-    proc.then(onsuccess, st.fail)
+
+    if (process.platform === 'win32') {
+      proc.then(st.fail, onsuccess)
+    } else {
+      proc.then(onsuccess, st.fail)
+    }
 
     setTimeout(seeYouLaterAlligator, delay)
 
@@ -475,14 +484,21 @@ test('unified-args', function(t) {
   })
 
   t.test('should not regenerate when watching', function(st) {
-    var expected = [
+    var lines = [
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
       'watch.txt: no issues found',
       'watch.txt: no issues found',
-      '',
-      'watch.txt: written'
-    ].join('\n')
+      ''
+    ]
+
+    // Windows immediatly quits.
+    // Other OSes support cleaning up things.
+    if (process.platform !== 'win32') {
+      lines.push('watch.txt: written')
+    }
+
+    var expected = lines.join('\n')
     var doc = join(cwd, 'watch.txt')
     var resolved = false
     var delay = 3000
@@ -492,8 +508,13 @@ test('unified-args', function(t) {
 
     touch.sync(doc)
 
-    proc = execa(bin, ['watch.txt', '-wo'])
-    proc.then(onsuccess, st.fail)
+    proc = execa(bin, ['watch.txt', '-w', '-o'])
+
+    if (process.platform === 'win32') {
+      proc.then(st.fail, onsuccess)
+    } else {
+      proc.then(onsuccess, st.fail)
+    }
 
     setTimeout(seeYouLaterAlligator, delay)
 
