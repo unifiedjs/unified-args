@@ -5,4 +5,9 @@ os:
 node_js:
   - lts/dubnium
   - node
-after_script: bash <(curl -s https://codecov.io/bash)
+after_script:
+  - echo "index"
+  - cat coverage/lcov-report/unified-args/index.js.html
+  - echo "options"
+  - cat coverage/lcov-report/unified-args/options.js.html
+  - bash <(curl -s https://codecov.io/bash)
