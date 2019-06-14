@@ -1,13 +1,13 @@
 language: node_js
 os:
   - windows
-  - linux
+  # - linux
 node_js:
-  - lts/dubnium
+  # - lts/dubnium
   - node
 after_script:
   - echo "index"
-  - cat coverage/lcov-report/unified-args/index.js.html
+  - cat coverage/lcov-report/unified-args/lib/index.js.html
   - echo "options"
-  - cat coverage/lcov-report/unified-args/options.js.html
+  - cat coverage/lcov-report/unified-args/lib/options.js.html
   - bash <(curl -s https://codecov.io/bash)
