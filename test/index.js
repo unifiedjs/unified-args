@@ -493,7 +493,7 @@ test('unified-args', function(t) {
     ]
 
     // Windows immediatly quits.
-    // Other OSes support finalising things.
+    // Other OSes support cleaning up things.
     if (process.platform !== 'win32') {
       lines.push('watch.txt: written')
     }
@@ -508,7 +508,7 @@ test('unified-args', function(t) {
 
     touch.sync(doc)
 
-    proc = execa(bin, ['watch.txt', '-wo'])
+    proc = execa(bin, ['watch.txt', '-w', '-o'])
 
     if (process.platform === 'win32') {
       proc.then(st.fail, onsuccess)

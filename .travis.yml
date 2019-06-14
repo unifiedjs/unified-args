@@ -5,9 +5,8 @@ os:
 node_js:
   # - lts/dubnium
   - node
+script:
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then npm test; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then npm run test-api; fi
 after_script:
-  - echo "index"
-  - cat coverage/lcov-report/unified-args/lib/index.js.html
-  - echo "options"
-  - cat coverage/lcov-report/unified-args/lib/options.js.html
   - bash <(curl -s https://codecov.io/bash)
