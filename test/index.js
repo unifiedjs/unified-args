@@ -33,8 +33,7 @@ test('unified-args', function(t) {
       'missing.txt',
       '  1:1  error  No such file or directory',
       '',
-      figures.cross + ' 1 error',
-      ''
+      figures.cross + ' 1 error'
     ].join('\n')
 
     st.plan(1)
@@ -42,7 +41,11 @@ test('unified-args', function(t) {
     execa(bin, ['missing.txt']).then(st.fail, onfail)
 
     function onfail(res) {
-      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+      st.deepEqual(
+        [res.exitCode, strip(res.stderr)],
+        [1, expected],
+        'should fail'
+      )
     }
   })
 
@@ -120,38 +123,56 @@ test('unified-args', function(t) {
   })
 
   t.test('should fail on a bad short flag', function(st) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8').replace(/\r/g, '')
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+      .replace(/\r/g, '')
+      .trim()
 
     st.plan(1)
 
     execa(bin, ['-n']).then(st.fail, onfail)
 
     function onfail(res) {
-      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+      st.deepEqual(
+        [res.exitCode, strip(res.stderr)],
+        [1, expected],
+        'should fail'
+      )
     }
   })
 
   t.test('should fail on a bad grouped short flag', function(st) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8').replace(/\r/g, '')
+    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+      .replace(/\r/g, '')
+      .trim()
 
     st.plan(1)
 
     execa(bin, ['-on']).then(st.fail, onfail)
 
     function onfail(res) {
-      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+      st.deepEqual(
+        [res.exitCode, strip(res.stderr)],
+        [1, expected],
+        'should fail'
+      )
     }
   })
 
   t.test('should fail on a bad long flag', function(st) {
-    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8').replace(/\r/g, '')
+    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8')
+      .replace(/\r/g, '')
+      .trim()
 
     st.plan(1)
 
     execa(bin, ['--no']).then(st.fail, onfail)
 
     function onfail(res) {
-      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+      st.deepEqual(
+        [res.exitCode, strip(res.stderr)],
+        [1, expected],
+        'should fail'
+      )
     }
   })
 
@@ -232,7 +253,7 @@ test('unified-args', function(t) {
 
     t.test('should fail on `' + flag + '` without value', function(st) {
       var expected =
-        'Error: Missing value: -e --ext <extensions> specify extensions\n'
+        'Error: Missing value: -e --ext <extensions> specify extensions'
 
       st.plan(1)
 
@@ -268,7 +289,7 @@ test('unified-args', function(t) {
   settingsFlags.forEach(function(flag) {
     t.test('should catch syntax errors in `' + flag + '`', function(st) {
       var expected =
-        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6\n"
+        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
 
       st.plan(1)
 
@@ -277,7 +298,7 @@ test('unified-args', function(t) {
 
       function onfail(res) {
         st.deepEqual(
-          [res.code, strip(res.stderr)],
+          [res.exitCode, strip(res.stderr)],
           [1, expected],
           'should fail'
         )
@@ -340,7 +361,7 @@ test('unified-args', function(t) {
 
     t.test('should catch syntax errors in `' + flag + '`', function(st) {
       var expected =
-        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6\n"
+        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
 
       st.plan(1)
 
@@ -349,7 +370,7 @@ test('unified-args', function(t) {
 
       function onfail(res) {
         st.deepEqual(
-          [res.code, strip(res.stderr)],
+          [res.exitCode, strip(res.stderr)],
           [1, expected],
           'should fail'
         )
@@ -428,8 +449,8 @@ test('unified-args', function(t) {
 
     function onfail(res) {
       st.deepEqual(
-        [res.code, res.stderr],
-        [1, 'Error: Missing value:  --report <reporter> specify reporter\n'],
+        [res.exitCode, res.stderr],
+        [1, 'Error: Missing value:  --report <reporter> specify reporter'],
         'should fail'
       )
     }
@@ -558,20 +579,24 @@ test('unified-args', function(t) {
         .slice(0, 2)
         .join('\n')
 
-      st.deepEqual([res.code, actual], [1, expected], 'should fail')
+      st.deepEqual([res.exitCode, actual], [1, expected], 'should fail')
     }
   })
 
   t.test('should report uncaught exceptions', function(st) {
     var bin = join(fixtures, 'uncaught-errors', 'cli.js')
-    var expected = 'one.txt: no issues found\nfoo\n'
+    var expected = 'one.txt: no issues found\nfoo'
 
     st.plan(1)
 
     execa(bin, ['.', '-u', './plugin']).then(st.fail, onfail)
 
     function onfail(res) {
-      st.deepEqual([res.code, strip(res.stderr)], [1, expected], 'should fail')
+      st.deepEqual(
+        [res.exitCode, strip(res.stderr)],
+        [1, expected],
+        'should fail'
+      )
     }
   })
 
