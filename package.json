@@ -28,7 +28,7 @@
     "json5": "^2.0.0",
     "minimist": "^1.2.0",
     "text-table": "^0.2.0",
-    "unified-engine": "^6.0.0"
+    "unified-engine": "^7.0.0"
   },
   "devDependencies": {
     "bail": "^1.0.0",
