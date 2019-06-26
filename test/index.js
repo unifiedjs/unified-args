@@ -460,8 +460,7 @@ test('unified-args', function(t) {
     var expected = [
       'Watching... (press CTRL+C to exit)',
       'watch.txt: no issues found',
-      'watch.txt: no issues found',
-      ''
+      'watch.txt: no issues found'
     ].join('\n')
     var doc = join(cwd, 'watch.txt')
     var delay = 3000
@@ -486,7 +485,7 @@ test('unified-args', function(t) {
       resolved = true
       rm(doc)
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [res.stdout, strip(res.stderr).trim()],
         ['', expected],
         'should work'
       )
@@ -509,14 +508,13 @@ test('unified-args', function(t) {
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
       'watch.txt: no issues found',
-      'watch.txt: no issues found',
-      ''
+      'watch.txt: no issues found'
     ]
 
     // Windows immediatly quits.
     // Other OSes support cleaning up things.
     if (process.platform !== 'win32') {
-      lines.push('watch.txt: written')
+      lines.push('', 'watch.txt: written')
     }
 
     var expected = lines.join('\n')
