@@ -102,6 +102,12 @@
     "value": "<path>"
   },
   {
+    "long": "ignore-pattern",
+    "description": "specify ignore patterns",
+    "type": "string",
+    "value": "<globs>"
+  },
+  {
     "long": "tree-in",
     "description": "specify input as syntax tree",
     "type": "boolean"

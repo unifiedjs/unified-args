@@ -456,6 +456,33 @@ test('unified-args', function(t) {
     }
   })
 
+  t.test('should support `--ignore-pattern`', function(st) {
+    var expected = [
+      'alpha.text: no issues found',
+      'bravo.text: no issues found',
+      'one.txt: no issues found',
+      'two.txt: no issues found'
+    ].join('\n')
+
+    st.plan(1)
+
+    execa(bin, [
+      '.',
+      '--ext',
+      'txt,text',
+      '--ignore-pattern',
+      'charlie/*,three/*.txt'
+    ]).then(onsuccess, st.fail)
+
+    function onsuccess(res) {
+      st.deepEqual(
+        [res.stdout, strip(res.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
+  })
+
   t.test('should honour `--watch`', function(st) {
     var expected = [
       'Watching... (press CTRL+C to exit)',
