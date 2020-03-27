@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-var xtend = require('xtend')
 var start = require('../../..')
 var config = require('../config')
 var processor = require('../processor')
 
 start(
-  xtend(config, {
+  Object.assign({}, config, {
     cwd: __dirname,
     processor: processor
   })
