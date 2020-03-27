@@ -5,7 +5,6 @@ var path = require('path')
 var execa = require('execa')
 var bail = require('bail')
 var test = require('tape')
-var touch = require('touch')
 var strip = require('strip-ansi')
 var figures = require('figures')
 
@@ -522,7 +521,7 @@ test('unified-args', function (t) {
 
     st.plan(3)
 
-    touch.sync(doc)
+    touch(doc)
 
     proc = execa(bin, ['watch.txt', '-w'])
 
@@ -546,7 +545,7 @@ test('unified-args', function (t) {
 
     function seeYouLaterAlligator() {
       st.equal(resolved, false, 'should still be running (#1)')
-      touch.sync(doc)
+      touch(doc)
       setTimeout(afterAWhileCrocodile, delay)
     }
 
@@ -578,7 +577,7 @@ test('unified-args', function (t) {
 
     st.plan(3)
 
-    touch.sync(doc)
+    touch(doc)
 
     proc = execa(bin, ['watch.txt', '-w', '-o'])
 
@@ -604,7 +603,7 @@ test('unified-args', function (t) {
 
     function seeYouLaterAlligator() {
       st.equal(resolved, false, 'should still be running (#1)')
-      touch.sync(doc)
+      touch(doc)
       setTimeout(afterAWhileCrocodile, delay)
     }
 
@@ -650,3 +649,9 @@ test('unified-args', function (t) {
 
   t.end()
 })
+
+function touch(fp) {
+  var fd = fs.openSync(fp, fs.constants.O_RDWR | fs.constants.O_CREAT)
+  fs.futimesSync(fd, fs.fstatSync(fd).atime, Date.now())
+  fs.closeSync(fd)
+}
