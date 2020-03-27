@@ -7,16 +7,12 @@ var bail = require('bail')
 var test = require('tape')
 var strip = require('strip-ansi')
 var figures = require('figures')
+var touch = require('touch')
 
 var sep = path.sep
 var join = path.join
-var constants = fs.constants
 var read = fs.readFileSync
 var unlink = fs.unlinkSync
-var open = fs.openSync
-var futimes = fs.futimesSync
-var fstat = fs.fstatSync
-var close = fs.closeSync
 
 var fixtures = join(__dirname, 'fixtures')
 
@@ -526,7 +522,7 @@ test('unified-args', function (t) {
 
     t.plan(3)
 
-    touch(doc)
+    touch.sync(doc)
 
     proc = execa(bin, ['watch.txt', '-w'])
 
@@ -550,7 +546,7 @@ test('unified-args', function (t) {
 
     function seeYouLaterAlligator() {
       t.equal(resolved, false, 'should still be running (#1)')
-      touch(doc)
+      touch.sync(doc)
       setTimeout(afterAWhileCrocodile, delay)
     }
 
@@ -582,7 +578,7 @@ test('unified-args', function (t) {
 
     t.plan(3)
 
-    touch(doc)
+    touch.sync(doc)
 
     proc = execa(bin, ['watch.txt', '-w', '-o'])
 
@@ -608,7 +604,7 @@ test('unified-args', function (t) {
 
     function seeYouLaterAlligator() {
       t.equal(resolved, false, 'should still be running (#1)')
-      touch(doc)
+      touch.sync(doc)
       setTimeout(afterAWhileCrocodile, delay)
     }
 
@@ -654,9 +650,3 @@ test('unified-args', function (t) {
 
   t.end()
 })
-
-function touch(fp) {
-  var fd = open(fp, constants.O_RDWR | constants.O_CREAT)
-  futimes(fd, fstat(fd).atime, Date.now())
-  close(fd)
-}
