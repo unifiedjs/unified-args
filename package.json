@@ -12,6 +12,10 @@
   ],
   "repository": "unifiedjs/unified-args",
   "bugs": "https://github.com/unifiedjs/unified-args/issues",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/unified"
+  },
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
