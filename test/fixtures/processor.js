@@ -2,9 +2,7 @@
 
 var unified = require('unified')
 
-module.exports = unified()
-  .use(main)
-  .freeze()
+module.exports = unified().use(main).freeze()
 
 function main() {
   this.Parser = parser

@@ -36,18 +36,18 @@
   },
   "devDependencies": {
     "bail": "^1.0.0",
-    "execa": "^2.0.0",
+    "execa": "^4.0.0",
     "figures": "^3.0.0",
-    "nyc": "^14.0.0",
-    "prettier": "^1.0.0",
-    "remark-cli": "^6.0.0",
-    "remark-preset-wooorm": "^5.0.0",
-    "strip-ansi": "^5.0.0",
+    "nyc": "^15.0.0",
+    "prettier": "^2.0.0",
+    "remark-cli": "^7.0.0",
+    "remark-preset-wooorm": "^6.0.0",
+    "strip-ansi": "^6.0.0",
     "tape": "^4.0.0",
     "touch": "^3.0.0",
     "unified": "^8.0.0",
     "vfile-reporter-json": "^2.0.0",
-    "xo": "^0.24.0",
+    "xo": "^0.28.0",
     "xtend": "^4.0.0"
   },
   "scripts": {
@@ -68,6 +68,7 @@
     "prettier": true,
     "esnext": false,
     "rules": {
+      "unicorn/string-content": "off",
       "guard-for-in": "off"
     }
   },

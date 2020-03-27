@@ -27,8 +27,8 @@ var bin = join(cwd, 'cli.js')
 
 process.on('unhandledRejection', bail)
 
-test('unified-args', function(t) {
-  t.test('should fail on missing files', function(st) {
+test('unified-args', function (t) {
+  t.test('should fail on missing files', function (st) {
     var expected = [
       'missing.txt',
       '  1:1  error  No such file or directory',
@@ -40,30 +40,30 @@ test('unified-args', function(t) {
 
     execa(bin, ['missing.txt']).then(st.fail, onfail)
 
-    function onfail(res) {
+    function onfail(result) {
       st.deepEqual(
-        [res.exitCode, strip(res.stderr)],
+        [result.exitCode, strip(result.stderr)],
         [1, expected],
         'should fail'
       )
     }
   })
 
-  t.test('should accept a path to a file', function(st) {
+  t.test('should accept a path to a file', function (st) {
     st.plan(1)
 
     execa(bin, ['one.txt']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         ['one', 'one.txt: no issues found'],
         'should work'
       )
     }
   })
 
-  t.test('should accept a path to a directory', function(st) {
+  t.test('should accept a path to a directory', function (st) {
     var expected = [
       'one.txt: no issues found',
       'three' + sep + 'five.txt: no issues found',
@@ -75,16 +75,16 @@ test('unified-args', function(t) {
 
     execa(bin, ['.']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         ['', expected],
         'should work'
       )
     }
   })
 
-  t.test('should accept a glob to files', function(st) {
+  t.test('should accept a glob to files', function (st) {
     var expected = [
       'one.txt: no issues found',
       'two.txt: no issues found'
@@ -94,16 +94,16 @@ test('unified-args', function(t) {
 
     execa(bin, ['*.txt']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         ['', expected],
         'should work'
       )
     }
   })
 
-  t.test('should accept a glob to a directory', function(st) {
+  t.test('should accept a glob to a directory', function (st) {
     var expected = [
       'three' + sep + 'five.txt: no issues found',
       'three' + sep + 'four.txt: no issues found'
@@ -113,16 +113,16 @@ test('unified-args', function(t) {
 
     execa(bin, ['thr+(e)']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         ['', expected],
         'should work'
       )
     }
   })
 
-  t.test('should fail on a bad short flag', function(st) {
+  t.test('should fail on a bad short flag', function (st) {
     var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
@@ -131,16 +131,16 @@ test('unified-args', function(t) {
 
     execa(bin, ['-n']).then(st.fail, onfail)
 
-    function onfail(res) {
+    function onfail(result) {
       st.deepEqual(
-        [res.exitCode, strip(res.stderr)],
+        [result.exitCode, strip(result.stderr)],
         [1, expected],
         'should fail'
       )
     }
   })
 
-  t.test('should fail on a bad grouped short flag', function(st) {
+  t.test('should fail on a bad grouped short flag', function (st) {
     var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
@@ -149,16 +149,16 @@ test('unified-args', function(t) {
 
     execa(bin, ['-on']).then(st.fail, onfail)
 
-    function onfail(res) {
+    function onfail(result) {
       st.deepEqual(
-        [res.exitCode, strip(res.stderr)],
+        [result.exitCode, strip(result.stderr)],
         [1, expected],
         'should fail'
       )
     }
   })
 
-  t.test('should fail on a bad long flag', function(st) {
+  t.test('should fail on a bad long flag', function (st) {
     var expected = read(join(cwd, 'LONG_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
@@ -167,44 +167,50 @@ test('unified-args', function(t) {
 
     execa(bin, ['--no']).then(st.fail, onfail)
 
-    function onfail(res) {
+    function onfail(result) {
       st.deepEqual(
-        [res.exitCode, strip(res.stderr)],
+        [result.exitCode, strip(result.stderr)],
         [1, expected],
         'should fail'
       )
     }
   })
 
-  helpFlags.forEach(function(flag) {
-    t.test('should show help on `' + flag + '`', function(st) {
-      var expected = read(join(cwd, 'HELP'), 'utf8')
-        .replace(/\r/g, '')
-        .trim()
+  helpFlags.forEach(function (flag) {
+    t.test('should show help on `' + flag + '`', function (st) {
+      var expected = read(join(cwd, 'HELP'), 'utf8').replace(/\r/g, '').trim()
 
       st.plan(1)
 
       execa(bin, [flag]).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
-        st.deepEqual([res.stdout, res.stderr], [expected, ''], 'should work')
+      function onsuccess(result) {
+        st.deepEqual(
+          [result.stdout, result.stderr],
+          [expected, ''],
+          'should work'
+        )
       }
     })
   })
 
-  versionFlags.forEach(function(flag) {
-    t.test('should show help on `' + flag + '`', function(st) {
+  versionFlags.forEach(function (flag) {
+    t.test('should show help on `' + flag + '`', function (st) {
       st.plan(1)
 
       execa(bin, [flag]).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
-        st.deepEqual([res.stdout, res.stderr], ['0.0.0', ''], 'should work')
+      function onsuccess(result) {
+        st.deepEqual(
+          [result.stdout, result.stderr],
+          ['0.0.0', ''],
+          'should work'
+        )
       }
     })
   })
 
-  t.test('should honour `--color`', function(st) {
+  t.test('should honour `--color`', function (st) {
     var expected =
       '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found'
 
@@ -212,25 +218,33 @@ test('unified-args', function(t) {
 
     execa(bin, ['--color', 'one.txt']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
-      st.deepEqual([res.stdout, res.stderr], ['one', expected], 'should work')
+    function onsuccess(result) {
+      st.deepEqual(
+        [result.stdout, result.stderr],
+        ['one', expected],
+        'should work'
+      )
     }
   })
 
-  t.test('should honour `--no-color`', function(st) {
+  t.test('should honour `--no-color`', function (st) {
     var expected = 'one.txt: no issues found'
 
     st.plan(1)
 
     execa(bin, ['--no-color', 'one.txt']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
-      st.deepEqual([res.stdout, res.stderr], ['one', expected], 'should work')
+    function onsuccess(result) {
+      st.deepEqual(
+        [result.stdout, result.stderr],
+        ['one', expected],
+        'should work'
+      )
     }
   })
 
-  extFlags.forEach(function(flag) {
-    t.test('should honour `' + flag + '`', function(st) {
+  extFlags.forEach(function (flag) {
+    t.test('should honour `' + flag + '`', function (st) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
@@ -242,16 +256,16 @@ test('unified-args', function(t) {
 
       execa(bin, ['.', flag, 'text']).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
+      function onsuccess(result) {
         st.deepEqual(
-          [res.stdout, strip(res.stderr)],
+          [result.stdout, strip(result.stderr)],
           ['', expected],
           'should work'
         )
       }
     })
 
-    t.test('should fail on `' + flag + '` without value', function(st) {
+    t.test('should fail on `' + flag + '` without value', function (st) {
       var expected =
         'Error: Missing value: -e --ext <extensions> specify extensions'
 
@@ -259,12 +273,16 @@ test('unified-args', function(t) {
 
       execa(bin, ['.', flag]).then(st.fail, onfail)
 
-      function onfail(res) {
-        st.deepEqual([res.stdout, res.stderr], ['', expected], 'should fail')
+      function onfail(result) {
+        st.deepEqual(
+          [result.stdout, result.stderr],
+          ['', expected],
+          'should fail'
+        )
       }
     })
 
-    t.test('should allow an extra `-e` after `' + flag + '`', function(st) {
+    t.test('should allow an extra `-e` after `' + flag + '`', function (st) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
@@ -276,9 +294,9 @@ test('unified-args', function(t) {
 
       execa(bin, ['.', flag, 'text', '-e']).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
+      function onsuccess(result) {
         st.deepEqual(
-          [res.stdout, strip(res.stderr)],
+          [result.stdout, strip(result.stderr)],
           ['', expected],
           'should work'
         )
@@ -286,8 +304,8 @@ test('unified-args', function(t) {
     })
   })
 
-  settingsFlags.forEach(function(flag) {
-    t.test('should catch syntax errors in `' + flag + '`', function(st) {
+  settingsFlags.forEach(function (flag) {
+    t.test('should catch syntax errors in `' + flag + '`', function (st) {
       var expected =
         "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
 
@@ -296,26 +314,26 @@ test('unified-args', function(t) {
       // Should be quoted.
       execa(bin, ['.', flag, 'foo:bar']).then(st.fail, onfail)
 
-      function onfail(res) {
+      function onfail(result) {
         st.deepEqual(
-          [res.exitCode, strip(res.stderr)],
+          [result.exitCode, strip(result.stderr)],
           [1, expected],
           'should fail'
         )
       }
     })
 
-    t.test('should honour `' + flag + '`', function(st) {
+    t.test('should honour `' + flag + '`', function (st) {
       var bin = join(fixtures, 'settings', 'cli.js')
 
       st.plan(1)
 
       execa(bin, ['one.txt', flag, '"foo-bar":"baz"']).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
+      function onsuccess(result) {
         // Parser and Compiler both log stringified settings.
         st.deepEqual(
-          [res.stdout, strip(res.stderr)],
+          [result.stdout, strip(result.stderr)],
           ['{"fooBar":"baz"}\none', 'one.txt: no issues found'],
           'should work'
         )
@@ -323,7 +341,7 @@ test('unified-args', function(t) {
     })
   })
 
-  t.test('shouldn’t fail on property-like settings', function(st) {
+  t.test('shouldn’t fail on property-like settings', function (st) {
     var expected = '{"foo":"https://example.com"}'
     var bin = join(fixtures, 'settings', 'cli.js')
     var setting = 'foo:"https://example.com"'
@@ -332,34 +350,34 @@ test('unified-args', function(t) {
 
     execa(bin, ['.', '--setting', setting]).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         [expected, 'one.txt: no issues found'],
         'should work'
       )
     }
   })
 
-  useFlags.forEach(function(flag) {
-    t.test('should load a plugin with `' + flag + '`', function(st) {
+  useFlags.forEach(function (flag) {
+    t.test('should load a plugin with `' + flag + '`', function (st) {
       var bin = join(fixtures, 'plugins', 'cli.js')
 
       st.plan(1)
 
       execa(bin, ['one.txt', flag, './plugin']).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
+      function onsuccess(result) {
         // Attacher logs options, which are `undefined`.
         st.deepEqual(
-          [res.stdout, strip(res.stderr)],
+          [result.stdout, strip(result.stderr)],
           ['undefined\none', 'one.txt: no issues found'],
           'should work'
         )
       }
     })
 
-    t.test('should catch syntax errors in `' + flag + '`', function(st) {
+    t.test('should catch syntax errors in `' + flag + '`', function (st) {
       var expected =
         "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
 
@@ -368,26 +386,26 @@ test('unified-args', function(t) {
       // Should be quoted.
       execa(bin, ['.', flag, './plugin=foo:bar']).then(st.fail, onfail)
 
-      function onfail(res) {
+      function onfail(result) {
         st.deepEqual(
-          [res.exitCode, strip(res.stderr)],
+          [result.exitCode, strip(result.stderr)],
           [1, expected],
           'should fail'
         )
       }
     })
 
-    t.test('should honour `' + flag + '`', function(st) {
+    t.test('should honour `' + flag + '`', function (st) {
       var bin = join(fixtures, 'plugins', 'cli.js')
-      var opts = './plugin=foo:{bar:"baz",qux:1,quux:true}'
+      var options = './plugin=foo:{bar:"baz",qux:1,quux:true}'
 
       st.plan(1)
 
-      execa(bin, ['one.txt', flag, opts]).then(onsuccess, st.fail)
+      execa(bin, ['one.txt', flag, options]).then(onsuccess, st.fail)
 
-      function onsuccess(res) {
+      function onsuccess(result) {
         st.deepEqual(
-          [res.stdout, strip(res.stderr)],
+          [result.stdout, strip(result.stderr)],
           [
             '{"foo":{"bar":"baz","qux":1,"quux":true}}\none',
             'one.txt: no issues found'
@@ -398,7 +416,7 @@ test('unified-args', function(t) {
     })
   })
 
-  t.test('should honour `--report`', function(st) {
+  t.test('should honour `--report`', function (st) {
     var expected = JSON.stringify([
       {
         path: 'alpha.text',
@@ -412,12 +430,16 @@ test('unified-args', function(t) {
 
     execa(bin, ['alpha.text', '--report', 'json']).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
-      st.deepEqual([res.stdout, res.stderr], ['alpha', expected], 'should work')
+    function onsuccess(result) {
+      st.deepEqual(
+        [result.stdout, result.stderr],
+        ['alpha', expected],
+        'should work'
+      )
     }
   })
 
-  t.test('should honour `--report` with options', function(st) {
+  t.test('should honour `--report` with options', function (st) {
     var expected = JSON.stringify(
       [
         {
@@ -437,26 +459,30 @@ test('unified-args', function(t) {
 
     execa(bin, ['alpha.text', '--report', setting]).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
-      st.deepEqual([res.stdout, res.stderr], ['alpha', expected], 'should work')
+    function onsuccess(result) {
+      st.deepEqual(
+        [result.stdout, result.stderr],
+        ['alpha', expected],
+        'should work'
+      )
     }
   })
 
-  t.test('should fail on `--report` without value', function(st) {
+  t.test('should fail on `--report` without value', function (st) {
     st.plan(1)
 
     execa(bin, ['.', '--report']).then(st.fail, onfail)
 
-    function onfail(res) {
+    function onfail(result) {
       st.deepEqual(
-        [res.exitCode, res.stderr],
+        [result.exitCode, result.stderr],
         [1, 'Error: Missing value:  --report <reporter> specify reporter'],
         'should fail'
       )
     }
   })
 
-  t.test('should support `--ignore-pattern`', function(st) {
+  t.test('should support `--ignore-pattern`', function (st) {
     var expected = [
       'alpha.text: no issues found',
       'bravo.text: no issues found',
@@ -474,16 +500,16 @@ test('unified-args', function(t) {
       'charlie/*,three/*.txt'
     ]).then(onsuccess, st.fail)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         ['', expected],
         'should work'
       )
     }
   })
 
-  t.test('should honour `--watch`', function(st) {
+  t.test('should honour `--watch`', function (st) {
     var expected = [
       'Watching... (press CTRL+C to exit)',
       'watch.txt: no issues found',
@@ -508,11 +534,11 @@ test('unified-args', function(t) {
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       resolved = true
       rm(doc)
       st.deepEqual(
-        [res.stdout, strip(res.stderr).trim()],
+        [result.stdout, strip(result.stderr).trim()],
         ['', expected],
         'should work'
       )
@@ -530,7 +556,7 @@ test('unified-args', function(t) {
     }
   })
 
-  t.test('should not regenerate when watching', function(st) {
+  t.test('should not regenerate when watching', function (st) {
     var lines = [
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
@@ -564,13 +590,13 @@ test('unified-args', function(t) {
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    function onsuccess(res) {
+    function onsuccess(result) {
       resolved = true
 
       rm(doc)
 
       st.deepEqual(
-        [res.stdout, strip(res.stderr)],
+        [result.stdout, strip(result.stderr)],
         ['', expected],
         'should work'
       )
@@ -588,7 +614,7 @@ test('unified-args', function(t) {
     }
   })
 
-  t.test('should exit on fatal errors when watching', function(st) {
+  t.test('should exit on fatal errors when watching', function (st) {
     var expected = [
       'Watching... (press CTRL+C to exit)',
       'Error: No input'
@@ -598,17 +624,14 @@ test('unified-args', function(t) {
 
     execa(bin, ['-w']).then(st.fail, onfail)
 
-    function onfail(res) {
-      var actual = strip(res.stderr)
-        .split('\n')
-        .slice(0, 2)
-        .join('\n')
+    function onfail(result) {
+      var actual = strip(result.stderr).split('\n').slice(0, 2).join('\n')
 
-      st.deepEqual([res.exitCode, actual], [1, expected], 'should fail')
+      st.deepEqual([result.exitCode, actual], [1, expected], 'should fail')
     }
   })
 
-  t.test('should report uncaught exceptions', function(st) {
+  t.test('should report uncaught exceptions', function (st) {
     var bin = join(fixtures, 'uncaught-errors', 'cli.js')
     var expected = 'one.txt: no issues found\nfoo'
 
@@ -616,9 +639,9 @@ test('unified-args', function(t) {
 
     execa(bin, ['.', '-u', './plugin']).then(st.fail, onfail)
 
-    function onfail(res) {
+    function onfail(result) {
       st.deepEqual(
-        [res.exitCode, strip(res.stderr)],
+        [result.exitCode, strip(result.stderr)],
         [1, expected],
         'should fail'
       )
