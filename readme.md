@@ -13,9 +13,8 @@ command-line arguments.
 Should be `require`d and configured in an executable script, on its own, as it
 handles the whole process.
 
-[`unifiedjs.github.io`][site], the website for **unified** provides a good
-overview about what unified can do.
-Make sure to visit it and try its introductionary [Guides][].
+[`unifiedjs.com`][site], the website for **unified** provides a good overview
+about what unified can do.
 
 ## Install
 
@@ -57,7 +56,7 @@ start({
 })
 ```
 
-## Table of Contents
+## Contents
 
 *   [API](#api)
     *   [`start(configuration)`](#startconfiguration)
@@ -180,7 +179,7 @@ All non-options are seen as input and can be:
     directories.
     These are searched for files with known [extensions][ext] which are not
     ignored by patterns in [ignore files][ignore-file].
-    The default behaviour is to exclude files in `node_modules` and hidden
+    The default behavior is to exclude files in `node_modules` and hidden
     directories (those starting with a dot: `.`) unless explicitly given
 
 <!-- Options: -->
@@ -294,7 +293,7 @@ cli input.txt --report pretty --report json # only last one is used
 ```
 
 [Reporter][] to load by its name or path, optionally with options, and use to
-report metadata about eevery processed file.
+report metadata about every processed file.
 
 To pass options, follow the name by an equals sign (`=`) and settings, which
 have the same in syntax as [`--setting <settings>`][setting].
@@ -369,7 +368,7 @@ Process as normal, then watch found files and reprocess when they change.
 The watch is stopped when `SIGINT` is received (usually done by pressing
 `CTRL-C`).
 
-If [`--output`][output] is given **without** `path` it is not honoured, to
+If [`--output`][output] is given **without** `path` it is not honored, to
 prevent an infinite loop.
 On operating systems other than Windows, when the watch closes, a final process
 runs including `--output`.
@@ -434,7 +433,7 @@ cli input.txt --quiet
 ```
 
 Ignore files without any messages in the report.
-The default behaviour is to show a success message.
+The default behavior is to show a success message.
 
 *   **Default**: off
 *   **Alias**: `-q`
@@ -475,7 +474,7 @@ cli input.txt --frail
 ```
 
 Exit with a status code of `1` if warnings or errors occur.
-The default behaviour is to exit with `1` on errors.
+The default behavior is to exit with `1` on errors.
 
 *   **Default**: off
 *   **Alias**: `-f`
@@ -512,7 +511,7 @@ cli input.txt --no-color
 
 Whether to output ANSI color codes in the report.
 
-*   **Default**: whether the terminal [supports colour][supports-color]
+*   **Default**: whether the terminal [supports color][supports-color]
 *   **Engine**: [`color`][engine-color]
 
 ###### Note
@@ -567,8 +566,8 @@ See [`contributing.md`][contributing] in [`unifiedjs/.github`][health] for ways
 to get started.
 See [`support.md`][support] for ways to get help.
 
-This project has a [Code of Conduct][coc].
-By interacting with this repository, organisation, or community you agree to
+This project has a [code of conduct][coc].
+By interacting with this repository, organization, or community you agree to
 abide by its terms.
 
 ## License
@@ -595,7 +594,7 @@ abide by its terms.
 
 [collective]: https://opencollective.com/unified
 
-[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+[chat-badge]: https://img.shields.io/badge/chat-spectrum-7b16ff.svg
 
 [chat]: https://spectrum.chat/unified
 
@@ -713,9 +712,7 @@ abide by its terms.
 
 [frail]: #--frail
 
-[site]: https://unifiedjs.github.io
-
-[guides]: https://unifiedjs.github.io/#guides
+[site]: https://unifiedjs.com
 
 [reporter]: https://github.com/vfile/vfile#reporters
 
