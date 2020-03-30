@@ -102,6 +102,13 @@
     "value": "<path>"
   },
   {
+    "long": "ignore-path-resolve-from",
+    "description": "resolve patterns in `ignore-path` from its directory or cwd",
+    "type": "string",
+    "value": "dir|cwd",
+    "default": "dir"
+  },
+  {
     "long": "ignore-pattern",
     "description": "specify ignore patterns",
     "type": "string",

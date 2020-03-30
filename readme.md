@@ -66,6 +66,7 @@ start({
     *   [`--output [path]`](#--output-path)
     *   [`--rc-path <path>`](#--rc-path-path)
     *   [`--ignore-path <path>`](#--ignore-path-path)
+    *   [`--ignore-path-resolve-from dir|cwd`](#--ignore-path-resolve-from-dircwd)
     *   [`--setting <settings>`](#--setting-settings)
     *   [`--report <reporter>`](#--report-reporter)
     *   [`--use <plugin>`](#--use-plugin)
@@ -261,6 +262,18 @@ File path to an [ignore file][ignore-file] to load, regardless of
 *   **Default**: none
 *   **Alias**: `-i`
 *   **Engine**: [`ignorePath`][engine-ignore-path]
+
+### `--ignore-path-resolve-from dir|cwd`
+
+```sh
+cli . --ignore-path node_modules/my-config/my-ignore --ignore-path-resolve-from cwd
+```
+
+Resolve patterns in the ignore file from its directory (`dir`, default) or the
+current working directory (`cwd`).
+
+*   **Default**: `dir`
+*   **Engine**: [`ignorePathResolveFrom`][engine-ignore-path-resolve-from]
 
 ### `--setting <settings>`
 
@@ -647,6 +660,8 @@ abide by its terms.
 [engine-ignore-name]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorename
 
 [engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepath
+
+[engine-ignore-path-resolve-from]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepathresolvefrom
 
 [engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsreporter
 

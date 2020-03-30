@@ -249,7 +249,8 @@ test('unified-args', function (t) {
         'alpha.text: no issues found',
         'bravo.text: no issues found',
         'charlie' + sep + 'delta.text: no issues found',
-        'charlie' + sep + 'echo.text: no issues found'
+        'charlie' + sep + 'echo.text: no issues found',
+        'delta.text: no issues found'
       ].join('\n')
 
       t.plan(1)
@@ -287,7 +288,8 @@ test('unified-args', function (t) {
         'alpha.text: no issues found',
         'bravo.text: no issues found',
         'charlie' + sep + 'delta.text: no issues found',
-        'charlie' + sep + 'echo.text: no issues found'
+        'charlie' + sep + 'echo.text: no issues found',
+        'delta.text: no issues found'
       ].join('\n')
 
       t.plan(1)
@@ -497,7 +499,62 @@ test('unified-args', function (t) {
       '--ext',
       'txt,text',
       '--ignore-pattern',
-      'charlie/*,three/*.txt'
+      'charlie/*,three/*.txt,delta.*'
+    ]).then(onsuccess, t.fail)
+
+    function onsuccess(result) {
+      t.deepEqual(
+        [result.stdout, strip(result.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
+  })
+
+  t.test('should support `--ignore-path`', function (t) {
+    var expected = [
+      'alpha.text: no issues found',
+      'bravo.text: no issues found',
+      'charlie' + sep + 'echo.text: no issues found',
+      'delta.text: no issues found'
+    ].join('\n')
+
+    t.plan(1)
+
+    execa(bin, [
+      '.',
+      '--ext',
+      'text',
+      '--ignore-path',
+      join('charlie', 'ignore')
+    ]).then(onsuccess, t.fail)
+
+    function onsuccess(result) {
+      t.deepEqual(
+        [result.stdout, strip(result.stderr)],
+        ['', expected],
+        'should work'
+      )
+    }
+  })
+
+  t.test('should support `--ignore-path-resolve-from cwd`', function (t) {
+    var expected = [
+      'alpha.text: no issues found',
+      'bravo.text: no issues found',
+      'charlie' + sep + 'echo.text: no issues found'
+    ].join('\n')
+
+    t.plan(1)
+
+    execa(bin, [
+      '.',
+      '--ext',
+      'text',
+      '--ignore-path',
+      join('charlie', 'ignore'),
+      '--ignore-path-resolve-from',
+      'cwd'
     ]).then(onsuccess, t.fail)
 
     function onsuccess(result) {
