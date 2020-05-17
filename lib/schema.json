@@ -130,6 +130,11 @@
     "type": "boolean"
   },
   {
+    "long": "silently-ignore",
+    "description": "suppress warnings about given ignored files",
+    "type": "boolean"
+  },
+  {
     "long": "stdout",
     "description": "specify writing to stdout",
     "type": "boolean",
