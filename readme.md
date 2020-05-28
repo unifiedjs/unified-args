@@ -287,7 +287,7 @@ cli input.txt --setting 'golf: false, hotel-india: ["juliet", 1]'
 Configuration for the parser and compiler of the processor.
 Can be set from [configuration files][config-file].
 
-The given settings are [JSON5][], with one exceptions: surrounding braces must
+The given settings are [JSON5][], with one exception: surrounding braces must
 not be used: `"foo": 1, "bar": "baz"` is valid
 
 *   **Default**: none
