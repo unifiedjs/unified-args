@@ -288,7 +288,7 @@ Configuration for the parser and compiler of the processor.
 Can be set from [configuration files][config-file].
 
 The given settings are [JSON5][], with one exception: surrounding braces must
-not be used.  Instead, simply use JSON syntax without braces, i.e. `"foo": 1, "bar": "baz"`.
+not be used.  Instead, use JSON syntax without braces, such as `"foo": 1, "bar": "baz"`.
 
 *   **Default**: none
 *   **Alias**: `-s`
