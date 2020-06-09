@@ -67,6 +67,8 @@ start({
     *   [`--rc-path <path>`](#--rc-path-path)
     *   [`--ignore-path <path>`](#--ignore-path-path)
     *   [`--ignore-path-resolve-from dir|cwd`](#--ignore-path-resolve-from-dircwd)
+    *   [`--ignore-pattern <globs>`](#--ignore-pattern-globs)
+    *   [`--silently-ignore`](#--silently-ignore)
     *   [`--setting <settings>`](#--setting-settings)
     *   [`--report <reporter>`](#--report-reporter)
     *   [`--use <plugin>`](#--use-plugin)
@@ -137,28 +139,31 @@ Usage: remark [options] [path | glob ...]
 
 Options:
 
-  -h  --help                output usage information
-  -v  --version             output version number
-  -o  --output [path]       specify output location
-  -r  --rc-path <path>      specify configuration file
-  -i  --ignore-path <path>  specify ignore file
-  -s  --setting <settings>  specify settings
-  -e  --ext <extensions>    specify extensions
-  -u  --use <plugins>       use plugins
-  -w  --watch               watch for changes and reprocess
-  -q  --quiet               output only warnings and errors
-  -S  --silent              output only errors
-  -f  --frail               exit with 1 on warnings
-  -t  --tree                specify input and output as syntax tree
-      --report <reporter>   specify reporter
-      --file-path <path>    specify path to process as
-      --tree-in             specify input as syntax tree
-      --tree-out            output syntax tree
-      --inspect             output formatted syntax tree
-      --[no-]stdout         specify writing to stdout (on by default)
-      --[no-]color          specify color in report (on by default)
-      --[no-]config         search for configuration files (on by default)
-      --[no-]ignore         search for ignore files (on by default)
+  -h  --help                              output usage information
+  -v  --version                           output version number
+  -o  --output [path]                     specify output location
+  -r  --rc-path <path>                    specify configuration file
+  -i  --ignore-path <path>                specify ignore file
+  -s  --setting <settings>                specify settings
+  -e  --ext <extensions>                  specify extensions
+  -u  --use <plugins>                     use plugins
+  -w  --watch                             watch for changes and reprocess
+  -q  --quiet                             output only warnings and errors
+  -S  --silent                            output only errors
+  -f  --frail                             exit with 1 on warnings
+  -t  --tree                              specify input and output as syntax tree
+      --report <reporter>                 specify reporter
+      --file-path <path>                  specify path to process as
+      --ignore-path-resolve-from dir|cwd  resolve patterns in `ignore-path` from its directory or cwd
+      --ignore-pattern <globs>            specify ignore patterns
+      --silently-ignore                   do not fail when given ignored files
+      --tree-in                           specify input as syntax tree
+      --tree-out                          output syntax tree
+      --inspect                           output formatted syntax tree
+      --[no-]stdout                       specify writing to stdout (on by default)
+      --[no-]color                        specify color in report (on by default)
+      --[no-]config                       search for configuration files (on by default)
+      --[no-]ignore                       search for ignore files (on by default)
 
 Examples:
 
@@ -274,6 +279,29 @@ current working directory (`cwd`).
 
 *   **Default**: `dir`
 *   **Engine**: [`ignorePathResolveFrom`][engine-ignore-path-resolve-from]
+
+### `--ignore-pattern <globs>`
+
+```sh
+cli . --ignore-pattern docs/*.md
+```
+
+Additional patterns to use to ignore files.
+
+*   **Default**: none
+*   **Engine**: [`ignorePatterns`][engine-ignore-patterns]
+
+### `--silently-ignore`
+
+```sh
+cli **/*.md --silently-ignore
+```
+
+Skip given files which are ignored by ignore files, instead of warning about
+them.
+
+*   **Default**: off
+*   **Engine**: [`silentlyIgnore`][engine-silently-ignore]
 
 ### `--setting <settings>`
 
@@ -662,6 +690,10 @@ abide by its terms.
 [engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepath
 
 [engine-ignore-path-resolve-from]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepathresolvefrom
+
+[engine-ignore-patterns]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepatterns
+
+[engine-silently-ignore]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionssilentlyignore
 
 [engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsreporter
 
