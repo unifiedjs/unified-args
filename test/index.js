@@ -566,6 +566,52 @@ test('unified-args', function (t) {
     }
   })
 
+  t.test('should fail when given an ignored path', function (t) {
+    var expected = [
+      'one.txt',
+      '  1:1  error  Cannot process specified file: it’s ignored',
+      '',
+      'two.txt: no issues found',
+      '',
+      figures.cross + ' 1 error'
+    ].join('\n')
+
+    t.plan(1)
+
+    execa(bin, ['one.txt', 'two.txt', '--ignore-pattern', 'one.txt']).then(
+      t.fail,
+      onfail
+    )
+
+    function onfail(result) {
+      t.deepEqual(
+        [result.exitCode, strip(result.stderr)],
+        [1, expected],
+        'should fail'
+      )
+    }
+  })
+
+  t.test('should support `--silently-ignore`', function (t) {
+    t.plan(1)
+
+    execa(bin, [
+      'one.txt',
+      'two.txt',
+      '--ignore-pattern',
+      'one.txt',
+      '--silently-ignore'
+    ]).then(onsuccess, t.fail)
+
+    function onsuccess(result) {
+      t.deepEqual(
+        [result.stdout, strip(result.stderr)],
+        ['', 'two.txt: no issues found'],
+        'should work'
+      )
+    }
+  })
+
   t.test('should honour `--watch`', function (t) {
     var expected = [
       'Watching... (press CTRL+C to exit)',
