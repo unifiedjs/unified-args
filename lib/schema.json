@@ -115,6 +115,11 @@
     "value": "<globs>"
   },
   {
+    "long": "silently-ignore",
+    "description": "do not fail when given ignored files",
+    "type": "boolean"
+  },
+  {
     "long": "tree-in",
     "description": "specify input as syntax tree",
     "type": "boolean"
@@ -127,11 +132,6 @@
   {
     "long": "inspect",
     "description": "output formatted syntax tree",
-    "type": "boolean"
-  },
-  {
-    "long": "silently-ignore",
-    "description": "suppress warnings about given ignored files",
     "type": "boolean"
   },
   {
