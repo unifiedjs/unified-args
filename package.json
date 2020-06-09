@@ -44,15 +44,15 @@
     "figures": "^3.0.0",
     "nyc": "^15.0.0",
     "prettier": "^2.0.0",
-    "remark": "^11.0.0",
-    "remark-cli": "^7.0.0",
-    "remark-preset-wooorm": "^6.0.0",
+    "remark": "^12.0.0",
+    "remark-cli": "^8.0.0",
+    "remark-preset-wooorm": "^7.0.0",
     "strip-ansi": "^6.0.0",
-    "tape": "^4.0.0",
+    "tape": "^5.0.0",
     "touch": "^3.0.0",
     "unified": "^9.0.0",
     "vfile-reporter-json": "^2.0.0",
-    "xo": "^0.28.0"
+    "xo": "^0.32.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier --write \"**/*.{js,ts}\" && xo --fix --ignore types",
@@ -73,9 +73,13 @@
     "prettier": true,
     "esnext": false,
     "rules": {
+      "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/string-content": "off",
       "guard-for-in": "off"
-    }
+    },
+    "ignores": [
+      "**/*.ts"
+    ]
   },
   "nyc": {
     "check-coverage": true,
