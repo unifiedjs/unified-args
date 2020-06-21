@@ -643,11 +643,11 @@ abide by its terms.
 
 [health]: https://github.com/unifiedjs/.github
 
-[contributing]: https://github.com/unifiedjs/.github/blob/master/contributing.md
+[contributing]: https://github.com/unifiedjs/.github/blob/HEAD/contributing.md
 
-[support]: https://github.com/unifiedjs/.github/blob/master/support.md
+[support]: https://github.com/unifiedjs/.github/blob/HEAD/support.md
 
-[coc]: https://github.com/unifiedjs/.github/blob/master/code-of-conduct.md
+[coc]: https://github.com/unifiedjs/.github/blob/HEAD/code-of-conduct.md
 
 [license]: license
 
@@ -667,69 +667,69 @@ abide by its terms.
 
 [remark]: https://github.com/remarkjs/remark
 
-[config-file]: https://github.com/unifiedjs/unified-engine/blob/master/doc/configure.md
+[config-file]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/configure.md
 
-[ignore-file]: https://github.com/unifiedjs/unified-engine/blob/master/doc/ignore.md
+[ignore-file]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/ignore.md
 
 [description]: https://github.com/unifiedjs/unified#description
 
-[engine-processor]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsprocessor
+[engine-processor]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsprocessor
 
-[engine-files]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsfiles
+[engine-files]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsfiles
 
-[engine-output]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsoutput
+[engine-output]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsoutput
 
-[engine-rc-path]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsrcpath
+[engine-rc-path]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsrcpath
 
-[engine-rc-name]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsrcname
+[engine-rc-name]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsrcname
 
-[engine-package-field]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionspackagefield
+[engine-package-field]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionspackagefield
 
-[engine-ignore-name]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorename
+[engine-ignore-name]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorename
 
-[engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepath
+[engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorepath
 
-[engine-ignore-path-resolve-from]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepathresolvefrom
+[engine-ignore-path-resolve-from]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorepathresolvefrom
 
-[engine-ignore-patterns]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsignorepatterns
+[engine-ignore-patterns]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorepatterns
 
-[engine-silently-ignore]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionssilentlyignore
+[engine-silently-ignore]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionssilentlyignore
 
-[engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsreporter
+[engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsreporter
 
-[engine-reporter-options]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsreporteroptions
+[engine-reporter-options]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsreporteroptions
 
-[engine-settings]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionssettings
+[engine-settings]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionssettings
 
-[engine-plugins]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsplugins
+[engine-plugins]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsplugins
 
-[engine-plugin-prefix]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionspluginprefix
+[engine-plugin-prefix]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionspluginprefix
 
-[engine-extensions]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsextensions
+[engine-extensions]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsextensions
 
-[engine-tree]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionstree
+[engine-tree]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionstree
 
-[engine-tree-in]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionstreein
+[engine-tree-in]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionstreein
 
-[engine-tree-out]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionstreeout
+[engine-tree-out]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionstreeout
 
-[engine-inspect]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsinspect
+[engine-inspect]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsinspect
 
-[engine-quiet]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsquiet
+[engine-quiet]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsquiet
 
-[engine-silent]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsilent
+[engine-silent]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsilent
 
-[engine-frail]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsfrail
+[engine-frail]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsfrail
 
-[engine-file-path]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsfilepath
+[engine-file-path]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsfilepath
 
-[engine-out]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsout
+[engine-out]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsout
 
-[engine-color]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionscolor
+[engine-color]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionscolor
 
-[engine-detect-config]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsdetectconfig
+[engine-detect-config]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsdetectconfig
 
-[engine-detect-ignore]: https://github.com/unifiedjs/unified-engine/blob/master/doc/options.md#optionsdetectignore
+[engine-detect-ignore]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsdetectignore
 
 [configured]: #startconfiguration
 
