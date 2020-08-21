@@ -485,8 +485,6 @@ The default behavior is to show a success message.
 This option may not work depending on the reporter given in
 [`--report`][report].
 
-###### Note
-
 The [`quiet`][quiet], [`silent`][silent], and [`color`][color] options may not
 work with the used reporter.
 
