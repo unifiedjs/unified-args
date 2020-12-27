@@ -4,8 +4,8 @@ on:
   - push
 jobs:
   main:
-    name: '${{matrix.node}} on ${{matrix.os}}'
-    runs-on: ${{matrix.os}}
+    name: ${{matrix.node}}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: dcodeIO/setup-node-nvm@master
@@ -16,9 +16,21 @@ jobs:
       - uses: codecov/codecov-action@v1
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
+        node:
+          - lts/dubnium
+          - node
+  windows:
+    name: ${{matrix.node}}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dcodeIO/setup-node-nvm@master
+        with:
+          node-version: ${{matrix.node}}
+      - run: npm install
+      - run: npm run test-api
+    strategy:
+      matrix:
         node:
           - lts/dubnium
           - node
