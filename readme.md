@@ -615,9 +615,9 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://img.shields.io/travis/unifiedjs/unified-args.svg
+[build-badge]: https://github.com/unifiedjs/unified-args/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/unifiedjs/unified-args
+[build]: https://github.com/unifiedjs/unified-args/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
 
