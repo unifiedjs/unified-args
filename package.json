@@ -21,12 +21,14 @@
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
     "Christian Murphy <christian.murphy.42@gmail.com"
   ],
+  "sideEffects": false,
+  "type": "module",
+  "main": "index.js",
   "files": [
-    "index.js",
-    "types/index.d.ts",
-    "lib/"
+    "dev/",
+    "lib/",
+    "index.js"
   ],
-  "types": "types/index.d.ts",
   "dependencies": {
     "camelcase": "^5.0.0",
     "chalk": "^3.0.0",
@@ -39,10 +41,9 @@
   },
   "devDependencies": {
     "bail": "^1.0.0",
-    "dtslint": "^4.0.0",
+    "c8": "^7.0.0",
     "execa": "^5.0.0",
     "figures": "^3.0.0",
-    "nyc": "^15.0.0",
     "prettier": "^2.0.0",
     "remark": "^13.0.0",
     "remark-cli": "^9.0.0",
@@ -52,14 +53,13 @@
     "touch": "^3.0.0",
     "unified": "^9.0.0",
     "vfile-reporter-json": "^2.0.0",
-    "xo": "^0.38.0"
+    "xo": "^0.39.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
-    "test-api": "node test",
-    "test-coverage": "nyc --reporter lcov tape test/index.js",
-    "test-types": "dtslint types",
-    "test": "npm run format && npm run test-coverage && npm run test-types"
+    "test-api": "node --conditions development test/index.js",
+    "test-coverage": "c8 --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 --reporter lcov node --conditions development test/index.js",
+    "test": "npm run format && npm run test-coverage"
   },
   "prettier": {
     "tabWidth": 2,
@@ -71,20 +71,15 @@
   },
   "xo": {
     "prettier": true,
-    "esnext": false,
     "rules": {
+      "no-var": "off",
+      "prefer-arrow-callback": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
       "guard-for-in": "off"
     },
     "ignores": [
       "**/*.ts"
     ]
-  },
-  "nyc": {
-    "check-coverage": true,
-    "lines": 100,
-    "functions": 100,
-    "branches": 100
   },
   "remarkConfig": {
     "plugins": [

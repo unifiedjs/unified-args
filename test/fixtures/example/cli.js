@@ -1,8 +1,12 @@
 #!/usr/bin/env node
-'use strict'
+import path from 'path'
+import {args} from '../../../index.js'
+import {processor} from '../processor.js'
+import {config} from '../config.js'
 
-var start = require('../../../index.js')
-var config = require('../config.json')
-var processor = require('../processor.js')
-
-start(Object.assign({}, config, {cwd: __dirname, processor: processor}))
+args(
+  Object.assign({}, config, {
+    cwd: path.join('test', 'fixtures', 'example'),
+    processor
+  })
+)

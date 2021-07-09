@@ -1,8 +1,6 @@
-'use strict'
+import unified from 'unified'
 
-var unified = require('unified')
-
-module.exports = unified().use(main).freeze()
+export const processor = unified().use(main).freeze()
 
 function main() {
   this.Parser = parser

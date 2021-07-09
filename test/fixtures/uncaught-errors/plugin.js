@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = function () {}
+export default function plugin() {}
 
 setTimeout(thrower, 1000)
 

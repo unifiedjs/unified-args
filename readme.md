@@ -18,6 +18,9 @@ about what unified can do.
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -59,7 +62,7 @@ start({
 ## Contents
 
 *   [API](#api)
-    *   [`start(configuration)`](#startconfiguration)
+    *   [`args(configuration)`](#argsconfiguration)
 *   [CLI](#cli)
     *   [`--help`](#--help)
     *   [`--version`](#--version)
@@ -93,7 +96,10 @@ start({
 
 ## API
 
-### `start(configuration)`
+This package exports the following identifiers: `args`.
+There is no default export.
+
+### `args(configuration)`
 
 Create a CLI for a [**unified**][unified] processor.
 
@@ -729,7 +735,7 @@ abide by its terms.
 
 [engine-detect-ignore]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsdetectignore
 
-[configured]: #startconfiguration
+[configured]: #argsconfiguration
 
 [usage]: #use
 

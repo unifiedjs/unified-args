@@ -1,23 +1,15 @@
-'use strict'
+import fs from 'fs'
+import path from 'path'
+import execa from 'execa'
+import bail from 'bail'
+import test from 'tape'
+import strip from 'strip-ansi'
+import figures from 'figures'
+import touch from 'touch'
 
-var fs = require('fs')
-var path = require('path')
-var execa = require('execa')
-var bail = require('bail')
-var test = require('tape')
-var strip = require('strip-ansi')
-var figures = require('figures')
-var touch = require('touch')
-
-var sep = path.sep
-var join = path.join
-var read = fs.readFileSync
-var unlink = fs.unlinkSync
-
-var fixtures = join(__dirname, 'fixtures')
-
-var cwd = join(fixtures, 'example')
-var bin = join(cwd, 'cli.js')
+var fixtures = path.join('test', 'fixtures')
+var cwd = path.join(fixtures, 'example')
+var bin = path.join(cwd, 'cli.js')
 
 process.on('unhandledRejection', bail)
 
@@ -60,8 +52,8 @@ test('unified-args', function (t) {
   t.test('should accept a path to a directory', function (t) {
     var expected = [
       'one.txt: no issues found',
-      'three' + sep + 'five.txt: no issues found',
-      'three' + sep + 'four.txt: no issues found',
+      'three' + path.sep + 'five.txt: no issues found',
+      'three' + path.sep + 'four.txt: no issues found',
       'two.txt: no issues found'
     ].join('\n')
 
@@ -99,8 +91,8 @@ test('unified-args', function (t) {
 
   t.test('should accept a glob to a directory', function (t) {
     var expected = [
-      'three' + sep + 'five.txt: no issues found',
-      'three' + sep + 'four.txt: no issues found'
+      'three' + path.sep + 'five.txt: no issues found',
+      'three' + path.sep + 'four.txt: no issues found'
     ].join('\n')
 
     t.plan(1)
@@ -117,7 +109,8 @@ test('unified-args', function (t) {
   })
 
   t.test('should fail on a bad short flag', function (t) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+    var expected = fs
+      .readFileSync(path.join(cwd, 'SHORT_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
 
@@ -135,7 +128,8 @@ test('unified-args', function (t) {
   })
 
   t.test('should fail on a bad grouped short flag', function (t) {
-    var expected = read(join(cwd, 'SHORT_FLAG'), 'utf8')
+    var expected = fs
+      .readFileSync(path.join(cwd, 'SHORT_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
 
@@ -153,7 +147,8 @@ test('unified-args', function (t) {
   })
 
   t.test('should fail on a bad long flag', function (t) {
-    var expected = read(join(cwd, 'LONG_FLAG'), 'utf8')
+    var expected = fs
+      .readFileSync(path.join(cwd, 'LONG_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
 
@@ -175,7 +170,10 @@ test('unified-args', function (t) {
 
   function helpFlag(flag) {
     t.test('should show help on `' + flag + '`', function (t) {
-      var expected = read(join(cwd, 'HELP'), 'utf8').replace(/\r/g, '').trim()
+      var expected = fs
+        .readFileSync(path.join(cwd, 'HELP'), 'utf8')
+        .replace(/\r/g, '')
+        .trim()
 
       t.plan(1)
 
@@ -251,8 +249,8 @@ test('unified-args', function (t) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
-        'charlie' + sep + 'delta.text: no issues found',
-        'charlie' + sep + 'echo.text: no issues found',
+        'charlie' + path.sep + 'delta.text: no issues found',
+        'charlie' + path.sep + 'echo.text: no issues found',
         'delta.text: no issues found'
       ].join('\n')
 
@@ -290,8 +288,8 @@ test('unified-args', function (t) {
       var expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
-        'charlie' + sep + 'delta.text: no issues found',
-        'charlie' + sep + 'echo.text: no issues found',
+        'charlie' + path.sep + 'delta.text: no issues found',
+        'charlie' + path.sep + 'echo.text: no issues found',
         'delta.text: no issues found'
       ].join('\n')
 
@@ -332,7 +330,7 @@ test('unified-args', function (t) {
     })
 
     t.test('should honour `' + flag + '`', function (t) {
-      var bin = join(fixtures, 'settings', 'cli.js')
+      var bin = path.join(fixtures, 'settings', 'cli.js')
 
       t.plan(1)
 
@@ -351,7 +349,7 @@ test('unified-args', function (t) {
 
   t.test('shouldn’t fail on property-like settings', function (t) {
     var expected = '{"foo":"https://example.com"}'
-    var bin = join(fixtures, 'settings', 'cli.js')
+    var bin = path.join(fixtures, 'settings', 'cli.js')
     var setting = 'foo:"https://example.com"'
 
     t.plan(1)
@@ -372,7 +370,7 @@ test('unified-args', function (t) {
 
   function useFlag(flag) {
     t.test('should load a plugin with `' + flag + '`', function (t) {
-      var bin = join(fixtures, 'plugins', 'cli.js')
+      var bin = path.join(fixtures, 'plugins', 'cli.js')
 
       t.plan(1)
 
@@ -407,7 +405,7 @@ test('unified-args', function (t) {
     })
 
     t.test('should honour `' + flag + '`', function (t) {
-      var bin = join(fixtures, 'plugins', 'cli.js')
+      var bin = path.join(fixtures, 'plugins', 'cli.js')
       var options = './plugin=foo:{bar:"baz",qux:1,quux:true}'
 
       t.plan(1)
@@ -429,12 +427,7 @@ test('unified-args', function (t) {
 
   t.test('should honour `--report`', function (t) {
     var expected = JSON.stringify([
-      {
-        path: 'alpha.text',
-        cwd: cwd,
-        history: ['alpha.text'],
-        messages: []
-      }
+      {path: 'alpha.text', cwd, history: ['alpha.text'], messages: []}
     ])
 
     t.plan(1)
@@ -452,14 +445,7 @@ test('unified-args', function (t) {
 
   t.test('should honour `--report` with options', function (t) {
     var expected = JSON.stringify(
-      [
-        {
-          path: 'alpha.text',
-          cwd: cwd,
-          history: ['alpha.text'],
-          messages: []
-        }
-      ],
+      [{path: 'alpha.text', cwd, history: ['alpha.text'], messages: []}],
       null,
       '\t'
     )
@@ -524,7 +510,7 @@ test('unified-args', function (t) {
     var expected = [
       'alpha.text: no issues found',
       'bravo.text: no issues found',
-      'charlie' + sep + 'echo.text: no issues found',
+      'charlie' + path.sep + 'echo.text: no issues found',
       'delta.text: no issues found'
     ].join('\n')
 
@@ -535,7 +521,7 @@ test('unified-args', function (t) {
       '--ext',
       'text',
       '--ignore-path',
-      join('charlie', 'ignore')
+      path.join('charlie', 'ignore')
     ]).then(onsuccess, t.fail)
 
     function onsuccess(result) {
@@ -551,7 +537,7 @@ test('unified-args', function (t) {
     var expected = [
       'alpha.text: no issues found',
       'bravo.text: no issues found',
-      'charlie' + sep + 'echo.text: no issues found'
+      'charlie' + path.sep + 'echo.text: no issues found'
     ].join('\n')
 
     t.plan(1)
@@ -561,7 +547,7 @@ test('unified-args', function (t) {
       '--ext',
       'text',
       '--ignore-path',
-      join('charlie', 'ignore'),
+      path.join('charlie', 'ignore'),
       '--ignore-path-resolve-from',
       'cwd'
     ]).then(onsuccess, t.fail)
@@ -627,7 +613,7 @@ test('unified-args', function (t) {
       'watch.txt: no issues found',
       'watch.txt: no issues found'
     ].join('\n')
-    var doc = join(cwd, 'watch.txt')
+    var doc = path.join(cwd, 'watch.txt')
     var delay = 3000
     var resolved = false
     var proc
@@ -648,7 +634,7 @@ test('unified-args', function (t) {
 
     function onsuccess(result) {
       resolved = true
-      unlink(doc)
+      fs.unlinkSync(doc)
       t.deepEqual(
         [result.stdout, strip(result.stderr).trim()],
         ['', expected],
@@ -683,7 +669,7 @@ test('unified-args', function (t) {
     }
 
     var expected = lines.join('\n')
-    var doc = join(cwd, 'watch.txt')
+    var doc = path.join(cwd, 'watch.txt')
     var resolved = false
     var delay = 3000
     var proc
@@ -705,7 +691,7 @@ test('unified-args', function (t) {
     function onsuccess(result) {
       resolved = true
 
-      unlink(doc)
+      fs.unlinkSync(doc)
 
       t.deepEqual(
         [result.stdout, strip(result.stderr)],
@@ -744,7 +730,7 @@ test('unified-args', function (t) {
   })
 
   t.test('should report uncaught exceptions', function (t) {
-    var bin = join(fixtures, 'uncaught-errors', 'cli.js')
+    var bin = path.join(fixtures, 'uncaught-errors', 'cli.js')
     var expected = 'one.txt: no issues found\nfoo'
 
     t.plan(1)
