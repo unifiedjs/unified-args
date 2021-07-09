@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict'
 
-var start = require('../../..')
-var config = require('../config')
-var processor = require('../processor')
+var start = require('../../../index.js')
+var config = require('../config.json')
+var processor = require('../processor.js')
 
 start(
   Object.assign({}, config, {

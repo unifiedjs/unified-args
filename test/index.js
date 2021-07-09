@@ -16,12 +16,6 @@ var unlink = fs.unlinkSync
 
 var fixtures = join(__dirname, 'fixtures')
 
-var helpFlags = ['-h', '--help']
-var versionFlags = ['-v', '--version']
-var extFlags = ['-e', '--ext']
-var settingsFlags = ['-s', '--setting']
-var useFlags = ['-u', '--use']
-
 var cwd = join(fixtures, 'example')
 var bin = join(cwd, 'cli.js')
 
@@ -176,7 +170,10 @@ test('unified-args', function (t) {
     }
   })
 
-  helpFlags.forEach(function (flag) {
+  helpFlag('-h')
+  helpFlag('--help')
+
+  function helpFlag(flag) {
     t.test('should show help on `' + flag + '`', function (t) {
       var expected = read(join(cwd, 'HELP'), 'utf8').replace(/\r/g, '').trim()
 
@@ -192,9 +189,12 @@ test('unified-args', function (t) {
         )
       }
     })
-  })
+  }
 
-  versionFlags.forEach(function (flag) {
+  versionFlag('-v')
+  versionFlag('--version')
+
+  function versionFlag(flag) {
     t.test('should show help on `' + flag + '`', function (t) {
       t.plan(1)
 
@@ -208,7 +208,7 @@ test('unified-args', function (t) {
         )
       }
     })
-  })
+  }
 
   t.test('should honour `--color`', function (t) {
     var expected =
@@ -243,7 +243,10 @@ test('unified-args', function (t) {
     }
   })
 
-  extFlags.forEach(function (flag) {
+  extFlag('-e')
+  extFlag('--ext')
+
+  function extFlag(flag) {
     t.test('should honour `' + flag + '`', function (t) {
       var expected = [
         'alpha.text: no issues found',
@@ -304,9 +307,12 @@ test('unified-args', function (t) {
         )
       }
     })
-  })
+  }
 
-  settingsFlags.forEach(function (flag) {
+  settingsFlag('-s')
+  settingsFlag('--setting')
+
+  function settingsFlag(flag) {
     t.test('should catch syntax errors in `' + flag + '`', function (t) {
       var expected =
         "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
@@ -341,7 +347,7 @@ test('unified-args', function (t) {
         )
       }
     })
-  })
+  }
 
   t.test('shouldn’t fail on property-like settings', function (t) {
     var expected = '{"foo":"https://example.com"}'
@@ -361,7 +367,10 @@ test('unified-args', function (t) {
     }
   })
 
-  useFlags.forEach(function (flag) {
+  useFlag('-u')
+  useFlag('--use')
+
+  function useFlag(flag) {
     t.test('should load a plugin with `' + flag + '`', function (t) {
       var bin = join(fixtures, 'plugins', 'cli.js')
 
@@ -416,7 +425,7 @@ test('unified-args', function (t) {
         )
       }
     })
-  })
+  }
 
   t.test('should honour `--report`', function (t) {
     var expected = JSON.stringify([
