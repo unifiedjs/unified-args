@@ -7,15 +7,15 @@ import strip from 'strip-ansi'
 import figures from 'figures'
 import touch from 'touch'
 
-var fixtures = path.join('test', 'fixtures')
-var cwd = path.join(fixtures, 'example')
-var bin = path.join(cwd, 'cli.js')
+const fixtures = path.join('test', 'fixtures')
+const cwd = path.join(fixtures, 'example')
+const bin = path.join(cwd, 'cli.js')
 
 process.on('unhandledRejection', bail)
 
-test('unified-args', function (t) {
-  t.test('should fail on missing files', function (t) {
-    var expected = [
+test('unified-args', (t) => {
+  t.test('should fail on missing files', (t) => {
+    const expected = [
       'missing.txt',
       '  1:1  error  No such file or directory',
       '',
@@ -35,7 +35,7 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should accept a path to a file', function (t) {
+  t.test('should accept a path to a file', (t) => {
     t.plan(1)
 
     execa(bin, ['one.txt']).then(onsuccess, t.fail)
@@ -49,8 +49,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should accept a path to a directory', function (t) {
-    var expected = [
+  t.test('should accept a path to a directory', (t) => {
+    const expected = [
       'one.txt: no issues found',
       'three' + path.sep + 'five.txt: no issues found',
       'three' + path.sep + 'four.txt: no issues found',
@@ -70,8 +70,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should accept a glob to files', function (t) {
-    var expected = [
+  t.test('should accept a glob to files', (t) => {
+    const expected = [
       'one.txt: no issues found',
       'two.txt: no issues found'
     ].join('\n')
@@ -89,8 +89,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should accept a glob to a directory', function (t) {
-    var expected = [
+  t.test('should accept a glob to a directory', (t) => {
+    const expected = [
       'three' + path.sep + 'five.txt: no issues found',
       'three' + path.sep + 'four.txt: no issues found'
     ].join('\n')
@@ -108,8 +108,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should fail on a bad short flag', function (t) {
-    var expected = fs
+  t.test('should fail on a bad short flag', (t) => {
+    const expected = fs
       .readFileSync(path.join(cwd, 'SHORT_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
@@ -127,8 +127,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should fail on a bad grouped short flag', function (t) {
-    var expected = fs
+  t.test('should fail on a bad grouped short flag', (t) => {
+    const expected = fs
       .readFileSync(path.join(cwd, 'SHORT_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
@@ -146,8 +146,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should fail on a bad long flag', function (t) {
-    var expected = fs
+  t.test('should fail on a bad long flag', (t) => {
+    const expected = fs
       .readFileSync(path.join(cwd, 'LONG_FLAG'), 'utf8')
       .replace(/\r/g, '')
       .trim()
@@ -169,8 +169,8 @@ test('unified-args', function (t) {
   helpFlag('--help')
 
   function helpFlag(flag) {
-    t.test('should show help on `' + flag + '`', function (t) {
-      var expected = fs
+    t.test('should show help on `' + flag + '`', (t) => {
+      const expected = fs
         .readFileSync(path.join(cwd, 'HELP'), 'utf8')
         .replace(/\r/g, '')
         .trim()
@@ -193,7 +193,7 @@ test('unified-args', function (t) {
   versionFlag('--version')
 
   function versionFlag(flag) {
-    t.test('should show help on `' + flag + '`', function (t) {
+    t.test('should show help on `' + flag + '`', (t) => {
       t.plan(1)
 
       execa(bin, [flag]).then(onsuccess, t.fail)
@@ -208,8 +208,8 @@ test('unified-args', function (t) {
     })
   }
 
-  t.test('should honour `--color`', function (t) {
-    var expected =
+  t.test('should honour `--color`', (t) => {
+    const expected =
       '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found'
 
     t.plan(1)
@@ -225,8 +225,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should honour `--no-color`', function (t) {
-    var expected = 'one.txt: no issues found'
+  t.test('should honour `--no-color`', (t) => {
+    const expected = 'one.txt: no issues found'
 
     t.plan(1)
 
@@ -245,8 +245,8 @@ test('unified-args', function (t) {
   extFlag('--ext')
 
   function extFlag(flag) {
-    t.test('should honour `' + flag + '`', function (t) {
-      var expected = [
+    t.test('should honour `' + flag + '`', (t) => {
+      const expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
         'charlie' + path.sep + 'delta.text: no issues found',
@@ -267,8 +267,8 @@ test('unified-args', function (t) {
       }
     })
 
-    t.test('should fail on `' + flag + '` without value', function (t) {
-      var expected =
+    t.test('should fail on `' + flag + '` without value', (t) => {
+      const expected =
         'Error: Missing value: -e --ext <extensions> specify extensions'
 
       t.plan(1)
@@ -284,8 +284,8 @@ test('unified-args', function (t) {
       }
     })
 
-    t.test('should allow an extra `-e` after `' + flag + '`', function (t) {
-      var expected = [
+    t.test('should allow an extra `-e` after `' + flag + '`', (t) => {
+      const expected = [
         'alpha.text: no issues found',
         'bravo.text: no issues found',
         'charlie' + path.sep + 'delta.text: no issues found',
@@ -311,8 +311,8 @@ test('unified-args', function (t) {
   settingsFlag('--setting')
 
   function settingsFlag(flag) {
-    t.test('should catch syntax errors in `' + flag + '`', function (t) {
-      var expected =
+    t.test('should catch syntax errors in `' + flag + '`', (t) => {
+      const expected =
         "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
 
       t.plan(1)
@@ -329,8 +329,8 @@ test('unified-args', function (t) {
       }
     })
 
-    t.test('should honour `' + flag + '`', function (t) {
-      var bin = path.join(fixtures, 'settings', 'cli.js')
+    t.test('should honour `' + flag + '`', (t) => {
+      const bin = path.join(fixtures, 'settings', 'cli.js')
 
       t.plan(1)
 
@@ -347,10 +347,10 @@ test('unified-args', function (t) {
     })
   }
 
-  t.test('shouldn’t fail on property-like settings', function (t) {
-    var expected = '{"foo":"https://example.com"}'
-    var bin = path.join(fixtures, 'settings', 'cli.js')
-    var setting = 'foo:"https://example.com"'
+  t.test('shouldn’t fail on property-like settings', (t) => {
+    const expected = '{"foo":"https://example.com"}'
+    const bin = path.join(fixtures, 'settings', 'cli.js')
+    const setting = 'foo:"https://example.com"'
 
     t.plan(1)
 
@@ -369,8 +369,8 @@ test('unified-args', function (t) {
   useFlag('--use')
 
   function useFlag(flag) {
-    t.test('should load a plugin with `' + flag + '`', function (t) {
-      var bin = path.join(fixtures, 'plugins', 'cli.js')
+    t.test('should load a plugin with `' + flag + '`', (t) => {
+      const bin = path.join(fixtures, 'plugins', 'cli.js')
 
       t.plan(1)
 
@@ -386,8 +386,8 @@ test('unified-args', function (t) {
       }
     })
 
-    t.test('should catch syntax errors in `' + flag + '`', function (t) {
-      var expected =
+    t.test('should catch syntax errors in `' + flag + '`', (t) => {
+      const expected =
         "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
 
       t.plan(1)
@@ -404,9 +404,9 @@ test('unified-args', function (t) {
       }
     })
 
-    t.test('should honour `' + flag + '`', function (t) {
-      var bin = path.join(fixtures, 'plugins', 'cli.js')
-      var options = './plugin=foo:{bar:"baz",qux:1,quux:true}'
+    t.test('should honour `' + flag + '`', (t) => {
+      const bin = path.join(fixtures, 'plugins', 'cli.js')
+      const options = './plugin=foo:{bar:"baz",qux:1,quux:true}'
 
       t.plan(1)
 
@@ -425,8 +425,8 @@ test('unified-args', function (t) {
     })
   }
 
-  t.test('should honour `--report`', function (t) {
-    var expected = JSON.stringify([
+  t.test('should honour `--report`', (t) => {
+    const expected = JSON.stringify([
       {path: 'alpha.text', cwd, history: ['alpha.text'], messages: []}
     ])
 
@@ -443,14 +443,14 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should honour `--report` with options', function (t) {
-    var expected = JSON.stringify(
+  t.test('should honour `--report` with options', (t) => {
+    const expected = JSON.stringify(
       [{path: 'alpha.text', cwd, history: ['alpha.text'], messages: []}],
       null,
       '\t'
     )
 
-    var setting = 'json=pretty:"\\t"'
+    const setting = 'json=pretty:"\\t"'
 
     t.plan(1)
 
@@ -465,7 +465,7 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should fail on `--report` without value', function (t) {
+  t.test('should fail on `--report` without value', (t) => {
     t.plan(1)
 
     execa(bin, ['.', '--report']).then(t.fail, onfail)
@@ -479,8 +479,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should support `--ignore-pattern`', function (t) {
-    var expected = [
+  t.test('should support `--ignore-pattern`', (t) => {
+    const expected = [
       'alpha.text: no issues found',
       'bravo.text: no issues found',
       'one.txt: no issues found',
@@ -506,8 +506,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should support `--ignore-path`', function (t) {
-    var expected = [
+  t.test('should support `--ignore-path`', (t) => {
+    const expected = [
       'alpha.text: no issues found',
       'bravo.text: no issues found',
       'charlie' + path.sep + 'echo.text: no issues found',
@@ -533,8 +533,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should support `--ignore-path-resolve-from cwd`', function (t) {
-    var expected = [
+  t.test('should support `--ignore-path-resolve-from cwd`', (t) => {
+    const expected = [
       'alpha.text: no issues found',
       'bravo.text: no issues found',
       'charlie' + path.sep + 'echo.text: no issues found'
@@ -561,8 +561,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should fail when given an ignored path', function (t) {
-    var expected = [
+  t.test('should fail when given an ignored path', (t) => {
+    const expected = [
       'one.txt',
       '  1:1  error  Cannot process specified file: it’s ignored',
       '',
@@ -587,7 +587,7 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should support `--silently-ignore`', function (t) {
+  t.test('should support `--silently-ignore`', (t) => {
     t.plan(1)
 
     execa(bin, [
@@ -607,22 +607,21 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should honour `--watch`', function (t) {
-    var expected = [
+  t.test('should honour `--watch`', (t) => {
+    const expected = [
       'Watching... (press CTRL+C to exit)',
       'watch.txt: no issues found',
       'watch.txt: no issues found'
     ].join('\n')
-    var doc = path.join(cwd, 'watch.txt')
-    var delay = 3000
-    var resolved = false
-    var proc
+    const doc = path.join(cwd, 'watch.txt')
+    const delay = 3000
+    let resolved = false
 
     t.plan(3)
 
     touch.sync(doc)
 
-    proc = execa(bin, ['watch.txt', '-w'])
+    const proc = execa(bin, ['watch.txt', '-w'])
 
     if (process.platform === 'win32') {
       proc.then(t.fail, onsuccess)
@@ -654,8 +653,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should not regenerate when watching', function (t) {
-    var lines = [
+  t.test('should not regenerate when watching', (t) => {
+    const lines = [
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
       'watch.txt: no issues found',
@@ -668,17 +667,16 @@ test('unified-args', function (t) {
       lines.push('', 'watch.txt: written')
     }
 
-    var expected = lines.join('\n')
-    var doc = path.join(cwd, 'watch.txt')
-    var resolved = false
-    var delay = 3000
-    var proc
+    const expected = lines.join('\n')
+    const doc = path.join(cwd, 'watch.txt')
+    let resolved = false
+    const delay = 3000
 
     t.plan(3)
 
     touch.sync(doc)
 
-    proc = execa(bin, ['watch.txt', '-w', '-o'])
+    const proc = execa(bin, ['watch.txt', '-w', '-o'])
 
     if (process.platform === 'win32') {
       proc.then(t.fail, onsuccess)
@@ -712,8 +710,8 @@ test('unified-args', function (t) {
     }
   })
 
-  t.test('should exit on fatal errors when watching', function (t) {
-    var expected = [
+  t.test('should exit on fatal errors when watching', (t) => {
+    const expected = [
       'Watching... (press CTRL+C to exit)',
       'Error: No input'
     ].join('\n')
@@ -723,15 +721,15 @@ test('unified-args', function (t) {
     execa(bin, ['-w']).then(t.fail, onfail)
 
     function onfail(result) {
-      var actual = strip(result.stderr).split('\n').slice(0, 2).join('\n')
+      const actual = strip(result.stderr).split('\n').slice(0, 2).join('\n')
 
       t.deepEqual([result.exitCode, actual], [1, expected], 'should fail')
     }
   })
 
-  t.test('should report uncaught exceptions', function (t) {
-    var bin = path.join(fixtures, 'uncaught-errors', 'cli.js')
-    var expected = 'one.txt: no issues found\nfoo'
+  t.test('should report uncaught exceptions', (t) => {
+    const bin = path.join(fixtures, 'uncaught-errors', 'cli.js')
+    const expected = 'one.txt: no issues found\nfoo'
 
     t.plan(1)
 

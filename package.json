@@ -71,12 +71,6 @@
   },
   "xo": {
     "prettier": true,
-    "rules": {
-      "no-var": "off",
-      "prefer-arrow-callback": "off",
-      "unicorn/no-fn-reference-in-iterator": "off",
-      "guard-for-in": "off"
-    },
     "ignores": [
       "**/*.ts"
     ]
