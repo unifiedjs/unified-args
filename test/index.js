@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import execa from 'execa'
-import bail from 'bail'
+import {bail} from 'bail'
 import test from 'tape'
 import strip from 'strip-ansi'
 import figures from 'figures'
@@ -374,7 +374,7 @@ test('unified-args', (t) => {
 
       t.plan(1)
 
-      execa(bin, ['one.txt', flag, './plugin']).then(onsuccess, t.fail)
+      execa(bin, ['one.txt', flag, './plugin.js']).then(onsuccess, t.fail)
 
       function onsuccess(result) {
         // Attacher logs options, which are `undefined`.
@@ -393,7 +393,7 @@ test('unified-args', (t) => {
       t.plan(1)
 
       // Should be quoted.
-      execa(bin, ['.', flag, './plugin=foo:bar']).then(t.fail, onfail)
+      execa(bin, ['.', flag, './plugin.js=foo:bar']).then(t.fail, onfail)
 
       function onfail(result) {
         t.deepEqual(
@@ -406,7 +406,7 @@ test('unified-args', (t) => {
 
     t.test('should honour `' + flag + '`', (t) => {
       const bin = path.join(fixtures, 'plugins', 'cli.js')
-      const options = './plugin=foo:{bar:"baz",qux:1,quux:true}'
+      const options = './plugin.js=foo:{bar:"baz",qux:1,quux:true}'
 
       t.plan(1)
 
@@ -733,7 +733,7 @@ test('unified-args', (t) => {
 
     t.plan(1)
 
-    execa(bin, ['.', '-u', './plugin']).then(t.fail, onfail)
+    execa(bin, ['.', '-u', './plugin.js']).then(t.fail, onfail)
 
     function onfail(result) {
       t.deepEqual(

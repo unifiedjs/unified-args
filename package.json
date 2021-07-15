@@ -30,29 +30,29 @@
     "index.js"
   ],
   "dependencies": {
-    "camelcase": "^5.0.0",
-    "chalk": "^3.0.0",
+    "camelcase": "^6.0.0",
+    "chalk": "^4.0.0",
     "chokidar": "^3.0.0",
-    "fault": "^1.0.2",
+    "fault": "^2.0.0",
     "json5": "^2.0.0",
     "minimist": "^1.2.0",
     "text-table": "^0.2.0",
-    "unified-engine": "^8.0.0"
+    "unified-engine": "^9.0.0"
   },
   "devDependencies": {
-    "bail": "^1.0.0",
+    "bail": "^2.0.0",
     "c8": "^7.0.0",
     "execa": "^5.0.0",
-    "figures": "^3.0.0",
+    "figures": "^4.0.0",
     "prettier": "^2.0.0",
     "remark": "^13.0.0",
     "remark-cli": "^9.0.0",
     "remark-preset-wooorm": "^8.0.0",
-    "strip-ansi": "^6.0.0",
+    "strip-ansi": "^7.0.0",
     "tape": "^5.0.0",
     "touch": "^3.0.0",
     "unified": "^9.0.0",
-    "vfile-reporter-json": "^2.0.0",
+    "vfile-reporter-json": "^3.0.0",
     "xo": "^0.39.0"
   },
   "scripts": {
