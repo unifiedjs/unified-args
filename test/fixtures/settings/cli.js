@@ -7,10 +7,8 @@ import {config} from '../config.js'
 args(
   Object.assign({}, config, {
     cwd: path.join('test', 'fixtures', 'settings'),
-    processor: processor().use(logger)
+    processor: processor().use(function () {
+      console.log(JSON.stringify(this.data('settings')))
+    })
   })
 )
-
-function logger() {
-  console.log(JSON.stringify(this.data('settings')))
-}

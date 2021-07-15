@@ -37,25 +37,21 @@ searching for markdown files, and loading [configuration][config-file] and
 
 ```js
 #!/usr/bin/env node
-'use strict'
+import {args} from 'unified-args'
+import extensions from 'markdown-extensions'
+import {remark} from 'remark'
 
-var start = require('unified-args')
-var extensions = require('markdown-extensions')
-var remark = require('remark')
-var pack = require('remark/package.json')
-
-var name = pack.name
-
-start({
+args({
   processor: remark,
-  name: name,
-  description: pack.description,
-  version: pack.version,
-  pluginPrefix: name,
-  extensions: extensions,
-  packageField: name + 'Config',
-  rcName: '.' + name + 'rc',
-  ignoreName: '.' + name + 'ignore'
+  name: 'remark',
+  description:
+    'Markdown processor powered by plugins part of the unified collective',
+  version: '14.0.0',
+  pluginPrefix: 'remark',
+  extensions,
+  packageField: 'remarkConfig',
+  rcName: '.remarkrc',
+  ignoreName: '.remarkignore'
 })
 ```
 
@@ -366,6 +362,7 @@ settings.
 ```sh
 cli input.txt --use man
 cli input.txt --use 'toc=max-depth:3'
+cli input.txt --use ./plugin.js
 ```
 
 Plugin to load by its name or path, optionally with options, and use on every

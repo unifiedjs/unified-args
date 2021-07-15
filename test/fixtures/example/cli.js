@@ -7,6 +7,6 @@ import {config} from '../config.js'
 args(
   Object.assign({}, config, {
     cwd: path.join('test', 'fixtures', 'example'),
-    processor
+    processor: processor()
   })
 )
