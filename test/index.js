@@ -4,8 +4,9 @@ import execa from 'execa'
 import {bail} from 'bail'
 import test from 'tape'
 import strip from 'strip-ansi'
-import figures from 'figures'
 import touch from 'touch'
+
+const cross = process.platform === 'win32' ? '×' : '✖'
 
 const fixtures = path.join('test', 'fixtures')
 const cwd = path.join(fixtures, 'example')
@@ -19,7 +20,7 @@ test('unified-args', (t) => {
       'missing.txt',
       '  1:1  error  No such file or directory',
       '',
-      figures.cross + ' 1 error'
+      cross + ' 1 error'
     ].join('\n')
 
     t.plan(1)
@@ -595,7 +596,7 @@ test('unified-args', (t) => {
       '',
       'two.txt: no issues found',
       '',
-      figures.cross + ' 1 error'
+      cross + ' 1 error'
     ].join('\n')
 
     t.plan(1)
