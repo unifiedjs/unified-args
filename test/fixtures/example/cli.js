@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import path from 'path'
+import path from 'node:path'
 import {args} from '../../../index.js'
 import {processor} from '../processor.js'
 import {config} from '../config.js'
