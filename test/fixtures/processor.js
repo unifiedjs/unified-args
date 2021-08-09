@@ -2,7 +2,7 @@
  * @typedef {import('unist').Literal<string>} Literal
  */
 
-import unified from 'unified'
+import {unified} from 'unified'
 
 export const processor = unified()
   .use(function () {
