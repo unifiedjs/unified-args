@@ -33,4 +33,4 @@ jobs:
       matrix:
         node:
           - lts/fermium
-          - node
+          - lts/gallium
