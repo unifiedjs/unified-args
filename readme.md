@@ -7,59 +7,19 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-Interface for creating CLIs around [**unified**][unified] processors.
-Wrapper around [`unifiedjs/unified-engine`][engine] to configure it with
-command-line arguments.
-Should be `require`d and configured in an executable script, on its own, as it
-handles the whole process.
-
-[`unifiedjs.com`][site], the website for **unified** provides a good overview
-about what unified can do.
-
-## Install
-
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 14+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
-
-```sh
-npm install unified-args
-```
-
-## Use
-
-This example creates a CLI for [**remark**][remark], loading `remark-` plugins,
-searching for markdown files, and loading [configuration][config-file] and
-[ignore][ignore-file] files.
-
-`cli` (you can make it runnable with: `chmod +x cli`):
-
-```js
-#!/usr/bin/env node
-import {args} from 'unified-args'
-import extensions from 'markdown-extensions'
-import {remark} from 'remark'
-
-args({
-  processor: remark,
-  name: 'remark',
-  description:
-    'Markdown processor powered by plugins part of the unified collective',
-  version: '14.0.0',
-  pluginPrefix: 'remark',
-  extensions,
-  packageField: 'remarkConfig',
-  rcName: '.remarkrc',
-  ignoreName: '.remarkignore'
-})
-```
+**[unified][]** engine to create a command line interface from a unified
+processor.
 
 ## Contents
 
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
 *   [API](#api)
     *   [`args(configuration)`](#argsconfiguration)
 *   [CLI](#cli)
+    *   [Files](#files)
     *   [`--help`](#--help)
     *   [`--version`](#--version)
     *   [`--output [path]`](#--output-path)
@@ -87,57 +47,128 @@ args({
     *   [`--ignore`](#--ignore)
 *   [Diagnostics](#diagnostics)
 *   [Debugging](#debugging)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
 *   [Contribute](#contribute)
 *   [License](#license)
 
+## What is this?
+
+This package wraps [`unified-engine`][unified-engine] so that it can be used
+to create a command line interface.
+It’s what you use underneath when you use [`remark-cli`][remark-cli].
+
+## When should I use this?
+
+You can use this to let users process multiple files from the command line,
+letting them configure from the file system.
+
+## Install
+
+This package is [ESM only][esm].
+In Node.js (version 14.14+, 16.0+, or 18.0+), install with [npm][]:
+
+```sh
+npm install unified-args
+```
+
+## Use
+
+The following example creates a CLI for [remark][], which will search for files
+in folders with a markdown extension, allows [configuration][config-file] from
+`.remarkrc` and `package.json` files, [ignoring files][ignore-file] from
+`.remarkignore` files, and more.
+
+Say our module `example.js` looks as follows:
+
+```js
+import {args} from 'unified-args'
+import {remark} from 'remark'
+
+args({
+  processor: remark,
+  name: 'remark',
+  description:
+    'Command line interface to inspect and change markdown files with remark',
+  version: '14.0.0',
+  pluginPrefix: 'remark',
+  packageField: 'remarkConfig',
+  rcName: '.remarkrc',
+  ignoreName: '.remarkignore',
+  extensions: [
+    'md',
+    'markdown',
+    'mdown',
+    'mkdn',
+    'mkd',
+    'mdwn',
+    'mkdown',
+    'ron'
+  ]
+})
+```
+
+…now running `node example.js --help` yields:
+
+```txt
+Usage: remark [options] [path | glob ...]
+
+  Command line interface to inspect and change markdown files with remark
+
+Options:
+
+  -h  --help                              output usage information
+  …
+```
+
 ## API
 
-This package exports the following identifiers: `args`.
+This package exports the identifier `args`.
 There is no default export.
 
 ### `args(configuration)`
 
-Create a CLI for a [**unified**][unified] processor.
+Create a command line interface from a unified processor.
 
 ###### `configuration`
 
 All options are required.
 
 *   `processor` ([`Processor`][unified-processor])
-    — Processor to transform files
+    — processor to inspect and transform files
     (engine: [`processor`][engine-processor])
 *   `name` (`string`)
-    — Name of executable
+    — name of executable
 *   `description` (`string`)
-    — Description of executable
+    — description of executable
 *   `version` (`string`)
-    — Version of executable
-*   `extensions` (`Array.<string>`)
-    — Default file [extensions][ext] to include
+    — version of executable
+*   `extensions` (`Array<string>`)
+    — default file [extensions][ext] to include
     (engine: [`extensions`][engine-extensions])
 *   `ignoreName` (`string`)
-    — Name of [ignore files][ignore-file] to load
+    — name of [ignore files][ignore-file] to load
     (engine: [`ignoreName`][engine-ignore-name])
 *   `rcName` (`string`)
-    — Name of [configuration files][config-file] to load
+    — name of [configuration files][config-file] to load
     (engine: [`rcName`][engine-rc-name])
 *   `packageField` (`string`)
-    — Property at which [configuration][config-file] can be found in
-    `package.json` files
+    — field where [configuration][config-file] can be found in `package.json`s
     (engine: [`packageField`][engine-package-field])
 *   `pluginPrefix` (`string`)
-    — Prefix to use when searching for [plug-ins][use]
+    — prefix to use when searching for [plugins][use]
     (engine: [`pluginPrefix`][engine-plugin-prefix])
 
 ## CLI
 
-CLIs created with **unified-args**, such as the [example][usage] above, creates
-an interface similar to the below (run `cli --help` for accurate information):
+CLIs created with `unified-args`, such as the [example][] above, have an
+interface similar to the below:
 
 ```txt
 Usage: remark [options] [path | glob ...]
 
-  Markdown processor powered by plugins
+  Command line interface to inspect and change markdown files with remark
 
 Options:
 
@@ -179,21 +210,25 @@ Examples:
   $ remark . -o
 ```
 
-All non-options are seen as input and can be:
+### Files
 
-*   Paths (`cli readme.txt`) and [globs][glob] (`cli *.txt`) pointing to files
-    to load
-*   Paths (`cli test`) and globs (`cli fixtures/{in,out}`) pointing to
-    directories.
-    These are searched for files with known [extensions][ext] which are not
-    ignored by patterns in [ignore files][ignore-file].
+All non-options passed to the cli are seen as input and can be:
+
+*   paths (`readme.txt`) and [globs][glob] (`*.txt`) pointing to files to load
+*   paths (`test`) and globs (`fixtures/{in,out}`) pointing to folders, which
+    are searched for files with known [extensions][ext] which are not ignored
+    by patterns in [ignore files][ignore-file].
     The default behavior is to exclude files in `node_modules` and hidden
-    directories (those starting with a dot: `.`) unless explicitly given
+    folders (those starting with `.`) unless explicitly given
 
-<!-- Options: -->
+You can force things to be seen as input by using `--`:
 
-*   **Default**: none
-*   **Engine**: [`files`][engine-files]
+```sh
+cli -- globs/* and/files
+```
+
+*   **default**: none
+*   **engine**: [`files`][engine-files]
 
 ### `--help`
 
@@ -203,8 +238,8 @@ cli --help
 
 Output short usage information.
 
-*   **Default**: off
-*   **Alias**: `-h`
+*   **default**: off
+*   **alias**: `-h`
 
 ### `--version`
 
@@ -214,125 +249,122 @@ cli --version
 
 Output version number.
 
-*   **Default**: off
-*   **Alias**: `-v`
+*   **default**: off
+*   **alias**: `-v`
 
 ### `--output [path]`
 
 ```sh
-cli . --output
-cli . --output doc
-cli input.txt --output doc/output.text
+cli --output -- .
+cli --output doc .
+cli --output doc/output.text input.txt
 ```
 
 Whether to write successfully processed files, and where to.
 Can be set from [configuration files][config-file].
 
-*   If output is **not** given, files are not written to the file system
-*   If output is given **without** `path`, input files are overwritten when
-    successful
-*   If output is given with `path` and it points to an existing directory,
-    files are written to that directory (intermediate directories are not
-    created)
-*   If output is given with `path`, the parent directory of that path
-    exists, and one file is processed, the file is written to the given
-    path
+*   if output is not given, files are not written to the file system
+*   otherwise, if `path` is not given, files are overwritten when successful
+*   otherwise, if `path` points to a folder, files are written there
+*   otherwise, if one file is processed, the file is written to `path`
 
-<!-- Options: -->
+> 👉 **Note**: intermediate folders are not created.
 
-*   **Default**: off
-*   **Alias**: `-o`
-*   **Engine**: [`output`][engine-output]
+*   **default**: off
+*   **alias**: `-o`
+*   **engine**: [`output`][engine-output]
 
 ### `--rc-path <path>`
 
 ```sh
-cli . --rc-path config.json
+cli --rc-path config.json .
 ```
 
-File path to a JSON [configuration file][config-file] to load, regardless of
+File path to a [configuration file][config-file] to load, regardless of
 [`--config`][config].
 
-*   **Default**: none
-*   **Alias**: `-r`
-*   **Engine**: [`rcPath`][engine-rc-path]
+*   **default**: none
+*   **alias**: `-r`
+*   **engine**: [`rcPath`][engine-rc-path]
 
 ### `--ignore-path <path>`
 
 ```sh
-cli . --ignore-path .gitignore
+cli --ignore-path .gitignore .
 ```
 
 File path to an [ignore file][ignore-file] to load, regardless of
 [`--ignore`][ignore].
 
-*   **Default**: none
-*   **Alias**: `-i`
-*   **Engine**: [`ignorePath`][engine-ignore-path]
+*   **default**: none
+*   **alias**: `-i`
+*   **engine**: [`ignorePath`][engine-ignore-path]
 
 ### `--ignore-path-resolve-from dir|cwd`
 
 ```sh
-cli . --ignore-path node_modules/my-config/my-ignore --ignore-path-resolve-from cwd
+cli --ignore-path node_modules/my-config/my-ignore --ignore-path-resolve-from cwd .
 ```
 
 Resolve patterns in the ignore file from its directory (`dir`, default) or the
 current working directory (`cwd`).
 
-*   **Default**: `dir`
-*   **Engine**: [`ignorePathResolveFrom`][engine-ignore-path-resolve-from]
+*   **default**: `dir`
+*   **engine**: [`ignorePathResolveFrom`][engine-ignore-path-resolve-from]
 
 ### `--ignore-pattern <globs>`
 
 ```sh
-cli . --ignore-pattern docs/*.md
+cli --ignore-pattern docs/*.md .
 ```
 
 Additional patterns to use to ignore files.
 
-*   **Default**: none
-*   **Engine**: [`ignorePatterns`][engine-ignore-patterns]
+*   **default**: none
+*   **engine**: [`ignorePatterns`][engine-ignore-patterns]
 
 ### `--silently-ignore`
 
 ```sh
-cli **/*.md --silently-ignore
+cli --silently-ignore **/*.md
 ```
 
 Skip given files which are ignored by ignore files, instead of warning about
 them.
 
-*   **Default**: off
-*   **Engine**: [`silentlyIgnore`][engine-silently-ignore]
+*   **default**: off
+*   **engine**: [`silentlyIgnore`][engine-silently-ignore]
 
 ### `--setting <settings>`
 
 ```sh
-cli input.txt --setting alpha:true
-cli input.txt --setting bravo:true --setting '"charlie": "delta"'
-cli input.txt --setting echo-foxtrot:-2
-cli input.txt --setting 'golf: false, hotel-india: ["juliet", 1]'
+cli --setting alpha:true input.txt
+cli --setting bravo:true --setting '"charlie": "delta"' input.txt
+cli --setting echo-foxtrot:-2 input.txt
+cli --setting 'golf: false, hotel-india: ["juliet", 1]' input.txt
 ```
 
 Configuration for the parser and compiler of the processor.
 Can be set from [configuration files][config-file].
 
 The given settings are [JSON5][], with one exception: surrounding braces must
-not be used.  Instead, use JSON syntax without braces, such as `"foo": 1, "bar": "baz"`.
+not be used.  Instead, use JSON syntax without braces, such as
+`"foo": 1, "bar": "baz"`.
 
-*   **Default**: none
-*   **Alias**: `-s`
-*   **Engine**: [`settings`][engine-settings]
+*   **default**: none
+*   **alias**: `-s`
+*   **engine**: [`settings`][engine-settings]
 
 ### `--report <reporter>`
 
 ```sh
-cli input.txt --report ./reporter.js
-cli input.txt --report vfile-reporter-json
-cli input.txt --report json
-cli input.txt --report json=pretty:2
-cli input.txt --report 'json=pretty:"\t"'
-cli input.txt --report pretty --report json # only last one is used
+cli --report ./reporter.js input.txt
+cli --report vfile-reporter-json input.txt
+cli --report json input.txt
+cli --report json=pretty:2 input.txt
+cli --report 'json=pretty:"\t"' input.txt
+# Only last one is used:
+cli --report pretty --report json input.txt
 ```
 
 [Reporter][] to load by its name or path, optionally with options, and use to
@@ -346,23 +378,22 @@ Prefixed reporters are preferred over modules without prefix.
 
 If multiple reporters are given, the last one is used.
 
-*   **Default**: none, which uses [`vfile-reporter`][vfile-reporter].
-*   **Engine**: [`reporter`][engine-reporter] and
-    [`reporterOptions`][engine-reporter-options].
+*   **default**: none, which uses [`vfile-reporter`][vfile-reporter]
+*   **engine**: [`reporter`][engine-reporter] and
+    [`reporterOptions`][engine-reporter-options]
 
-###### Note
-
-The [`quiet`][quiet], [`silent`][silent], and [`color`][color] options may not
-work with the used reporter.
-If they are given, they are preferred over the same properties in reporter
-settings.
+> 👉 **Note**: the [`quiet`][quiet], [`silent`][silent], and [`color`][color]
+> options may not work with the used reporter.
+> If they are given, they are preferred over the same properties in reporter
+> settings.
 
 ### `--use <plugin>`
 
 ```sh
-cli input.txt --use man
-cli input.txt --use 'toc=max-depth:3'
-cli input.txt --use ./plugin.js
+cli --use remark-man input.txt
+cli --use man input.txt
+cli --use 'toc=max-depth:3' input.txt
+cli --use ./plugin.js input.txt
 ```
 
 Plugin to load by its name or path, optionally with options, and use on every
@@ -375,29 +406,30 @@ have the same in syntax as [`--setting <settings>`][setting].
 Plugins prefixed with the [configured `pluginPrefix`][configured] are preferred
 over modules without prefix.
 
-*   **Default**: none
-*   **Alias**: `-u`
-*   **Engine**: [`plugins`][engine-plugins]
+*   **default**: none
+*   **alias**: `-u`
+*   **engine**: [`plugins`][engine-plugins]
 
 ### `--ext <extensions>`
 
 ```sh
-cli . --ext html
-cli . --ext html,htm
+cli --ext html .
+cli --ext html --ext htm .
+cli --ext html,htm .
 ```
 
 Specify one or more extensions to include when searching for files.
 
 If no extensions are given, uses the [configured `extensions`][configured].
 
-*   **Default**: Configured [`extensions`][configured]
-*   **Alias**: `-e`
-*   **Engine**: [`extensions`][engine-extensions]
+*   **default**: configured [`extensions`][configured]
+*   **alias**: `-e`
+*   **engine**: [`extensions`][engine-extensions]
 
 ### `--watch`
 
 ```sh
-cli . -qwo
+cli -qwo .
 ```
 
 Yields:
@@ -408,17 +440,16 @@ Note: Ignoring `--output` until exit.
 ```
 
 Process as normal, then watch found files and reprocess when they change.
-
 The watch is stopped when `SIGINT` is received (usually done by pressing
 `CTRL-C`).
 
-If [`--output`][output] is given **without** `path` it is not honored, to
-prevent an infinite loop.
+If [`--output`][output] is given without `path`, it is not honored, to prevent
+an infinite loop.
 On operating systems other than Windows, when the watch closes, a final process
 runs including `--output`.
 
-*   **Default**: off
-*   **Alias**: `-w`
+*   **default**: off
+*   **alias**: `-w`
 
 ### `--tree`
 
@@ -429,9 +460,9 @@ cli --tree < input.json > output.json
 Treat input as a syntax tree in JSON and output the transformed syntax tree.
 This runs neither the [parsing nor the compilation phase][description].
 
-*   **Default**: off
-*   **Alias**: `-t`
-*   **Engine**: [`tree`][engine-tree]
+*   **default**: off
+*   **alias**: `-t`
+*   **engine**: [`tree`][engine-tree]
 
 ### `--tree-in`
 
@@ -442,8 +473,8 @@ cli --tree-in < input.json > input.txt
 Treat input as a syntax tree in JSON.
 This does not run the [parsing phase][description].
 
-*   **Default**: off
-*   **Engine**: [`treeIn`][engine-tree-in]
+*   **default**: off
+*   **engine**: [`treeIn`][engine-tree-in]
 
 ### `--tree-out`
 
@@ -454,8 +485,8 @@ cli --tree-out < input.txt > output.json
 Output the transformed syntax tree.
 This does not run the [compilation phase][description].
 
-*   **Default**: off
-*   **Engine**: [`treeOut`][engine-tree-out]
+*   **default**: off
+*   **engine**: [`treeOut`][engine-tree-out]
 
 ### `--inspect`
 
@@ -464,63 +495,56 @@ cli --inspect < input.txt
 ```
 
 Output the transformed syntax tree, formatted with
-[`unist-util-inspect`][inspect].
+[`unist-util-inspect`][unist-util-inspect].
 This does not run the [compilation phase][description].
 
-*   **Default**: off
-*   **Engine**: [`inspect`][engine-inspect]
+*   **default**: off
+*   **engine**: [`inspect`][engine-inspect]
 
 ### `--quiet`
 
 ```sh
-cli input.txt --quiet
+cli --quiet input.txt
 ```
 
 Ignore files without any messages in the report.
 The default behavior is to show a success message.
 
-*   **Default**: off
-*   **Alias**: `-q`
-*   **Engine**: [`quiet`][engine-quiet]
+*   **default**: off
+*   **alias**: `-q`
+*   **engine**: [`quiet`][engine-quiet]
 
-###### Note
-
-This option may not work depending on the reporter given in
-[`--report`][report].
-
-The [`quiet`][quiet], [`silent`][silent], and [`color`][color] options may not
-work with the used reporter.
+> 👉 **Note**: this option may not work depending on the reporter given in
+> [`--report`][report].
 
 ### `--silent`
 
 ```sh
-cli input.txt --silent
+cli --silent input.txt
 ```
 
 Show only fatal errors in the report.
 Turns [`--quiet`][quiet] on.
 
-*   **Default**: off
-*   **Alias**: `-S`
-*   **Engine**: [`silent`][engine-silent]
+*   **default**: off
+*   **alias**: `-S`
+*   **engine**: [`silent`][engine-silent]
 
-###### Note
-
-This option may not work depending on the reporter given in
-[`--report`][report].
+> 👉 **Note**: this option may not work depending on the reporter given in
+> [`--report`][report].
 
 ### `--frail`
 
 ```sh
-cli input.txt --frail
+cli --frail input.txt
 ```
 
 Exit with a status code of `1` if warnings or errors occur.
 The default behavior is to exit with `1` on errors.
 
-*   **Default**: off
-*   **Alias**: `-f`
-*   **Engine**: [`frail`][engine-frail]
+*   **default**: off
+*   **alias**: `-f`
+*   **engine**: [`frail`][engine-frail]
 
 ### `--file-path <path>`
 
@@ -530,64 +554,63 @@ cli --file-path input.txt < input.txt > doc/output.txt
 
 File path to process the given file on **stdin**(4) as, if any.
 
-*   **Default**: none
-*   **Engine**: [`filePath`][engine-file-path]
+*   **default**: none
+*   **engine**: [`filePath`][engine-file-path]
 
 ### `--stdout`
 
 ```sh
-cli input.txt --no-stdout
+cli --no-stdout input.txt
 ```
 
 Whether to write a processed file to **stdout**(4).
 
-*   **Default**: off if [`--output`][output] or [`--watch`][watch] are given, or
+*   **default**: off if [`--output`][output] or [`--watch`][watch] are given, or
     if multiple files could be processed
-*   **Engine**: [`out`][engine-out]
+*   **engine**: [`out`][engine-out]
 
 ### `--color`
 
 ```sh
-cli input.txt --no-color
+cli --no-color input.txt
 ```
 
 Whether to output ANSI color codes in the report.
 
-*   **Default**: whether the terminal [supports color][supports-color]
-*   **Engine**: [`color`][engine-color]
+*   **default**: whether the terminal [supports color][supports-color]
+*   **engine**: [`color`][engine-color]
 
-###### Note
-
-This option may not work depending on the reporter given in
-[`--report`][report].
+> 👉 **Note**: This option may not work depending on the reporter given in
+> [`--report`][report].
 
 ### `--config`
 
 ```sh
-cli input.txt --no-config
+cli --no-config input.txt
 ```
 
 Whether to load [configuration files][config-file].
 
-Searches for files with the [configured `rcName`][configured]: `$rcName` (JSON),
-`$rcName.js` (JavaScript), `$rcName.yml` (YAML), and `$rcName.yaml` (YAML); and
-looks for the [configured `packageField`][configured] in `package.json` files.
+Searches for files with the [configured `rcName`][configured]: `$rcName` and
+`$rcName.json` (JSON), `$rcName.yml` and  `$rcName.yaml` (YAML), `$rcName.js`
+(JavaScript), `$rcName.cjs` (CommonJS), and `$rcName.mjs` (ESM); and looks for
+the [configured `packageField`][configured] in `package.json` files.
 
-*   **Default**: on
-*   **Engine**: [`detectConfig`][engine-detect-config]
+*   **default**: on
+*   **engine**: [`detectConfig`][engine-detect-config]
 
 ### `--ignore`
 
 ```sh
-cli . --no-ignore
+cli --no-ignore .
 ```
 
 Whether to load [ignore files][ignore-file].
 
 Searches for files named [`$ignoreName`][configured].
 
-*   **Default**: on
-*   **Engine**: [`detectIgnore`][engine-detect-ignore]
+*   **default**: on
+*   **engine**: [`detectIgnore`][engine-detect-ignore]
 
 ## Diagnostics
 
@@ -601,6 +624,26 @@ CLIs created with **unified-args** exit with:
 
 CLIs can be debugged by setting the [`DEBUG`][debug] environment variable to
 `*`, such as `DEBUG="*" cli example.txt`.
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It export the additional type `Options`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
+
+## Security
+
+`unified-args` loads and evaluates configuration files, plugins, and presets
+from the file system (often from `node_modules/`).
+That means code that is on your file system runs.
+Make sure you trust the workspace where you run `unified-args` and be careful
+with packages from npm and changes made by contributors.
 
 ## Contribute
 
@@ -642,99 +685,113 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[typescript]: https://www.typescriptlang.org
+
 [health]: https://github.com/unifiedjs/.github
 
-[contributing]: https://github.com/unifiedjs/.github/blob/HEAD/contributing.md
+[contributing]: https://github.com/unifiedjs/.github/blob/main/contributing.md
 
-[support]: https://github.com/unifiedjs/.github/blob/HEAD/support.md
+[support]: https://github.com/unifiedjs/.github/blob/main/support.md
 
-[coc]: https://github.com/unifiedjs/.github/blob/HEAD/code-of-conduct.md
+[coc]: https://github.com/unifiedjs/.github/blob/main/code-of-conduct.md
 
 [license]: license
 
 [author]: https://wooorm.com
 
-[debug]: https://github.com/visionmedia/debug#debug
+[unified]: https://github.com/unifiedjs/unified
+
+[unified-processor]: https://github.com/unifiedjs/unified#processor
+
+[description]: https://github.com/unifiedjs/unified#description
+
+[remark]: https://github.com/remarkjs/remark
+
+[remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
+
+[reporter]: https://github.com/vfile/vfile#reporters
+
+[vfile-reporter]: https://github.com/vfile/vfile-reporter
+
+[unist-util-inspect]: https://github.com/syntax-tree/unist-util-inspect
+
+[debug]: https://github.com/debug-js/debug
 
 [glob]: https://github.com/isaacs/node-glob#glob-primer
 
 [supports-color]: https://github.com/chalk/supports-color
 
-[unified]: https://github.com/unifiedjs/unified
+[json5]: https://github.com/json5/json5
 
-[engine]: https://github.com/unifiedjs/unified-engine
+[unified-engine]: https://github.com/unifiedjs/unified-engine
 
-[unified-processor]: https://github.com/unifiedjs/unified#processor
+[config-file]: https://github.com/unifiedjs/unified-engine/blob/main/doc/configure.md
 
-[remark]: https://github.com/remarkjs/remark
+[ignore-file]: https://github.com/unifiedjs/unified-engine/blob/main/doc/ignore.md
 
-[config-file]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/configure.md
+[engine-processor]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsprocessor
 
-[ignore-file]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/ignore.md
+[engine-files]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsfiles
 
-[description]: https://github.com/unifiedjs/unified#description
+[engine-output]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsoutput
 
-[engine-processor]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsprocessor
+[engine-rc-path]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsrcpath
 
-[engine-files]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsfiles
+[engine-rc-name]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsrcname
 
-[engine-output]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsoutput
+[engine-package-field]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionspackagefield
 
-[engine-rc-path]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsrcpath
+[engine-ignore-name]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsignorename
 
-[engine-rc-name]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsrcname
+[engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsignorepath
 
-[engine-package-field]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionspackagefield
+[engine-ignore-path-resolve-from]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsignorepathresolvefrom
 
-[engine-ignore-name]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorename
+[engine-ignore-patterns]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsignorepatterns
 
-[engine-ignore-path]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorepath
+[engine-silently-ignore]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionssilentlyignore
 
-[engine-ignore-path-resolve-from]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorepathresolvefrom
+[engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsreporter
 
-[engine-ignore-patterns]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsignorepatterns
+[engine-reporter-options]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsreporteroptions
 
-[engine-silently-ignore]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionssilentlyignore
+[engine-settings]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionssettings
 
-[engine-reporter]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsreporter
+[engine-plugins]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsplugins
 
-[engine-reporter-options]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsreporteroptions
+[engine-plugin-prefix]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionspluginprefix
 
-[engine-settings]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionssettings
+[engine-extensions]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsextensions
 
-[engine-plugins]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsplugins
+[engine-tree]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionstree
 
-[engine-plugin-prefix]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionspluginprefix
+[engine-tree-in]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionstreein
 
-[engine-extensions]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsextensions
+[engine-tree-out]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionstreeout
 
-[engine-tree]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionstree
+[engine-inspect]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsinspect
 
-[engine-tree-in]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionstreein
+[engine-quiet]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsquiet
 
-[engine-tree-out]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionstreeout
+[engine-silent]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsilent
 
-[engine-inspect]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsinspect
+[engine-frail]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsfrail
 
-[engine-quiet]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsquiet
+[engine-file-path]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsfilepath
 
-[engine-silent]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsilent
+[engine-out]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsout
 
-[engine-frail]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsfrail
+[engine-color]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionscolor
 
-[engine-file-path]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsfilepath
+[engine-detect-config]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsdetectconfig
 
-[engine-out]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsout
-
-[engine-color]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionscolor
-
-[engine-detect-config]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsdetectconfig
-
-[engine-detect-ignore]: https://github.com/unifiedjs/unified-engine/blob/HEAD/doc/options.md#optionsdetectignore
+[engine-detect-ignore]: https://github.com/unifiedjs/unified-engine/blob/main/doc/options.md#optionsdetectignore
 
 [configured]: #argsconfiguration
 
-[usage]: #use
+[example]: #use
 
 [watch]: #--watch
 
@@ -759,13 +816,3 @@ abide by its terms.
 [color]: #--color
 
 [frail]: #--frail
-
-[site]: https://unifiedjs.com
-
-[reporter]: https://github.com/vfile/vfile#reporters
-
-[vfile-reporter]: https://github.com/vfile/vfile-reporter
-
-[inspect]: https://github.com/syntax-tree/unist-util-inspect
-
-[json5]: https://github.com/json5/json5
