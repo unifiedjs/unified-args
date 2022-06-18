@@ -39,7 +39,7 @@
     "json5": "^2.0.0",
     "minimist": "^1.0.0",
     "text-table": "^0.2.0",
-    "unified-engine": "^9.0.0"
+    "unified-engine": "^10.0.0"
   },
   "devDependencies": {
     "@types/tape": "^4.0.0",
