@@ -1,7 +1,11 @@
+/**
+ * @typedef {import('execa').ExecaReturnValue} ExecaReturnValue
+ */
+
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import execa from 'execa'
+import {execa} from 'execa'
 import {bail} from 'bail'
 import test from 'tape'
 import strip from 'strip-ansi'
@@ -28,7 +32,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['missing.txt']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, strip(error.stderr)],
           [1, expected],
@@ -125,7 +129,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['-n']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, strip(error.stderr)],
           [1, expected],
@@ -145,7 +149,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['-on']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, strip(error.stderr)],
           [1, expected],
@@ -165,7 +169,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['--no']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, strip(error.stderr)],
           [1, expected],
@@ -290,7 +294,7 @@ test('unified-args', (t) => {
 
       execa(bin, ['.', flag]).then(
         () => t.fail(),
-        (/** @type {execa.ExecaReturnValue} */ error) => {
+        (/** @type {ExecaReturnValue} */ error) => {
           t.deepEqual(
             [error.stdout, error.stderr],
             ['', expected],
@@ -337,7 +341,7 @@ test('unified-args', (t) => {
       // Should be quoted.
       execa(bin, ['.', flag, 'foo:bar']).then(
         () => t.fail(),
-        (/** @type {execa.ExecaReturnValue} */ error) => {
+        (/** @type {ExecaReturnValue} */ error) => {
           t.deepEqual(
             [error.exitCode, strip(error.stderr)],
             [1, expected],
@@ -416,7 +420,7 @@ test('unified-args', (t) => {
       // Should be quoted.
       execa(bin, ['.', flag, './plugin.js=foo:bar']).then(
         () => t.fail(),
-        (/** @type {execa.ExecaReturnValue} */ error) => {
+        (/** @type {ExecaReturnValue} */ error) => {
           t.deepEqual(
             [error.exitCode, strip(error.stderr)],
             [1, expected],
@@ -495,7 +499,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['.', '--report']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, error.stderr],
           [1, 'Error: Missing value:  --report <reporter> specify reporter'],
@@ -604,7 +608,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['one.txt', 'two.txt', '--ignore-pattern', 'one.txt']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, strip(error.stderr)],
           [1, expected],
@@ -659,7 +663,7 @@ test('unified-args', (t) => {
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    function onsuccess(/** @type {execa.ExecaReturnValue} */ result) {
+    function onsuccess(/** @type {ExecaReturnValue} */ result) {
       resolved = true
       fs.unlinkSync(doc)
       t.deepEqual(
@@ -714,7 +718,7 @@ test('unified-args', (t) => {
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    function onsuccess(/** @type {execa.ExecaReturnValue} */ result) {
+    function onsuccess(/** @type {ExecaReturnValue} */ result) {
       resolved = true
 
       fs.unlinkSync(doc)
@@ -748,7 +752,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['-w']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         const actual = strip(error.stderr).split('\n').slice(0, 2).join('\n')
 
         t.deepEqual([error.exitCode, actual], [1, expected], 'should fail')
@@ -764,7 +768,7 @@ test('unified-args', (t) => {
 
     execa(bin, ['.', '-u', './plugin.js']).then(
       () => t.fail(),
-      (/** @type {execa.ExecaReturnValue} */ error) => {
+      (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
           [error.exitCode, strip(error.stderr)],
           [1, expected],
