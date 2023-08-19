@@ -32,14 +32,14 @@
   ],
   "dependencies": {
     "@types/text-table": "^0.2.0",
-    "camelcase": "^7.0.0",
+    "camelcase": "^8.0.0",
     "chalk": "^5.0.0",
     "chokidar": "^3.0.0",
     "fault": "^2.0.0",
     "json5": "^2.0.0",
     "minimist": "^1.0.0",
     "text-table": "^0.2.0",
-    "unified-engine": "^10.0.0"
+    "unified-engine": "^11.0.0"
   },
   "devDependencies": {
     "@types/minimist": "^1.0.0",
@@ -47,7 +47,7 @@
     "@types/touch": "^3.0.0",
     "bail": "^2.0.0",
     "c8": "^8.0.0",
-    "execa": "^7.0.0",
+    "execa": "^8.0.0",
     "prettier": "^3.0.0",
     "remark": "^14.0.0",
     "remark-cli": "^11.0.0",
@@ -58,8 +58,8 @@
     "touch": "^3.0.0",
     "type-coverage": "^2.0.0",
     "typescript": "^5.0.0",
-    "unified": "^10.0.0",
-    "vfile-reporter-json": "^3.0.0",
+    "unified": "^11.0.0",
+    "vfile-reporter-json": "^4.0.0",
     "xo": "^0.56.0"
   },
   "scripts": {

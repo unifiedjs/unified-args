@@ -11,8 +11,6 @@ import test from 'tape'
 import strip from 'strip-ansi'
 import touch from 'touch'
 
-const cross = process.platform === 'win32' ? '×' : '✖'
-
 const fixtures = path.join('test', 'fixtures')
 const cwd = path.join(fixtures, 'example')
 const bin = path.join(cwd, 'cli.js')
@@ -23,9 +21,11 @@ test('unified-args', (t) => {
   t.test('should fail on missing files', (t) => {
     const expected = [
       'missing.txt',
-      '  1:1  error  No such file or directory',
+      ' error No such file or folder',
+      '  [cause]:',
+      '    Error: ENOENT:…',
       '',
-      cross + ' 1 error'
+      '✖ 1 error'
     ].join('\n')
 
     t.plan(1)
@@ -34,7 +34,7 @@ test('unified-args', (t) => {
       () => t.fail(),
       (/** @type {ExecaReturnValue} */ error) => {
         t.deepEqual(
-          [error.exitCode, strip(error.stderr)],
+          [error.exitCode, cleanError(error.stderr)],
           [1, expected],
           'should fail'
         )
@@ -597,11 +597,11 @@ test('unified-args', (t) => {
   t.test('should fail when given an ignored path', (t) => {
     const expected = [
       'one.txt',
-      '  1:1  error  Cannot process specified file: it’s ignored',
+      ' error Cannot process specified file: it’s ignored',
       '',
       'two.txt: no issues found',
       '',
-      cross + ' 1 error'
+      '✖ 1 error'
     ].join('\n')
 
     t.plan(1)
@@ -780,3 +780,32 @@ test('unified-args', (t) => {
 
   t.end()
 })
+
+/**
+ * Clean an error so that it’s easier to test.
+ *
+ * This particularly removed error cause messages, which change across Node
+ * versions.
+ * It also drops file paths, which differ across platforms.
+ *
+ * @param {string} value
+ *   Error, report, or stack.
+ * @param {number | undefined} [max=Infinity]
+ *   Lines to include.
+ * @returns {string}
+ *   Clean error.
+ */
+function cleanError(value, max) {
+  return (
+    strip(value)
+      // Clean syscal errors
+      .replace(/( *Error: [A-Z]+:)[^\n]*/g, '$1…')
+
+      .replace(/\(.+[/\\]/g, '(')
+      .replace(/file:.+\//g, '')
+      .replace(/\d+:\d+/g, '1:1')
+      .split('\n')
+      .slice(0, max || Number.POSITIVE_INFINITY)
+      .join('\n')
+  )
+}
