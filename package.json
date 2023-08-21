@@ -1,6 +1,6 @@
 {
   "name": "unified-args",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "description": "create CLIs for unified processors",
   "license": "MIT",
   "keywords": [
