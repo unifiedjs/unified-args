@@ -675,7 +675,7 @@ test('args', async function (t) {
   await t.test('should support `--watch`', async function () {
     // On Windows, `SIGINT` crashes immediately and results in an error.
     // Hence `reject: false`, `exitCode`, and extra lines when non-windows.
-    const delay = 1000
+    const delay = 3000
     const url = new URL('watch.txt', base)
 
     await fs.writeFile(url, 'alpha')
@@ -690,11 +690,14 @@ test('args', async function (t) {
 
     const lines = [
       'Watching... (press CTRL+C to exit)',
+      'watch.txt: no issues found',
       'watch.txt: no issues found'
     ]
 
-    if (platform !== 'win32') {
-      lines.push('watch.txt: no issues found', '')
+    if (platform === 'win32') {
+      // Empty.
+    } else {
+      lines.push('')
     }
 
     assert.equal(result.exitCode, platform === 'win32' ? undefined : 0)
@@ -712,7 +715,7 @@ test('args', async function (t) {
   })
 
   await t.test('should not regenerate when watching', async function () {
-    const delay = 1000
+    const delay = 3000
     const url = new URL('watch.txt', base)
 
     await fs.writeFile(url, 'alpha')
@@ -728,11 +731,12 @@ test('args', async function (t) {
     const lines = [
       'Watching... (press CTRL+C to exit)',
       'Note: Ignoring `--output` until exit.',
+      'watch.txt: no issues found',
       'watch.txt: no issues found'
     ]
 
     if (platform !== 'win32') {
-      lines.push('watch.txt: no issues found', '', 'watch.txt: written')
+      lines.push('', 'watch.txt: written')
     }
 
     assert.equal(result.exitCode, platform === 'win32' ? undefined : 0)
