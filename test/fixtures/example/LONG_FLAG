@@ -22,5 +22,6 @@ Error: Unknown option `--no`, expected:
       --tree-in                           specify input as syntax tree
       --tree-out                          output syntax tree
   -u  --use <plugins>                     use plugins
+      --verbose                           report extra info for messages
   -v  --version                           output version number
   -w  --watch                             watch for changes and reprocess

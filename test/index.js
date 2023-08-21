@@ -145,7 +145,7 @@ test('args', async function (t) {
       const result = /** @type {ExecaError} */ (error)
 
       assert.deepEqual(
-        [result.exitCode, cleanError(result.stderr, 26)],
+        [result.exitCode, cleanError(result.stderr, 27)],
         [1, longFlag]
       )
     }
