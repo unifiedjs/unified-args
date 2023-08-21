@@ -3,7 +3,6 @@ export default function plugin() {}
 setTimeout(thrower, 1000)
 
 function thrower() {
-  /* eslint-disable no-throw-literal */
+  // eslint-disable-next-line no-throw-literal -- intentional.
   throw 'foo'
-  /* eslint-enable no-throw-literal */
 }

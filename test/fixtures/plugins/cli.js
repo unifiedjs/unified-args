@@ -1,12 +1,6 @@
 #!/usr/bin/env node
-import path from 'node:path'
 import {args} from '../../../index.js'
-import {processor} from '../processor.js'
 import {config} from '../config.js'
+import {processor} from '../processor.js'
 
-args(
-  Object.assign({}, config, {
-    cwd: path.join('test', 'fixtures', 'plugins'),
-    processor: processor()
-  })
-)
+args({...config, cwd: new URL('.', import.meta.url), processor})

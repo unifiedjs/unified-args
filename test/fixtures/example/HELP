@@ -19,7 +19,7 @@ Options:
   -t  --tree                              specify input and output as syntax tree
       --report <reporter>                 specify reporter
       --file-path <path>                  specify path to process as
-      --ignore-path-resolve-from dir|cwd  resolve patterns in `ignore-path` from its directory or cwd
+      --ignore-path-resolve-from cwd|dir  resolve patterns in `ignore-path` from its directory or cwd
       --ignore-pattern <globs>            specify ignore patterns
       --silently-ignore                   do not fail when given ignored files
       --tree-in                           specify input as syntax tree

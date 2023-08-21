@@ -25,7 +25,7 @@ processor.
     *   [`--output [path]`](#--output-path)
     *   [`--rc-path <path>`](#--rc-path-path)
     *   [`--ignore-path <path>`](#--ignore-path-path)
-    *   [`--ignore-path-resolve-from dir|cwd`](#--ignore-path-resolve-from-dircwd)
+    *   [`--ignore-path-resolve-from cwd|dir`](#--ignore-path-resolve-from-cwddir)
     *   [`--ignore-pattern <globs>`](#--ignore-pattern-globs)
     *   [`--silently-ignore`](#--silently-ignore)
     *   [`--setting <settings>`](#--setting-settings)
@@ -87,15 +87,8 @@ import {args} from 'unified-args'
 import {remark} from 'remark'
 
 args({
-  processor: remark,
-  name: 'remark',
   description:
     'Command line interface to inspect and change markdown files with remark',
-  version: '14.0.0',
-  pluginPrefix: 'remark',
-  packageField: 'remarkConfig',
-  rcName: '.remarkrc',
-  ignoreName: '.remarkignore',
   extensions: [
     'md',
     'markdown',
@@ -105,7 +98,14 @@ args({
     'mdwn',
     'mkdown',
     'ron'
-  ]
+  ],
+  ignoreName: '.remarkignore',
+  name: 'remark',
+  packageField: 'remarkConfig',
+  pluginPrefix: 'remark',
+  processor: remark,
+  rcName: '.remarkrc',
+  version: '14.0.0'
 })
 ```
 
@@ -187,7 +187,7 @@ Options:
   -t  --tree                              specify input and output as syntax tree
       --report <reporter>                 specify reporter
       --file-path <path>                  specify path to process as
-      --ignore-path-resolve-from dir|cwd  resolve patterns in `ignore-path` from its directory or cwd
+      --ignore-path-resolve-from cwd|dir  resolve patterns in `ignore-path` from its directory or cwd
       --ignore-pattern <globs>            specify ignore patterns
       --silently-ignore                   do not fail when given ignored files
       --tree-in                           specify input as syntax tree
@@ -300,7 +300,7 @@ File path to an [ignore file][ignore-file] to load, regardless of
 *   **alias**: `-i`
 *   **engine**: [`ignorePath`][engine-ignore-path]
 
-### `--ignore-path-resolve-from dir|cwd`
+### `--ignore-path-resolve-from cwd|dir`
 
 ```sh
 cli --ignore-path node_modules/my-config/my-ignore --ignore-path-resolve-from cwd .

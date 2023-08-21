@@ -1,10 +1,10 @@
 export const config = {
-  name: 'foo',
   description: 'Foo processor',
-  version: '0.0.0',
-  pluginPrefix: 'foo',
   extensions: ['txt'],
+  ignoreName: '.fooignore',
+  name: 'foo',
   packageField: 'fooConfig',
+  pluginPrefix: 'foo',
   rcName: '.foorc',
-  ignoreName: '.fooignore'
+  version: '0.0.0'
 }

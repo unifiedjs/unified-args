@@ -1,784 +1,785 @@
 /**
- * @typedef {import('execa').ExecaReturnValue} ExecaReturnValue
+ * @typedef {import('execa').ExecaError<string>} ExecaError
  */
 
-import fs from 'node:fs'
-import path from 'node:path'
-import process from 'node:process'
+import assert from 'node:assert/strict'
+import fs from 'node:fs/promises'
+import {sep} from 'node:path'
+import {EOL} from 'node:os'
+import {platform} from 'node:process'
+import test from 'node:test'
+import {fileURLToPath} from 'node:url'
 import {execa} from 'execa'
-import {bail} from 'bail'
-import test from 'tape'
-import strip from 'strip-ansi'
-import touch from 'touch'
+import stripAnsi from 'strip-ansi'
 
-const fixtures = path.join('test', 'fixtures')
-const cwd = path.join(fixtures, 'example')
-const bin = path.join(cwd, 'cli.js')
+const base = new URL('fixtures/example/', import.meta.url)
+const bin = new URL('fixtures/example/cli.js', import.meta.url)
+const binPath = fileURLToPath(bin)
 
-process.on('unhandledRejection', bail)
+test('args', async function (t) {
+  // Clean from last run.
+  try {
+    await fs.unlink(new URL('watch.txt', base))
+  } catch {}
 
-test('unified-args', (t) => {
-  t.test('should fail on missing files', (t) => {
-    const expected = [
-      'missing.txt',
-      ' error No such file or folder',
-      '  [cause]:',
-      '    Error: ENOENT:…',
-      '',
-      '✖ 1 error'
-    ].join('\n')
+  const help = String(await fs.readFile(new URL('HELP', base)))
+    .replace(/\r\n/g, '\n')
+    .trimEnd()
+  const longFlag = String(await fs.readFile(new URL('LONG_FLAG', base)))
+    .replace(/\r\n/g, '\n')
+    .trimEnd()
+  const shortFlag = String(await fs.readFile(new URL('SHORT_FLAG', base)))
+    .replace(/\r\n/g, '\n')
+    .trimEnd()
 
-    t.plan(1)
-
-    execa(bin, ['missing.txt']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, cleanError(error.stderr)],
-          [1, expected],
-          'should fail'
-        )
-      }
-    )
+  await t.test('should expose the public api', async function () {
+    assert.deepEqual(Object.keys(await import('../index.js')).sort(), ['args'])
   })
 
-  t.test('should accept a path to a file', (t) => {
-    t.plan(1)
-
-    execa(bin, ['one.txt']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['one', 'one.txt: no issues found'],
-          'should work'
-        )
-      },
-      () => t.fail()
-    )
-  })
-
-  t.test('should accept a path to a directory', (t) => {
-    const expected = [
-      'one.txt: no issues found',
-      'three' + path.sep + 'five.txt: no issues found',
-      'three' + path.sep + 'four.txt: no issues found',
-      'two.txt: no issues found'
-    ].join('\n')
-
-    t.plan(1)
-
-    execa(bin, ['.']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
-    )
-  })
-
-  t.test('should accept a glob to files', (t) => {
-    const expected = [
-      'one.txt: no issues found',
-      'two.txt: no issues found'
-    ].join('\n')
-
-    t.plan(1)
-
-    execa(bin, ['*.txt']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
-    )
-  })
-
-  t.test('should accept a glob to a directory', (t) => {
-    const expected = [
-      'three' + path.sep + 'five.txt: no issues found',
-      'three' + path.sep + 'four.txt: no issues found'
-    ].join('\n')
-
-    t.plan(1)
-
-    execa(bin, ['thr+(e)']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
-    )
-  })
-
-  t.test('should fail on a bad short flag', (t) => {
-    const expected = fs
-      .readFileSync(path.join(cwd, 'SHORT_FLAG'), 'utf8')
-      .replace(/\r/g, '')
-      .trim()
-
-    t.plan(1)
-
-    execa(bin, ['-n']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, strip(error.stderr)],
-          [1, expected],
-          'should fail'
-        )
-      }
-    )
-  })
-
-  t.test('should fail on a bad grouped short flag', (t) => {
-    const expected = fs
-      .readFileSync(path.join(cwd, 'SHORT_FLAG'), 'utf8')
-      .replace(/\r/g, '')
-      .trim()
-
-    t.plan(1)
-
-    execa(bin, ['-on']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, strip(error.stderr)],
-          [1, expected],
-          'should fail'
-        )
-      }
-    )
-  })
-
-  t.test('should fail on a bad long flag', (t) => {
-    const expected = fs
-      .readFileSync(path.join(cwd, 'LONG_FLAG'), 'utf8')
-      .replace(/\r/g, '')
-      .trim()
-
-    t.plan(1)
-
-    execa(bin, ['--no']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, strip(error.stderr)],
-          [1, expected],
-          'should fail'
-        )
-      }
-    )
-  })
-
-  helpFlag('-h')
-  helpFlag('--help')
-
-  function helpFlag(/** @type {string} */ flag) {
-    t.test('should show help on `' + flag + '`', (t) => {
-      const expected = fs
-        .readFileSync(path.join(cwd, 'HELP'), 'utf8')
-        .replace(/\r/g, '')
-        .trim()
-
-      t.plan(1)
-
-      execa(bin, [flag]).then(
-        (result) => {
-          t.deepEqual(
-            [result.stdout, result.stderr],
-            [expected, ''],
-            'should work'
-          )
-        },
-        () => t.fail()
+  await t.test('should fail on missing files', async function () {
+    try {
+      await execa(binPath, ['missing.txt'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr)],
+        [
+          1,
+          [
+            'missing.txt',
+            ' error No such file or folder',
+            '  [cause]:',
+            '    Error: ENOENT:…',
+            '',
+            '✖ 1 error'
+          ].join('\n')
+        ]
       )
+    }
+  })
+
+  await t.test('should accept a path to a file', async function () {
+    const result = await execa(binPath, ['one.txt'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['one', 'one.txt: no issues found']
+    )
+  })
+
+  await t.test('should accept a path to a directory', async function () {
+    const result = await execa(binPath, ['.'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        '',
+        [
+          'one.txt: no issues found',
+          'three' + sep + 'five.txt: no issues found',
+          'three' + sep + 'four.txt: no issues found',
+          'two.txt: no issues found'
+        ].join('\n')
+      ]
+    )
+  })
+
+  await t.test('should accept a glob to files', async function () {
+    const result = await execa(binPath, ['*.txt'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['', 'one.txt: no issues found\ntwo.txt: no issues found']
+    )
+  })
+
+  await t.test('should accept a glob to a directory', async function () {
+    const result = await execa(binPath, ['thr+(e)'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        '',
+        [
+          'three' + sep + 'five.txt: no issues found',
+          'three' + sep + 'four.txt: no issues found'
+        ].join('\n')
+      ]
+    )
+  })
+
+  await t.test('should fail on a bad short flag', async function () {
+    try {
+      await execa(binPath, ['-n'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr, 14)],
+        [1, shortFlag]
+      )
+    }
+  })
+
+  await t.test('should fail on a bad grouped short flag', async function () {
+    try {
+      await execa(binPath, ['-on'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr, 14)],
+        [1, shortFlag]
+      )
+    }
+  })
+
+  await t.test('should fail on a bad long flag', async function () {
+    try {
+      await execa(binPath, ['--no'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr, 26)],
+        [1, longFlag]
+      )
+    }
+  })
+
+  await helpFlag('-h')
+  await helpFlag('--help')
+
+  /**
+   * @param {string} flag
+   *   Flag.
+   * @returns {Promise<undefined>}
+   *   Nothing.
+   */
+  async function helpFlag(flag) {
+    await t.test('should show help on `' + flag + '`', async function () {
+      const result = await execa(binPath, [flag])
+      assert.deepEqual([result.stdout, result.stderr], [help, ''])
     })
   }
 
-  versionFlag('-v')
-  versionFlag('--version')
+  await versionFlag('-v')
+  await versionFlag('--version')
 
-  function versionFlag(/** @type {string} */ flag) {
-    t.test('should show help on `' + flag + '`', (t) => {
-      t.plan(1)
+  /**
+   * @param {string} flag
+   *   Flag.
+   * @returns {Promise<undefined>}
+   *   Nothing.
+   */
+  async function versionFlag(flag) {
+    await t.test('should show version on `' + flag + '`', async function () {
+      const result = await execa(binPath, [flag])
 
-      execa(bin, [flag]).then(
-        (result) => {
-          t.deepEqual(
-            [result.stdout, result.stderr],
-            ['0.0.0', ''],
-            'should work'
-          )
-        },
-        () => t.fail()
-      )
+      assert.deepEqual([result.stdout, result.stderr], ['0.0.0', ''])
     })
   }
 
-  t.test('should honour `--color`', (t) => {
-    const expected =
-      '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found'
+  await t.test('should support `--color`', async function () {
+    const result = await execa(binPath, ['--color', 'one.txt'])
 
-    t.plan(1)
-
-    execa(bin, ['--color', 'one.txt']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, result.stderr],
-          ['one', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+    assert.deepEqual(
+      [result.stdout, result.stderr],
+      ['one', '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found']
     )
   })
 
-  t.test('should honour `--no-color`', (t) => {
-    const expected = 'one.txt: no issues found'
+  await t.test('should support `--no-color`', async function () {
+    const result = await execa(binPath, ['--no-color', 'one.txt'])
 
-    t.plan(1)
-
-    execa(bin, ['--no-color', 'one.txt']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, result.stderr],
-          ['one', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+    assert.deepEqual(
+      [result.stdout, result.stderr],
+      ['one', 'one.txt: no issues found']
     )
   })
 
-  extFlag('-e')
-  extFlag('--ext')
+  await extFlag('-e')
+  await extFlag('--ext')
 
-  function extFlag(/** @type {string} */ flag) {
-    t.test('should honour `' + flag + '`', (t) => {
-      const expected = [
-        'alpha.text: no issues found',
-        'bravo.text: no issues found',
-        'charlie' + path.sep + 'delta.text: no issues found',
-        'charlie' + path.sep + 'echo.text: no issues found',
-        'delta.text: no issues found'
-      ].join('\n')
+  /**
+   * @param {string} flag
+   *   Flag.
+   * @returns {Promise<undefined>}
+   *   Nothing.
+   */
+  async function extFlag(flag) {
+    await t.test('should support `' + flag + '`', async function () {
+      const result = await execa(binPath, ['.', flag, 'text'])
 
-      t.plan(1)
-
-      execa(bin, ['.', flag, 'text']).then(
-        (result) => {
-          t.deepEqual(
-            [result.stdout, strip(result.stderr)],
-            ['', expected],
-            'should work'
-          )
-        },
-        () => t.fail()
+      assert.deepEqual(
+        [result.stdout, cleanError(result.stderr)],
+        [
+          '',
+          [
+            'alpha.text: no issues found',
+            'bravo.text: no issues found',
+            'charlie' + sep + 'delta.text: no issues found',
+            'charlie' + sep + 'echo.text: no issues found',
+            'delta.text: no issues found'
+          ].join('\n')
+        ]
       )
     })
 
-    t.test('should fail on `' + flag + '` without value', (t) => {
-      const expected =
-        'Error: Missing value: -e --ext <extensions> specify extensions'
+    await t.test(
+      'should fail on `' + flag + '` without value',
+      async function () {
+        try {
+          await execa(binPath, ['.', flag])
+          assert.fail()
+        } catch (error) {
+          const result = /** @type {ExecaError} */ (error)
 
-      t.plan(1)
-
-      execa(bin, ['.', flag]).then(
-        () => t.fail(),
-        (/** @type {ExecaReturnValue} */ error) => {
-          t.deepEqual(
-            [error.stdout, error.stderr],
-            ['', expected],
-            'should fail'
-          )
-        }
-      )
-    })
-
-    t.test('should allow an extra `-e` after `' + flag + '`', (t) => {
-      const expected = [
-        'alpha.text: no issues found',
-        'bravo.text: no issues found',
-        'charlie' + path.sep + 'delta.text: no issues found',
-        'charlie' + path.sep + 'echo.text: no issues found',
-        'delta.text: no issues found'
-      ].join('\n')
-
-      t.plan(1)
-
-      execa(bin, ['.', flag, 'text', '-e']).then(
-        (result) => {
-          t.deepEqual(
-            [result.stdout, strip(result.stderr)],
-            ['', expected],
-            'should work'
-          )
-        },
-        () => t.fail()
-      )
-    })
-  }
-
-  settingsFlag('-s')
-  settingsFlag('--setting')
-
-  function settingsFlag(/** @type {string} */ flag) {
-    t.test('should catch syntax errors in `' + flag + '`', (t) => {
-      const expected =
-        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
-
-      t.plan(1)
-
-      // Should be quoted.
-      execa(bin, ['.', flag, 'foo:bar']).then(
-        () => t.fail(),
-        (/** @type {ExecaReturnValue} */ error) => {
-          t.deepEqual(
-            [error.exitCode, strip(error.stderr)],
-            [1, expected],
-            'should fail'
-          )
-        }
-      )
-    })
-
-    t.test('should honour `' + flag + '`', (t) => {
-      const bin = path.join(fixtures, 'settings', 'cli.js')
-
-      t.plan(1)
-
-      execa(bin, ['one.txt', flag, '"foo-bar":"baz"']).then(
-        (result) => {
-          // Parser and Compiler both log stringified settings.
-          t.deepEqual(
-            [result.stdout, strip(result.stderr)],
-            ['{"fooBar":"baz"}\none', 'one.txt: no issues found'],
-            'should work'
-          )
-        },
-        () => t.fail()
-      )
-    })
-  }
-
-  t.test('shouldn’t fail on property-like settings', (t) => {
-    const expected = '{"foo":"https://example.com"}'
-    const bin = path.join(fixtures, 'settings', 'cli.js')
-    const setting = 'foo:"https://example.com"'
-
-    t.plan(1)
-
-    execa(bin, ['.', '--setting', setting]).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          [expected, 'one.txt: no issues found'],
-          'should work'
-        )
-      },
-      () => t.fail()
-    )
-  })
-
-  useFlag('-u')
-  useFlag('--use')
-
-  function useFlag(/** @type {string} */ flag) {
-    t.test('should load a plugin with `' + flag + '`', (t) => {
-      const bin = path.join(fixtures, 'plugins', 'cli.js')
-
-      t.plan(1)
-
-      execa(bin, ['one.txt', flag, './plugin.js']).then(
-        (result) => {
-          // Attacher logs options, which are `undefined`.
-          t.deepEqual(
-            [result.stdout, strip(result.stderr)],
-            ['undefined\none', 'one.txt: no issues found'],
-            'should work'
-          )
-        },
-        () => t.fail()
-      )
-    })
-
-    t.test('should catch syntax errors in `' + flag + '`', (t) => {
-      const expected =
-        "Error: Cannot parse `foo:bar` as JSON: JSON5: invalid character 'b' at 1:6"
-
-      t.plan(1)
-
-      // Should be quoted.
-      execa(bin, ['.', flag, './plugin.js=foo:bar']).then(
-        () => t.fail(),
-        (/** @type {ExecaReturnValue} */ error) => {
-          t.deepEqual(
-            [error.exitCode, strip(error.stderr)],
-            [1, expected],
-            'should fail'
-          )
-        }
-      )
-    })
-
-    t.test('should honour `' + flag + '`', (t) => {
-      const bin = path.join(fixtures, 'plugins', 'cli.js')
-      const options = './plugin.js=foo:{bar:"baz",qux:1,quux:true}'
-
-      t.plan(1)
-
-      execa(bin, ['one.txt', flag, options]).then(
-        (result) => {
-          t.deepEqual(
-            [result.stdout, strip(result.stderr)],
+          assert.deepEqual(
+            [result.exitCode, cleanError(result.stderr, 1)],
             [
-              '{"foo":{"bar":"baz","qux":1,"quux":true}}\none',
-              'one.txt: no issues found'
-            ],
-            'should fail'
+              1,
+              'Error: Missing value: -e --ext <extensions> specify extensions'
+            ]
           )
-        },
-        () => t.fail()
+        }
+      }
+    )
+
+    await t.test(
+      'should allow an extra `-e` after `' + flag + '`',
+      async function () {
+        const result = await execa(binPath, ['.', flag, 'text', '-e'])
+
+        assert.deepEqual(
+          [result.stdout, cleanError(result.stderr)],
+          [
+            '',
+            [
+              'alpha.text: no issues found',
+              'bravo.text: no issues found',
+              'charlie' + sep + 'delta.text: no issues found',
+              'charlie' + sep + 'echo.text: no issues found',
+              'delta.text: no issues found'
+            ].join('\n')
+          ]
+        )
+      }
+    )
+  }
+
+  await settingsFlag('-s')
+  await settingsFlag('--setting')
+
+  /**
+   * @param {string} flag
+   *   Flag.
+   * @returns {Promise<undefined>}
+   *   Nothing.
+   */
+  async function settingsFlag(flag) {
+    await t.test(
+      'should catch syntax errors in `' + flag + '`',
+      async function () {
+        try {
+          // Should be quoted.
+          await execa(binPath, ['.', flag, 'foo:bar'])
+          assert.fail()
+        } catch (error) {
+          const result = /** @type {ExecaError} */ (error)
+
+          assert.deepEqual(
+            [result.exitCode, cleanError(result.stderr, 1)],
+            [1, 'Error: Cannot parse `foo:bar` as JSON']
+          )
+        }
+      }
+    )
+
+    await t.test('should support `' + flag + '`', async function () {
+      const binPath = fileURLToPath(
+        new URL('fixtures/settings/cli.js', import.meta.url)
+      )
+
+      const result = await execa(binPath, ['one.txt', flag, '"foo-bar":"baz"'])
+
+      // Parser and Compiler both log stringified settings.
+      assert.deepEqual(
+        [result.stdout, cleanError(result.stderr)],
+        ['{"fooBar":"baz"}\none', 'one.txt: no issues found']
       )
     })
   }
 
-  t.test('should honour `--report`', (t) => {
-    const expected = JSON.stringify([
-      {path: 'alpha.text', cwd, history: ['alpha.text'], messages: []}
+  await t.test('should not fail on property-like settings', async function () {
+    const binPath = fileURLToPath(
+      new URL('fixtures/settings/cli.js', import.meta.url)
+    )
+
+    const result = await execa(binPath, [
+      '.',
+      '--setting',
+      'foo:"https://example.com"'
     ])
 
-    t.plan(1)
-
-    execa(bin, ['alpha.text', '--report', 'json']).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, result.stderr],
-          ['alpha', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['{"foo":"https://example.com"}', 'one.txt: no issues found']
     )
   })
 
-  t.test('should honour `--report` with options', (t) => {
-    const expected = JSON.stringify(
-      [{path: 'alpha.text', cwd, history: ['alpha.text'], messages: []}],
-      null,
-      '\t'
+  await t.test('should ignore boolean settings', async function () {
+    const binPath = fileURLToPath(
+      new URL('fixtures/settings/cli.js', import.meta.url)
     )
 
-    const setting = 'json=pretty:"\\t"'
+    const result = await execa(binPath, ['.', '--no-setting'])
 
-    t.plan(1)
-
-    execa(bin, ['alpha.text', '--report', setting]).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, result.stderr],
-          ['alpha', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['{}', 'one.txt: no issues found']
     )
   })
 
-  t.test('should fail on `--report` without value', (t) => {
-    t.plan(1)
+  await useFlag('-u')
+  await useFlag('--use')
 
-    execa(bin, ['.', '--report']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, error.stderr],
-          [1, 'Error: Missing value:  --report <reporter> specify reporter'],
-          'should fail'
-        )
+  /**
+   * @param {string} flag
+   *   Flag.
+   * @returns {Promise<undefined>}
+   *   Nothing.
+   */
+  async function useFlag(flag) {
+    await t.test('should load a plugin with `' + flag + '`', async function () {
+      const binPath = fileURLToPath(
+        new URL('fixtures/plugins/cli.js', import.meta.url)
+      )
+
+      const result = await execa(binPath, ['one.txt', flag, './plugin.js'])
+
+      // Plugin logs options, which are `undefined`.
+      assert.deepEqual(
+        [result.stdout, cleanError(result.stderr)],
+        ['undefined\none', 'one.txt: no issues found']
+      )
+    })
+
+    await t.test(
+      'should catch syntax errors in `' + flag + '`',
+      async function () {
+        // Should be quoted.
+        try {
+          await execa(binPath, ['.', flag, './plugin.js=foo:bar'])
+          assert.fail()
+        } catch (error) {
+          const result = /** @type {ExecaError} */ (error)
+
+          assert.deepEqual(
+            [result.exitCode, cleanError(result.stderr, 1)],
+            [1, 'Error: Cannot parse `foo:bar` as JSON']
+          )
+        }
       }
     )
+
+    await t.test('should support `' + flag + '`', async function () {
+      const binPath = fileURLToPath(
+        new URL('fixtures/plugins/cli.js', import.meta.url)
+      )
+
+      const result = await execa(binPath, [
+        'one.txt',
+        flag,
+        './plugin.js=foo:{bar:"baz",qux:1,quux:true}'
+      ])
+
+      assert.deepEqual(
+        [result.stdout, cleanError(result.stderr)],
+        [
+          '{"foo":{"bar":"baz","qux":1,"quux":true}}\none',
+          'one.txt: no issues found'
+        ]
+      )
+    })
+  }
+
+  await t.test('should support `--report`', async function () {
+    const result = await execa(binPath, ['alpha.text', '--report', 'json'])
+
+    assert.deepEqual(
+      [result.stdout, result.stderr],
+      [
+        'alpha',
+        JSON.stringify([
+          {
+            path: 'alpha.text',
+            cwd: 'test' + sep + 'fixtures' + sep + 'example',
+            history: ['alpha.text'],
+            messages: []
+          }
+        ])
+      ]
+    )
   })
 
-  t.test('should support `--ignore-pattern`', (t) => {
-    const expected = [
-      'alpha.text: no issues found',
-      'bravo.text: no issues found',
-      'one.txt: no issues found',
-      'two.txt: no issues found'
-    ].join('\n')
+  await t.test('should support `--report` with options', async function () {
+    const result = await execa(binPath, [
+      'alpha.text',
+      '--report',
+      'json=pretty:"\t"'
+    ])
 
-    t.plan(1)
+    assert.deepEqual(
+      [result.stdout, result.stderr],
+      [
+        'alpha',
+        JSON.stringify(
+          [
+            {
+              path: 'alpha.text',
+              cwd: 'test' + sep + 'fixtures' + sep + 'example',
+              history: ['alpha.text'],
+              messages: []
+            }
+          ],
+          undefined,
+          '\t'
+        )
+      ]
+    )
+  })
 
-    execa(bin, [
+  await t.test('should fail on `--report` without value', async function () {
+    try {
+      await execa(binPath, ['.', '--report'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr, 1)],
+        [1, 'Error: Missing value: --report <reporter> specify reporter']
+      )
+    }
+  })
+
+  await t.test('should support `--no-stdout`', async function () {
+    const result = await execa(binPath, ['one.txt', '--no-stdout'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['', 'one.txt: no issues found']
+    )
+  })
+
+  await t.test('should support `--tree-in`', async function () {
+    const result = await execa(binPath, ['tree.json', '--tree-in'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['hi!', 'tree.json: no issues found']
+    )
+  })
+
+  await t.test('should support `--tree-out`', async function () {
+    const result = await execa(binPath, ['one.txt', '--tree-out'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        JSON.stringify({type: 'text', value: 'one' + EOL}, undefined, 2),
+        'one.txt: no issues found'
+      ]
+    )
+  })
+
+  await t.test('should support `--tree`', async function () {
+    const result = await execa(binPath, ['tree.json', '--tree'])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        '{\n  "type": "text",\n  "value": "hi!"\n}',
+        'tree.json: no issues found'
+      ]
+    )
+  })
+
+  await t.test('should support `--ignore-pattern`', async function () {
+    const result = await execa(binPath, [
       '.',
       '--ext',
       'txt,text',
       '--ignore-pattern',
       'charlie/*,three/*.txt,delta.*'
-    ]).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+    ])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        '',
+        [
+          'alpha.text: no issues found',
+          'bravo.text: no issues found',
+          'one.txt: no issues found',
+          'two.txt: no issues found'
+        ].join('\n')
+      ]
     )
   })
 
-  t.test('should support `--ignore-path`', (t) => {
-    const expected = [
-      'alpha.text: no issues found',
-      'bravo.text: no issues found',
-      'charlie' + path.sep + 'echo.text: no issues found',
-      'delta.text: no issues found'
-    ].join('\n')
-
-    t.plan(1)
-
-    execa(bin, [
+  await t.test('should support `--ignore-path`', async function () {
+    const result = await execa(binPath, [
       '.',
       '--ext',
       'text',
       '--ignore-path',
-      path.join('charlie', 'ignore')
-    ]).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+      'charlie' + sep + 'ignore'
+    ])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        '',
+        [
+          'alpha.text: no issues found',
+          'bravo.text: no issues found',
+          'charlie' + sep + 'echo.text: no issues found',
+          'delta.text: no issues found'
+        ].join('\n')
+      ]
     )
   })
 
-  t.test('should support `--ignore-path-resolve-from cwd`', (t) => {
-    const expected = [
-      'alpha.text: no issues found',
-      'bravo.text: no issues found',
-      'charlie' + path.sep + 'echo.text: no issues found'
-    ].join('\n')
-
-    t.plan(1)
-
-    execa(bin, [
+  await t.test('should ignore non-last `--ignore-path`s', async function () {
+    const result = await execa(binPath, [
       '.',
       '--ext',
       'text',
       '--ignore-path',
-      path.join('charlie', 'ignore'),
-      '--ignore-path-resolve-from',
-      'cwd'
-    ]).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', expected],
-          'should work'
-        )
-      },
-      () => t.fail()
+      'missing',
+      '--ignore-path',
+      'charlie' + sep + 'ignore'
+    ])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      [
+        '',
+        [
+          'alpha.text: no issues found',
+          'bravo.text: no issues found',
+          'charlie' + sep + 'echo.text: no issues found',
+          'delta.text: no issues found'
+        ].join('\n')
+      ]
     )
   })
 
-  t.test('should fail when given an ignored path', (t) => {
-    const expected = [
-      'one.txt',
-      ' error Cannot process specified file: it’s ignored',
-      '',
-      'two.txt: no issues found',
-      '',
-      '✖ 1 error'
-    ].join('\n')
+  await t.test(
+    'should support `--ignore-path-resolve-from cwd`',
+    async function () {
+      const result = await execa(binPath, [
+        '.',
+        '--ext',
+        'text',
+        '--ignore-path',
+        'charlie' + sep + 'ignore',
+        '--ignore-path-resolve-from',
+        'cwd'
+      ])
 
-    t.plan(1)
+      assert.deepEqual(
+        [result.stdout, cleanError(result.stderr)],
+        [
+          '',
+          [
+            'alpha.text: no issues found',
+            'bravo.text: no issues found',
+            'charlie' + sep + 'echo.text: no issues found'
+          ].join('\n')
+        ]
+      )
+    }
+  )
 
-    execa(bin, ['one.txt', 'two.txt', '--ignore-pattern', 'one.txt']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, strip(error.stderr)],
-          [1, expected],
-          'should fail'
+  await t.test('should fail when given an ignored path', async function () {
+    try {
+      await execa(binPath, [
+        'one.txt',
+        'two.txt',
+        '--ignore-pattern',
+        'one.txt'
+      ])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr)],
+        [
+          1,
+          [
+            'one.txt',
+            ' error Cannot process specified file: it’s ignored',
+            '',
+            'two.txt: no issues found',
+            '',
+            '✖ 1 error'
+          ].join('\n')
+        ]
+      )
+    }
+  })
+
+  await t.test(
+    'should fail when given an incorrect `ignore-path-resolve-from`',
+    async function () {
+      try {
+        await execa(binPath, ['one.txt', '--ignore-path-resolve-from', 'xyz'])
+        assert.fail()
+      } catch (error) {
+        const result = /** @type {ExecaError} */ (error)
+
+        assert.deepEqual(
+          [result.exitCode, cleanError(result.stderr, 1)],
+          [
+            1,
+            "Error: Expected `'cwd'` or `'dir'` for `ignore-path-resolve-from`, not: `xyz`"
+          ]
         )
       }
-    )
-  })
+    }
+  )
 
-  t.test('should support `--silently-ignore`', (t) => {
-    t.plan(1)
-
-    execa(bin, [
+  await t.test('should support `--silently-ignore`', async function () {
+    const result = await execa(binPath, [
       'one.txt',
       'two.txt',
       '--ignore-pattern',
       'one.txt',
       '--silently-ignore'
-    ]).then(
-      (result) => {
-        t.deepEqual(
-          [result.stdout, strip(result.stderr)],
-          ['', 'two.txt: no issues found'],
-          'should work'
-        )
-      },
-      () => t.fail()
+    ])
+
+    assert.deepEqual(
+      [result.stdout, cleanError(result.stderr)],
+      ['', 'two.txt: no issues found']
     )
   })
 
-  t.test('should honour `--watch`', (t) => {
-    const expected = [
-      'Watching... (press CTRL+C to exit)',
-      'watch.txt: no issues found',
-      'watch.txt: no issues found'
-    ].join('\n')
-    const doc = path.join(cwd, 'watch.txt')
-    const delay = 3000
-    let resolved = false
+  await t.test('should support `--watch`', async function () {
+    // On Windows, `SIGINT` crashes immediately and results in an error.
+    // Hence `reject: false`, `exitCode`, and extra lines when non-windows.
+    const delay = 500
+    const url = new URL('watch.txt', base)
 
-    t.plan(3)
+    await fs.writeFile(url, 'alpha')
 
-    touch.sync(doc)
-
-    const proc = execa(bin, ['watch.txt', '-w'])
-
-    if (process.platform === 'win32') {
-      proc.then(() => t.fail(), onsuccess)
-    } else {
-      proc.then(onsuccess, () => t.fail())
-    }
+    const proc = execa(binPath, ['watch.txt', '-w'], {reject: false})
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    function onsuccess(/** @type {ExecaReturnValue} */ result) {
-      resolved = true
-      fs.unlinkSync(doc)
-      t.deepEqual(
-        [result.stdout, strip(result.stderr).trim()],
-        ['', expected],
-        'should work'
-      )
-    }
+    const result = await proc
 
-    function seeYouLaterAlligator() {
-      t.equal(resolved, false, 'should still be running (#1)')
-      touch.sync(doc)
-      setTimeout(afterAWhileCrocodile, delay)
-    }
+    await fs.unlink(url)
 
-    function afterAWhileCrocodile() {
-      t.equal(resolved, false, 'should still be running (#2)')
-      proc.kill('SIGINT')
-    }
-  })
-
-  t.test('should not regenerate when watching', (t) => {
     const lines = [
       'Watching... (press CTRL+C to exit)',
-      'Note: Ignoring `--output` until exit.',
-      'watch.txt: no issues found',
       'watch.txt: no issues found'
     ]
 
-    // Windows immediatly quits.
-    // Other OSes support cleaning up things.
-    if (process.platform !== 'win32') {
-      lines.push('', 'watch.txt: written')
+    if (platform !== 'win32') {
+      lines.push('watch.txt: no issues found', '')
     }
 
-    const expected = lines.join('\n')
-    const doc = path.join(cwd, 'watch.txt')
-    let resolved = false
-    const delay = 3000
+    assert.equal(result.exitCode, platform === 'win32' ? undefined : 0)
+    assert.equal(result.stdout, '')
+    assert.equal(cleanError(result.stderr), lines.join('\n'))
 
-    t.plan(3)
-
-    touch.sync(doc)
-
-    const proc = execa(bin, ['watch.txt', '-w', '-o'])
-
-    if (process.platform === 'win32') {
-      proc.then(() => t.fail(), onsuccess)
-    } else {
-      proc.then(onsuccess, () => t.fail())
-    }
-
-    setTimeout(seeYouLaterAlligator, delay)
-
-    function onsuccess(/** @type {ExecaReturnValue} */ result) {
-      resolved = true
-
-      fs.unlinkSync(doc)
-
-      t.deepEqual(
-        [result.stdout, strip(result.stderr)],
-        ['', expected],
-        'should work'
-      )
-    }
-
-    function seeYouLaterAlligator() {
-      t.equal(resolved, false, 'should still be running (#1)')
-      touch.sync(doc)
+    async function seeYouLaterAlligator() {
+      await fs.writeFile(url, 'bravo')
       setTimeout(afterAWhileCrocodile, delay)
     }
 
     function afterAWhileCrocodile() {
-      t.equal(resolved, false, 'should still be running (#2)')
       proc.kill('SIGINT')
     }
   })
 
-  t.test('should exit on fatal errors when watching', (t) => {
-    const expected = [
+  await t.test('should not regenerate when watching', async function () {
+    const delay = 500
+    const url = new URL('watch.txt', base)
+
+    await fs.writeFile(url, 'alpha')
+
+    const proc = execa(binPath, ['watch.txt', '-w', '-o'], {reject: false})
+
+    setTimeout(seeYouLaterAlligator, delay)
+
+    const result = await proc
+
+    await fs.unlink(url)
+
+    const lines = [
       'Watching... (press CTRL+C to exit)',
-      'Error: No input'
-    ].join('\n')
+      'Note: Ignoring `--output` until exit.',
+      'watch.txt: no issues found'
+    ]
 
-    t.plan(1)
+    if (platform !== 'win32') {
+      lines.push('watch.txt: no issues found', '', 'watch.txt: written')
+    }
 
-    execa(bin, ['-w']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        const actual = strip(error.stderr).split('\n').slice(0, 2).join('\n')
+    assert.equal(result.exitCode, platform === 'win32' ? undefined : 0)
+    assert.equal(result.stdout, '')
+    assert.equal(cleanError(result.stderr), lines.join('\n'))
 
-        t.deepEqual([error.exitCode, actual], [1, expected], 'should fail')
-      }
-    )
+    async function seeYouLaterAlligator() {
+      await fs.writeFile(url, 'bravo')
+      setTimeout(afterAWhileCrocodile, delay)
+    }
+
+    function afterAWhileCrocodile() {
+      proc.kill('SIGINT')
+    }
   })
 
-  t.test('should report uncaught exceptions', (t) => {
-    const bin = path.join(fixtures, 'uncaught-errors', 'cli.js')
-    const expected = 'one.txt: no issues found\nfoo'
+  await t.test('should exit on fatal errors when watching', async function () {
+    try {
+      await execa(binPath, ['-w'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
 
-    t.plan(1)
-
-    execa(bin, ['.', '-u', './plugin.js']).then(
-      () => t.fail(),
-      (/** @type {ExecaReturnValue} */ error) => {
-        t.deepEqual(
-          [error.exitCode, strip(error.stderr)],
-          [1, expected],
-          'should fail'
-        )
-      }
-    )
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr, 2)],
+        [1, 'Watching... (press CTRL+C to exit)\nError: No input']
+      )
+    }
   })
 
-  t.end()
+  await t.test('should report uncaught exceptions', async function () {
+    const binPath = fileURLToPath(
+      new URL('fixtures/uncaught-errors/cli.js', import.meta.url)
+    )
+
+    try {
+      await execa(binPath, ['.', '-u', './plugin.js'])
+      assert.fail()
+    } catch (error) {
+      const result = /** @type {ExecaError} */ (error)
+
+      assert.deepEqual(
+        [result.exitCode, cleanError(result.stderr)],
+        [1, 'one.txt: no issues found\nfoo']
+      )
+    }
+  })
 })
 
 /**
@@ -797,7 +798,7 @@ test('unified-args', (t) => {
  */
 function cleanError(value, max) {
   return (
-    strip(value)
+    stripAnsi(value)
       // Clean syscal errors
       .replace(/( *Error: [A-Z]+:)[^\n]*/g, '$1…')
 
