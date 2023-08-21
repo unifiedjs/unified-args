@@ -3,34 +3,39 @@ on:
   - pull_request
   - push
 jobs:
-  main:
-    name: ${{matrix.node}}
-    runs-on: ubuntu-latest
+  unix:
+    name: '${{matrix.node}} on ${{matrix.os}}'
+    runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: dcodeIO/setup-node-nvm@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node}}
       - run: npm install
       - run: npm test
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v3
     strategy:
       matrix:
+        os:
+          - ubuntu-latest
         node:
-          - lts/fermium
+          - lts/gallium
           - node
+  # Just run quick tests on windows.
   windows:
-    name: ${{matrix.node}}
-    runs-on: windows-latest
+    name: '${{matrix.node}} on ${{matrix.os}}'
+    runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: dcodeIO/setup-node-nvm@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node}}
       - run: npm install
       - run: npm run test-api
     strategy:
       matrix:
+        os:
+          - windows-latest
         node:
-          - lts/fermium
           - lts/gallium
+          - node
