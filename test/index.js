@@ -33,7 +33,7 @@ test('args', async function (t) {
     .trimEnd()
 
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('../index.js')).sort(), ['args'])
+    assert.deepEqual(Object.keys(await import('unified-args')).sort(), ['args'])
   })
 
   await t.test('should fail on missing files', async function () {
