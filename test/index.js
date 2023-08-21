@@ -310,7 +310,7 @@ test('args', async function (t) {
       // Parser and Compiler both log stringified settings.
       assert.deepEqual(
         [result.stdout, cleanError(result.stderr)],
-        ['{"fooBar":"baz"}\none', 'one.txt: no issues found']
+        ['{"foo-bar":"baz"}\none', 'one.txt: no issues found']
       )
     })
   }
@@ -675,7 +675,7 @@ test('args', async function (t) {
   await t.test('should support `--watch`', async function () {
     // On Windows, `SIGINT` crashes immediately and results in an error.
     // Hence `reject: false`, `exitCode`, and extra lines when non-windows.
-    const delay = 500
+    const delay = 1000
     const url = new URL('watch.txt', base)
 
     await fs.writeFile(url, 'alpha')
@@ -712,7 +712,7 @@ test('args', async function (t) {
   })
 
   await t.test('should not regenerate when watching', async function () {
-    const delay = 500
+    const delay = 1000
     const url = new URL('watch.txt', base)
 
     await fs.writeFile(url, 'alpha')
