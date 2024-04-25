@@ -38,7 +38,7 @@
     "minimist": "^1.0.0",
     "strip-ansi": "^7.0.0",
     "text-table": "^0.2.0",
-    "unified-engine": "^11.0.0"
+    "unified-engine": "^11.2.1"
   },
   "devDependencies": {
     "@types/minimist": "^1.0.0",
