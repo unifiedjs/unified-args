@@ -1,33 +1,9 @@
 {
-  "name": "unified-args",
-  "version": "11.0.1",
-  "description": "create CLIs for unified processors",
-  "license": "MIT",
-  "keywords": [
-    "arguments",
-    "cli",
-    "engine",
-    "processor",
-    "unified"
-  ],
-  "repository": "unifiedjs/unified-args",
-  "bugs": "https://github.com/unifiedjs/unified-args/issues",
-  "funding": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/unified"
-  },
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+  "bugs": "https://github.com/unifiedjs/unified-args/issues",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
     "Christian Murphy <christian.murphy.42@gmail.com"
-  ],
-  "sideEffects": false,
-  "type": "module",
-  "exports": "./index.js",
-  "files": [
-    "lib/",
-    "index.d.ts",
-    "index.js"
   ],
   "dependencies": {
     "@types/text-table": "^0.2.0",
@@ -40,6 +16,7 @@
     "text-table": "^0.2.0",
     "unified-engine": "^11.0.0"
   },
+  "description": "create CLIs for unified processors",
   "devDependencies": {
     "@types/minimist": "^1.0.0",
     "@types/unist": "^3.0.0",
@@ -55,14 +32,25 @@
     "vfile-reporter-json": "^4.0.0",
     "xo": "^0.60.0"
   },
-  "scripts": {
-    "build": "tsc --build --clean && tsc --build && type-coverage",
-    "format": "remark . --frail --output --quiet && prettier . --log-level warn --write && xo --fix",
-    "prepack": "npm run build && npm run format",
-    "test": "npm run build && npm run format && npm run test-coverage",
-    "test-api": "node --conditions development test/index.js",
-    "test-coverage": "c8 --100 --check-coverage --reporter lcov npm run test-api"
+  "exports": "./index.js",
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "lib/"
+  ],
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/unified"
   },
+  "keywords": [
+    "arguments",
+    "cli",
+    "engine",
+    "processor",
+    "unified"
+  ],
+  "license": "MIT",
+  "name": "unified-args",
   "prettier": {
     "bracketSpacing": false,
     "semi": false,
@@ -76,12 +64,22 @@
       "remark-preset-wooorm"
     ]
   },
+  "repository": "unifiedjs/unified-args",
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && type-coverage",
+    "format": "remark --frail --output --quiet -- . && prettier --log-level warn --write -- . && xo --fix",
+    "prepack": "npm run build && npm run format",
+    "test": "npm run build && npm run format && npm run test-coverage",
+    "test-api": "node --conditions development test/index.js",
+    "test-coverage": "c8 --100 --reporter lcov -- npm run test-api"
+  },
+  "sideEffects": false,
   "typeCoverage": {
     "atLeast": 100,
-    "detail": true,
-    "ignoreCatch": true,
     "strict": true
   },
+  "type": "module",
+  "version": "11.0.1",
   "xo": {
     "prettier": true,
     "rules": {
