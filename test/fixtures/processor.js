@@ -11,9 +11,9 @@ export const processor = unified()
     // @ts-expect-error: TS is wrong about `this`.
     function () {
       /** @type {import('unified').Parser<Node>} */
-      this.parser = function (doc) {
+      this.parser = function (value) {
         /** @type {Literal} */
-        const node = {type: 'text', value: doc}
+        const node = {type: 'text', value}
         return node
       }
     }

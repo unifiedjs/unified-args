@@ -4,7 +4,7 @@
 
 import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
-import {sep} from 'node:path'
+import path from 'node:path'
 import {EOL} from 'node:os'
 import {platform} from 'node:process'
 import test from 'node:test'
@@ -13,8 +13,8 @@ import {execa} from 'execa'
 import stripAnsi from 'strip-ansi'
 
 const base = new URL('fixtures/example/', import.meta.url)
-const bin = new URL('fixtures/example/cli.js', import.meta.url)
-const binPath = fileURLToPath(bin)
+const binaryUrl = new URL('fixtures/example/cli.js', import.meta.url)
+const binaryPath = fileURLToPath(binaryUrl)
 
 test('args', async function (t) {
   // Clean from last run.
@@ -38,7 +38,7 @@ test('args', async function (t) {
 
   await t.test('should fail on missing files', async function () {
     try {
-      await execa(binPath, ['missing.txt'])
+      await execa(binaryPath, ['missing.txt'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)
@@ -60,7 +60,7 @@ test('args', async function (t) {
   })
 
   await t.test('should accept a path to a file', async function () {
-    const result = await execa(binPath, ['one.txt'])
+    const result = await execa(binaryPath, ['one.txt'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -69,7 +69,7 @@ test('args', async function (t) {
   })
 
   await t.test('should accept a path to a directory', async function () {
-    const result = await execa(binPath, ['.'])
+    const result = await execa(binaryPath, ['.'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -77,8 +77,8 @@ test('args', async function (t) {
         '',
         [
           'one.txt: no issues found',
-          'three' + sep + 'five.txt: no issues found',
-          'three' + sep + 'four.txt: no issues found',
+          'three' + path.sep + 'five.txt: no issues found',
+          'three' + path.sep + 'four.txt: no issues found',
           'two.txt: no issues found'
         ].join('\n')
       ]
@@ -86,7 +86,7 @@ test('args', async function (t) {
   })
 
   await t.test('should accept a glob to files', async function () {
-    const result = await execa(binPath, ['*.txt'])
+    const result = await execa(binaryPath, ['*.txt'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -95,15 +95,15 @@ test('args', async function (t) {
   })
 
   await t.test('should accept a glob to a directory', async function () {
-    const result = await execa(binPath, ['thr+(e)'])
+    const result = await execa(binaryPath, ['thr+(e)'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
       [
         '',
         [
-          'three' + sep + 'five.txt: no issues found',
-          'three' + sep + 'four.txt: no issues found'
+          'three' + path.sep + 'five.txt: no issues found',
+          'three' + path.sep + 'four.txt: no issues found'
         ].join('\n')
       ]
     )
@@ -111,7 +111,7 @@ test('args', async function (t) {
 
   await t.test('should fail on a bad short flag', async function () {
     try {
-      await execa(binPath, ['-n'])
+      await execa(binaryPath, ['-n'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)
@@ -125,7 +125,7 @@ test('args', async function (t) {
 
   await t.test('should fail on a bad grouped short flag', async function () {
     try {
-      await execa(binPath, ['-on'])
+      await execa(binaryPath, ['-on'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)
@@ -139,7 +139,7 @@ test('args', async function (t) {
 
   await t.test('should fail on a bad long flag', async function () {
     try {
-      await execa(binPath, ['--no'])
+      await execa(binaryPath, ['--no'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)
@@ -162,7 +162,7 @@ test('args', async function (t) {
    */
   async function helpFlag(flag) {
     await t.test('should show help on `' + flag + '`', async function () {
-      const result = await execa(binPath, [flag])
+      const result = await execa(binaryPath, [flag])
       assert.deepEqual([result.stdout, result.stderr], [help, ''])
     })
   }
@@ -178,14 +178,14 @@ test('args', async function (t) {
    */
   async function versionFlag(flag) {
     await t.test('should show version on `' + flag + '`', async function () {
-      const result = await execa(binPath, [flag])
+      const result = await execa(binaryPath, [flag])
 
       assert.deepEqual([result.stdout, result.stderr], ['0.0.0', ''])
     })
   }
 
   await t.test('should support `--color`', async function () {
-    const result = await execa(binPath, ['--color', 'one.txt'])
+    const result = await execa(binaryPath, ['--color', 'one.txt'])
 
     assert.deepEqual(
       [result.stdout, result.stderr],
@@ -194,7 +194,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--no-color`', async function () {
-    const result = await execa(binPath, ['--no-color', 'one.txt'])
+    const result = await execa(binaryPath, ['--no-color', 'one.txt'])
 
     assert.deepEqual(
       [result.stdout, result.stderr],
@@ -202,8 +202,8 @@ test('args', async function (t) {
     )
   })
 
-  await extFlag('-e')
-  await extFlag('--ext')
+  await extensionFlag('-e')
+  await extensionFlag('--ext')
 
   /**
    * @param {string} flag
@@ -211,9 +211,9 @@ test('args', async function (t) {
    * @returns {Promise<undefined>}
    *   Nothing.
    */
-  async function extFlag(flag) {
+  async function extensionFlag(flag) {
     await t.test('should support `' + flag + '`', async function () {
-      const result = await execa(binPath, ['.', flag, 'text'])
+      const result = await execa(binaryPath, ['.', flag, 'text'])
 
       assert.deepEqual(
         [result.stdout, cleanError(result.stderr)],
@@ -222,8 +222,8 @@ test('args', async function (t) {
           [
             'alpha.text: no issues found',
             'bravo.text: no issues found',
-            'charlie' + sep + 'delta.text: no issues found',
-            'charlie' + sep + 'echo.text: no issues found',
+            'charlie' + path.sep + 'delta.text: no issues found',
+            'charlie' + path.sep + 'echo.text: no issues found',
             'delta.text: no issues found'
           ].join('\n')
         ]
@@ -234,7 +234,7 @@ test('args', async function (t) {
       'should fail on `' + flag + '` without value',
       async function () {
         try {
-          await execa(binPath, ['.', flag])
+          await execa(binaryPath, ['.', flag])
           assert.fail()
         } catch (error) {
           const result = /** @type {ExecaError} */ (error)
@@ -253,7 +253,7 @@ test('args', async function (t) {
     await t.test(
       'should allow an extra `-e` after `' + flag + '`',
       async function () {
-        const result = await execa(binPath, ['.', flag, 'text', '-e'])
+        const result = await execa(binaryPath, ['.', flag, 'text', '-e'])
 
         assert.deepEqual(
           [result.stdout, cleanError(result.stderr)],
@@ -262,8 +262,8 @@ test('args', async function (t) {
             [
               'alpha.text: no issues found',
               'bravo.text: no issues found',
-              'charlie' + sep + 'delta.text: no issues found',
-              'charlie' + sep + 'echo.text: no issues found',
+              'charlie' + path.sep + 'delta.text: no issues found',
+              'charlie' + path.sep + 'echo.text: no issues found',
               'delta.text: no issues found'
             ].join('\n')
           ]
@@ -287,7 +287,7 @@ test('args', async function (t) {
       async function () {
         try {
           // Should be quoted.
-          await execa(binPath, ['.', flag, 'foo:bar'])
+          await execa(binaryPath, ['.', flag, 'foo:bar'])
           assert.fail()
         } catch (error) {
           const result = /** @type {ExecaError} */ (error)
@@ -301,11 +301,15 @@ test('args', async function (t) {
     )
 
     await t.test('should support `' + flag + '`', async function () {
-      const binPath = fileURLToPath(
+      const binaryPath = fileURLToPath(
         new URL('fixtures/settings/cli.js', import.meta.url)
       )
 
-      const result = await execa(binPath, ['one.txt', flag, '"foo-bar":"baz"'])
+      const result = await execa(binaryPath, [
+        'one.txt',
+        flag,
+        '"foo-bar":"baz"'
+      ])
 
       // Parser and Compiler both log stringified settings.
       assert.deepEqual(
@@ -316,11 +320,11 @@ test('args', async function (t) {
   }
 
   await t.test('should not fail on property-like settings', async function () {
-    const binPath = fileURLToPath(
+    const binaryPath = fileURLToPath(
       new URL('fixtures/settings/cli.js', import.meta.url)
     )
 
-    const result = await execa(binPath, [
+    const result = await execa(binaryPath, [
       '.',
       '--setting',
       'foo:"https://example.com"'
@@ -333,11 +337,11 @@ test('args', async function (t) {
   })
 
   await t.test('should ignore boolean settings', async function () {
-    const binPath = fileURLToPath(
+    const binaryPath = fileURLToPath(
       new URL('fixtures/settings/cli.js', import.meta.url)
     )
 
-    const result = await execa(binPath, ['.', '--no-setting'])
+    const result = await execa(binaryPath, ['.', '--no-setting'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -356,11 +360,11 @@ test('args', async function (t) {
    */
   async function useFlag(flag) {
     await t.test('should load a plugin with `' + flag + '`', async function () {
-      const binPath = fileURLToPath(
+      const binaryPath = fileURLToPath(
         new URL('fixtures/plugins/cli.js', import.meta.url)
       )
 
-      const result = await execa(binPath, ['one.txt', flag, './plugin.js'])
+      const result = await execa(binaryPath, ['one.txt', flag, './plugin.js'])
 
       // Plugin logs options, which are `undefined`.
       assert.deepEqual(
@@ -374,7 +378,7 @@ test('args', async function (t) {
       async function () {
         // Should be quoted.
         try {
-          await execa(binPath, ['.', flag, './plugin.js=foo:bar'])
+          await execa(binaryPath, ['.', flag, './plugin.js=foo:bar'])
           assert.fail()
         } catch (error) {
           const result = /** @type {ExecaError} */ (error)
@@ -388,11 +392,11 @@ test('args', async function (t) {
     )
 
     await t.test('should support `' + flag + '`', async function () {
-      const binPath = fileURLToPath(
+      const binaryPath = fileURLToPath(
         new URL('fixtures/plugins/cli.js', import.meta.url)
       )
 
-      const result = await execa(binPath, [
+      const result = await execa(binaryPath, [
         'one.txt',
         flag,
         './plugin.js=foo:{bar:"baz",qux:1,quux:true}'
@@ -409,7 +413,7 @@ test('args', async function (t) {
   }
 
   await t.test('should support `--report`', async function () {
-    const result = await execa(binPath, ['alpha.text', '--report', 'json'])
+    const result = await execa(binaryPath, ['alpha.text', '--report', 'json'])
 
     assert.deepEqual(
       [result.stdout, result.stderr],
@@ -418,7 +422,7 @@ test('args', async function (t) {
         JSON.stringify([
           {
             path: 'alpha.text',
-            cwd: 'test' + sep + 'fixtures' + sep + 'example',
+            cwd: 'test' + path.sep + 'fixtures' + path.sep + 'example',
             history: ['alpha.text'],
             messages: []
           }
@@ -428,7 +432,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--report` with options', async function () {
-    const result = await execa(binPath, [
+    const result = await execa(binaryPath, [
       'alpha.text',
       '--report',
       'json=pretty:"\t"'
@@ -442,7 +446,7 @@ test('args', async function (t) {
           [
             {
               path: 'alpha.text',
-              cwd: 'test' + sep + 'fixtures' + sep + 'example',
+              cwd: 'test' + path.sep + 'fixtures' + path.sep + 'example',
               history: ['alpha.text'],
               messages: []
             }
@@ -456,7 +460,7 @@ test('args', async function (t) {
 
   await t.test('should fail on `--report` without value', async function () {
     try {
-      await execa(binPath, ['.', '--report'])
+      await execa(binaryPath, ['.', '--report'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)
@@ -469,7 +473,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--no-stdout`', async function () {
-    const result = await execa(binPath, ['one.txt', '--no-stdout'])
+    const result = await execa(binaryPath, ['one.txt', '--no-stdout'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -478,7 +482,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--tree-in`', async function () {
-    const result = await execa(binPath, ['tree.json', '--tree-in'])
+    const result = await execa(binaryPath, ['tree.json', '--tree-in'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -487,7 +491,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--tree-out`', async function () {
-    const result = await execa(binPath, ['one.txt', '--tree-out'])
+    const result = await execa(binaryPath, ['one.txt', '--tree-out'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -499,7 +503,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--tree`', async function () {
-    const result = await execa(binPath, ['tree.json', '--tree'])
+    const result = await execa(binaryPath, ['tree.json', '--tree'])
 
     assert.deepEqual(
       [result.stdout, cleanError(result.stderr)],
@@ -511,7 +515,7 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--ignore-pattern`', async function () {
-    const result = await execa(binPath, [
+    const result = await execa(binaryPath, [
       '.',
       '--ext',
       'txt,text',
@@ -534,12 +538,12 @@ test('args', async function (t) {
   })
 
   await t.test('should support `--ignore-path`', async function () {
-    const result = await execa(binPath, [
+    const result = await execa(binaryPath, [
       '.',
       '--ext',
       'text',
       '--ignore-path',
-      'charlie' + sep + 'ignore'
+      'charlie' + path.sep + 'ignore'
     ])
 
     assert.deepEqual(
@@ -549,7 +553,7 @@ test('args', async function (t) {
         [
           'alpha.text: no issues found',
           'bravo.text: no issues found',
-          'charlie' + sep + 'echo.text: no issues found',
+          'charlie' + path.sep + 'echo.text: no issues found',
           'delta.text: no issues found'
         ].join('\n')
       ]
@@ -557,14 +561,14 @@ test('args', async function (t) {
   })
 
   await t.test('should ignore non-last `--ignore-path`s', async function () {
-    const result = await execa(binPath, [
+    const result = await execa(binaryPath, [
       '.',
       '--ext',
       'text',
       '--ignore-path',
       'missing',
       '--ignore-path',
-      'charlie' + sep + 'ignore'
+      'charlie' + path.sep + 'ignore'
     ])
 
     assert.deepEqual(
@@ -574,7 +578,7 @@ test('args', async function (t) {
         [
           'alpha.text: no issues found',
           'bravo.text: no issues found',
-          'charlie' + sep + 'echo.text: no issues found',
+          'charlie' + path.sep + 'echo.text: no issues found',
           'delta.text: no issues found'
         ].join('\n')
       ]
@@ -584,12 +588,12 @@ test('args', async function (t) {
   await t.test(
     'should support `--ignore-path-resolve-from cwd`',
     async function () {
-      const result = await execa(binPath, [
+      const result = await execa(binaryPath, [
         '.',
         '--ext',
         'text',
         '--ignore-path',
-        'charlie' + sep + 'ignore',
+        'charlie' + path.sep + 'ignore',
         '--ignore-path-resolve-from',
         'cwd'
       ])
@@ -601,7 +605,7 @@ test('args', async function (t) {
           [
             'alpha.text: no issues found',
             'bravo.text: no issues found',
-            'charlie' + sep + 'echo.text: no issues found'
+            'charlie' + path.sep + 'echo.text: no issues found'
           ].join('\n')
         ]
       )
@@ -610,7 +614,7 @@ test('args', async function (t) {
 
   await t.test('should fail when given an ignored path', async function () {
     try {
-      await execa(binPath, [
+      await execa(binaryPath, [
         'one.txt',
         'two.txt',
         '--ignore-pattern',
@@ -641,7 +645,11 @@ test('args', async function (t) {
     'should fail when given an incorrect `ignore-path-resolve-from`',
     async function () {
       try {
-        await execa(binPath, ['one.txt', '--ignore-path-resolve-from', 'xyz'])
+        await execa(binaryPath, [
+          'one.txt',
+          '--ignore-path-resolve-from',
+          'xyz'
+        ])
         assert.fail()
       } catch (error) {
         const result = /** @type {ExecaError} */ (error)
@@ -658,7 +666,7 @@ test('args', async function (t) {
   )
 
   await t.test('should support `--silently-ignore`', async function () {
-    const result = await execa(binPath, [
+    const result = await execa(binaryPath, [
       'one.txt',
       'two.txt',
       '--ignore-pattern',
@@ -680,11 +688,13 @@ test('args', async function (t) {
 
     await fs.writeFile(url, 'alpha')
 
-    const proc = execa(binPath, ['watch.txt', '-w'], {reject: false})
+    const processPromise = execa(binaryPath, ['watch.txt', '-w'], {
+      reject: false
+    })
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    const result = await proc
+    const result = await processPromise
 
     await fs.unlink(url)
 
@@ -710,7 +720,7 @@ test('args', async function (t) {
     }
 
     function afterAWhileCrocodile() {
-      proc.kill('SIGINT')
+      processPromise.kill('SIGINT')
     }
   })
 
@@ -720,11 +730,13 @@ test('args', async function (t) {
 
     await fs.writeFile(url, 'alpha')
 
-    const proc = execa(binPath, ['watch.txt', '-w', '-o'], {reject: false})
+    const processPromise = execa(binaryPath, ['watch.txt', '-w', '-o'], {
+      reject: false
+    })
 
     setTimeout(seeYouLaterAlligator, delay)
 
-    const result = await proc
+    const result = await processPromise
 
     await fs.unlink(url)
 
@@ -749,13 +761,13 @@ test('args', async function (t) {
     }
 
     function afterAWhileCrocodile() {
-      proc.kill('SIGINT')
+      processPromise.kill('SIGINT')
     }
   })
 
   await t.test('should exit on fatal errors when watching', async function () {
     try {
-      await execa(binPath, ['-w'])
+      await execa(binaryPath, ['-w'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)
@@ -768,12 +780,12 @@ test('args', async function (t) {
   })
 
   await t.test('should report uncaught exceptions', async function () {
-    const binPath = fileURLToPath(
+    const binaryPath = fileURLToPath(
       new URL('fixtures/uncaught-errors/cli.js', import.meta.url)
     )
 
     try {
-      await execa(binPath, ['.', '-u', './plugin.js'])
+      await execa(binaryPath, ['.', '-u', './plugin.js'])
       assert.fail()
     } catch (error) {
       const result = /** @type {ExecaError} */ (error)

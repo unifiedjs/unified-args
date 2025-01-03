@@ -43,17 +43,17 @@
   "devDependencies": {
     "@types/minimist": "^1.0.0",
     "@types/unist": "^3.0.0",
-    "c8": "^8.0.0",
+    "c8": "^10.0.0",
     "execa": "^8.0.0",
     "prettier": "^3.0.0",
-    "remark": "^14.0.0",
-    "remark-cli": "^11.0.0",
-    "remark-preset-wooorm": "^9.0.0",
+    "remark": "^15.0.0",
+    "remark-cli": "^12.0.0",
+    "remark-preset-wooorm": "^10.0.0",
     "type-coverage": "^2.0.0",
     "typescript": "^5.0.0",
     "unified": "^11.0.0",
     "vfile-reporter-json": "^4.0.0",
-    "xo": "^0.56.0"
+    "xo": "^0.60.0"
   },
   "scripts": {
     "build": "tsc --build --clean && tsc --build && type-coverage",

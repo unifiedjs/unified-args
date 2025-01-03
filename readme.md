@@ -12,48 +12,48 @@ processor.
 
 ## Contents
 
-*   [What is this?](#what-is-this)
-*   [When should I use this?](#when-should-i-use-this)
-*   [Install](#install)
-*   [Use](#use)
-*   [API](#api)
-    *   [`args(options)`](#argsoptions)
-    *   [`Options`](#options)
-*   [CLI](#cli)
-    *   [Files](#files)
-    *   [`--color`](#--color)
-    *   [`--config`](#--config)
-    *   [`--ext <extensions>`](#--ext-extensions)
-    *   [`--file-path <path>`](#--file-path-path)
-    *   [`--frail`](#--frail)
-    *   [`--help`](#--help)
-    *   [`--ignore`](#--ignore)
-    *   [`--ignore-path <path>`](#--ignore-path-path)
-    *   [`--ignore-path-resolve-from cwd|dir`](#--ignore-path-resolve-from-cwddir)
-    *   [`--ignore-pattern <globs>`](#--ignore-pattern-globs)
-    *   [`--inspect`](#--inspect)
-    *   [`--output [path]`](#--output-path)
-    *   [`--quiet`](#--quiet)
-    *   [`--rc-path <path>`](#--rc-path-path)
-    *   [`--report <reporter>`](#--report-reporter)
-    *   [`--setting <settings>`](#--setting-settings)
-    *   [`--silent`](#--silent)
-    *   [`--silently-ignore`](#--silently-ignore)
-    *   [`--stdout`](#--stdout)
-    *   [`--tree`](#--tree)
-    *   [`--tree-in`](#--tree-in)
-    *   [`--tree-out`](#--tree-out)
-    *   [`--use <plugin>`](#--use-plugin)
-    *   [`--verbose`](#--verbose)
-    *   [`--version`](#--version)
-    *   [`--watch`](#--watch)
-*   [Diagnostics](#diagnostics)
-*   [Debugging](#debugging)
-*   [Types](#types)
-*   [Compatibility](#compatibility)
-*   [Security](#security)
-*   [Contribute](#contribute)
-*   [License](#license)
+* [What is this?](#what-is-this)
+* [When should I use this?](#when-should-i-use-this)
+* [Install](#install)
+* [Use](#use)
+* [API](#api)
+  * [`args(options)`](#argsoptions)
+  * [`Options`](#options)
+* [CLI](#cli)
+  * [Files](#files)
+  * [`--color`](#--color)
+  * [`--config`](#--config)
+  * [`--ext <extensions>`](#--ext-extensions)
+  * [`--file-path <path>`](#--file-path-path)
+  * [`--frail`](#--frail)
+  * [`--help`](#--help)
+  * [`--ignore`](#--ignore)
+  * [`--ignore-path <path>`](#--ignore-path-path)
+  * [`--ignore-path-resolve-from cwd|dir`](#--ignore-path-resolve-from-cwddir)
+  * [`--ignore-pattern <globs>`](#--ignore-pattern-globs)
+  * [`--inspect`](#--inspect)
+  * [`--output [path]`](#--output-path)
+  * [`--quiet`](#--quiet)
+  * [`--rc-path <path>`](#--rc-path-path)
+  * [`--report <reporter>`](#--report-reporter)
+  * [`--setting <settings>`](#--setting-settings)
+  * [`--silent`](#--silent)
+  * [`--silently-ignore`](#--silently-ignore)
+  * [`--stdout`](#--stdout)
+  * [`--tree`](#--tree)
+  * [`--tree-in`](#--tree-in)
+  * [`--tree-out`](#--tree-out)
+  * [`--use <plugin>`](#--use-plugin)
+  * [`--verbose`](#--verbose)
+  * [`--version`](#--version)
+  * [`--watch`](#--watch)
+* [Diagnostics](#diagnostics)
+* [Debugging](#debugging)
+* [Types](#types)
+* [Compatibility](#compatibility)
+* [Security](#security)
+* [Contribute](#contribute)
+* [License](#license)
 
 ## What is this?
 
@@ -140,8 +140,8 @@ Start the CLI.
 
 ###### Parameters
 
-*   `options` ([`Options`][api-options], required)
-    — configuration
+* `options` ([`Options`][api-options], required)
+  — configuration
 
 ###### Returns
 
@@ -155,30 +155,30 @@ Configuration (TypeScript type).
 
 <!-- Note: `cwd` excluded in docs, it’s for testing. -->
 
-*   `description` (`string`, required)
-    — description of executable
-*   `extensions` (`Array<string>`, required)
-    — default file extensions to include
-    (engine: `options.extensions`)
-*   `ignoreName` (`string`, required)
-    — name of [ignore files][ignore-file] to load
-    (engine: `options.ignoreName`)
-*   `name` (`string`, required)
-    — name of executable
-*   `packageField` (`string`, required)
-    — field where [configuration][config-file] can be found in `package.json`s
-    (engine: `options.packageField`)
-*   `pluginPrefix` (`string`, required)
-    — prefix to use when searching for plugins
-    (engine: `options.pluginPrefix`)
-*   `processor` ([`Processor`][unified-processor], required)
-    — processor to use
-    (engine: `options.processor`)
-*   `rcName` (`string`, required)
-    — name of [configuration files][config-file] to load
-    (engine: `options.rcName`)
-*   `version` (`string`, required)
-    — version of executable
+* `description` (`string`, required)
+  — description of executable
+* `extensions` (`Array<string>`, required)
+  — default file extensions to include
+  (engine: `options.extensions`)
+* `ignoreName` (`string`, required)
+  — name of [ignore files][ignore-file] to load
+  (engine: `options.ignoreName`)
+* `name` (`string`, required)
+  — name of executable
+* `packageField` (`string`, required)
+  — field where [configuration][config-file] can be found in `package.json`s
+  (engine: `options.packageField`)
+* `pluginPrefix` (`string`, required)
+  — prefix to use when searching for plugins
+  (engine: `options.pluginPrefix`)
+* `processor` ([`Processor`][unified-processor], required)
+  — processor to use
+  (engine: `options.processor`)
+* `rcName` (`string`, required)
+  — name of [configuration files][config-file] to load
+  (engine: `options.rcName`)
+* `version` (`string`, required)
+  — version of executable
 
 ## CLI
 
@@ -235,12 +235,12 @@ Examples:
 
 All non-options passed to the cli are seen as input and can be:
 
-*   paths (`readme.txt`) and [globs][glob] (`*.txt`) pointing to files to load
-*   paths (`test`) and globs (`fixtures/{in,out}/`) pointing to folders, which
-    are searched for files with known extensions which are not ignored
-    by patterns in [ignore files][ignore-file].
-    The default behavior is to exclude files in `node_modules/` unless
-    explicitly given
+* paths (`readme.txt`) and [globs][glob] (`*.txt`) pointing to files to load
+* paths (`test`) and globs (`fixtures/{in,out}/`) pointing to folders, which
+  are searched for files with known extensions which are not ignored
+  by patterns in [ignore files][ignore-file].
+  The default behavior is to exclude files in `node_modules/` unless
+  explicitly given
 
 You can force things to be seen as input by using `--`:
 
@@ -248,8 +248,8 @@ You can force things to be seen as input by using `--`:
 cli -- globs/* and/files
 ```
 
-*   **default**: none
-*   **engine**: `options.files`
+* **default**: none
+* **engine**: `options.files`
 
 ### `--color`
 
@@ -259,8 +259,8 @@ cli --no-color input.txt
 
 Whether to output ANSI color codes in the report.
 
-*   **default**: whether the terminal [supports color][supports-color]
-*   **engine**: `options.color`
+* **default**: whether the terminal [supports color][supports-color]
+* **engine**: `options.color`
 
 > 👉 **Note**: This option may not work depending on the reporter given in
 > [`--report`][cli-report].
@@ -278,8 +278,8 @@ Searches for files with the [configured][api-options] `rcName`: `$rcName` and
 (JavaScript), `$rcName.cjs` (CommonJS), and `$rcName.mjs` (ESM); and looks for
 the configured `packageField` in `package.json` files.
 
-*   **default**: on
-*   **engine**: `options.detectConfig`
+* **default**: on
+* **engine**: `options.detectConfig`
 
 ### `--ext <extensions>`
 
@@ -291,9 +291,9 @@ cli --ext htm,html .
 
 Specify one or more extensions to include when searching for files.
 
-*   **default**: [configured][api-options] `extensions`
-*   **alias**: `-e`
-*   **engine**: `options.extensions`
+* **default**: [configured][api-options] `extensions`
+* **alias**: `-e`
+* **engine**: `options.extensions`
 
 ### `--file-path <path>`
 
@@ -303,8 +303,8 @@ cli --file-path input.txt < input.txt > doc/output.txt
 
 File path to process the given file on **stdin**(4) as, if any.
 
-*   **default**: none
-*   **engine**: `options.filePath`
+* **default**: none
+* **engine**: `options.filePath`
 
 ### `--frail`
 
@@ -315,9 +315,9 @@ cli --frail input.txt
 Exit with a status code of `1` if warnings or errors occur.
 The default behavior is to exit with `1` on errors.
 
-*   **default**: off
-*   **alias**: `-f`
-*   **engine**: `options.frail`
+* **default**: off
+* **alias**: `-f`
+* **engine**: `options.frail`
 
 ### `--help`
 
@@ -327,8 +327,8 @@ cli --help
 
 Output short usage information.
 
-*   **default**: off
-*   **alias**: `-h`
+* **default**: off
+* **alias**: `-h`
 
 ### `--ignore`
 
@@ -340,8 +340,8 @@ Whether to load [ignore files][ignore-file].
 
 Searches for files named [`$ignoreName`][api-options].
 
-*   **default**: on
-*   **engine**: `options.detectIgnore`
+* **default**: on
+* **engine**: `options.detectIgnore`
 
 ### `--ignore-path <path>`
 
@@ -352,9 +352,9 @@ cli --ignore-path .gitignore .
 File path to an [ignore file][ignore-file] to load, regardless of
 [`--ignore`][cli-ignore].
 
-*   **default**: none
-*   **alias**: `-i`
-*   **engine**: `options.ignorePath`
+* **default**: none
+* **alias**: `-i`
+* **engine**: `options.ignorePath`
 
 ### `--ignore-path-resolve-from cwd|dir`
 
@@ -365,8 +365,8 @@ cli --ignore-path node_modules/my-config/my-ignore --ignore-path-resolve-from cw
 Resolve patterns in the ignore file from its directory (`dir`, default) or the
 current working directory (`cwd`).
 
-*   **default**: `'dir'`
-*   **engine**: `options.ignorePathResolveFrom`
+* **default**: `'dir'`
+* **engine**: `options.ignorePathResolveFrom`
 
 ### `--ignore-pattern <globs>`
 
@@ -376,8 +376,8 @@ cli --ignore-pattern "docs/*.md" .
 
 Additional patterns to use to ignore files.
 
-*   **default**: none
-*   **engine**: `options.ignorePatterns`
+* **default**: none
+* **engine**: `options.ignorePatterns`
 
 ### `--inspect`
 
@@ -389,8 +389,8 @@ Output the transformed syntax tree, formatted with
 [`unist-util-inspect`][unist-util-inspect].
 This does not run the [compilation phase][overview].
 
-*   **default**: off
-*   **engine**: `options.inspect`
+* **default**: off
+* **engine**: `options.inspect`
 
 ### `--output [path]`
 
@@ -403,16 +403,16 @@ cli --output doc/output.text input.txt
 Whether to write successfully processed files, and where to.
 Can be set from [configuration files][config-file].
 
-*   if output is not given, files are not written to the file system
-*   otherwise, if `path` is not given, files are overwritten when successful
-*   otherwise, if `path` points to a folder, files are written there
-*   otherwise, if one file is processed, the file is written to `path`
+* if output is not given, files are not written to the file system
+* otherwise, if `path` is not given, files are overwritten when successful
+* otherwise, if `path` points to a folder, files are written there
+* otherwise, if one file is processed, the file is written to `path`
 
 > 👉 **Note**: intermediate folders are not created.
 
-*   **default**: off
-*   **alias**: `-o`
-*   **engine**: `options.output`
+* **default**: off
+* **alias**: `-o`
+* **engine**: `options.output`
 
 ### `--quiet`
 
@@ -423,9 +423,9 @@ cli --quiet input.txt
 Ignore files without any messages in the report.
 The default behavior is to show a success message.
 
-*   **default**: off
-*   **alias**: `-q`
-*   **engine**: `options.quiet`
+* **default**: off
+* **alias**: `-q`
+* **engine**: `options.quiet`
 
 > 👉 **Note**: this option may not work depending on the reporter given in
 > [`--report`][cli-report].
@@ -439,9 +439,9 @@ cli --rc-path config.json .
 File path to a [configuration file][config-file] to load, regardless of
 [`--config`][cli-config].
 
-*   **default**: none
-*   **alias**: `-r`
-*   **engine**: `options.rcPath`
+* **default**: none
+* **alias**: `-r`
+* **engine**: `options.rcPath`
 
 ### `--report <reporter>`
 
@@ -466,8 +466,8 @@ Prefixed reporters are preferred over modules without prefix.
 
 If multiple reporters are given, the last one is used.
 
-*   **default**: none, which uses [`vfile-reporter`][vfile-reporter]
-*   **engine**: `options.reporter` and `options.reporterOptions`
+* **default**: none, which uses [`vfile-reporter`][vfile-reporter]
+* **engine**: `options.reporter` and `options.reporterOptions`
 
 > 👉 **Note**: the [`quiet`][cli-quiet], [`silent`][cli-silent], and
 > [`color`][cli-color] options may not work with the used reporter.
@@ -490,9 +490,9 @@ The given settings are [JSON5][], with one exception: surrounding braces must
 not be used.  Instead, use JSON syntax without braces, such as
 `"foo": 1, "bar": "baz"`.
 
-*   **default**: none
-*   **alias**: `-s`
-*   **engine**: `options.settings`
+* **default**: none
+* **alias**: `-s`
+* **engine**: `options.settings`
 
 ### `--silent`
 
@@ -503,9 +503,9 @@ cli --silent input.txt
 Show only fatal errors in the report.
 Turns [`--quiet`][cli-quiet] on.
 
-*   **default**: off
-*   **alias**: `-S`
-*   **engine**: `options.silent`
+* **default**: off
+* **alias**: `-S`
+* **engine**: `options.silent`
 
 > 👉 **Note**: this option may not work depending on the reporter given in
 > [`--report`][cli-report].
@@ -519,8 +519,8 @@ cli --silently-ignore **/*.md
 Skip given files which are ignored by ignore files, instead of warning about
 them.
 
-*   **default**: off
-*   **engine**: `options.silentlyIgnore`
+* **default**: off
+* **engine**: `options.silentlyIgnore`
 
 ### `--stdout`
 
@@ -530,9 +530,9 @@ cli --no-stdout input.txt
 
 Whether to write a processed file to **stdout**(4).
 
-*   **default**: off if [`--output`][cli-output] or [`--watch`][cli-watch] are
-    given, or if multiple files could be processed
-*   **engine**: `options.out`
+* **default**: off if [`--output`][cli-output] or [`--watch`][cli-watch] are
+  given, or if multiple files could be processed
+* **engine**: `options.out`
 
 ### `--tree`
 
@@ -543,9 +543,9 @@ cli --tree < input.json > output.json
 Treat input as a syntax tree in JSON and output the transformed syntax tree.
 This runs neither the [parsing nor the compilation phase][overview].
 
-*   **default**: off
-*   **alias**: `-t`
-*   **engine**: `options.tree`
+* **default**: off
+* **alias**: `-t`
+* **engine**: `options.tree`
 
 ### `--tree-in`
 
@@ -556,8 +556,8 @@ cli --tree-in < input.json > input.txt
 Treat input as a syntax tree in JSON.
 This does not run the [parsing phase][overview].
 
-*   **default**: same as `--tree`
-*   **engine**: `options.treeIn`
+* **default**: same as `--tree`
+* **engine**: `options.treeIn`
 
 ### `--tree-out`
 
@@ -568,8 +568,8 @@ cli --tree-out < input.txt > output.json
 Output the transformed syntax tree.
 This does not run the [compilation phase][overview].
 
-*   **default**: same as `--tree`
-*   **engine**: `options.treeOut`
+* **default**: same as `--tree`
+* **engine**: `options.treeOut`
 
 ### `--use <plugin>`
 
@@ -590,9 +590,9 @@ have the same in syntax as [`--setting <settings>`][cli-setting].
 Plugins prefixed with the [configured][api-options] `pluginPrefix` are
 preferred over modules without prefix.
 
-*   **default**: none
-*   **alias**: `-u`
-*   **engine**: `options.plugins`
+* **default**: none
+* **alias**: `-u`
+* **engine**: `options.plugins`
 
 ### `--verbose`
 
@@ -602,8 +602,8 @@ cli --verbose input.txt
 
 Print more info for messages.
 
-*   **default**: off
-*   **engine**: `options.verbose`
+* **default**: off
+* **engine**: `options.verbose`
 
 > 👉 **Note**: this option may not work depending on the reporter given in
 > [`--report`][cli-report].
@@ -616,8 +616,8 @@ cli --version
 
 Output version number.
 
-*   **default**: off
-*   **alias**: `-v`
+* **default**: off
+* **alias**: `-v`
 
 ### `--watch`
 
@@ -641,16 +641,16 @@ prevent an infinite loop.
 On operating systems other than Windows, when the watch closes, a final process
 runs including `--output`.
 
-*   **default**: off
-*   **alias**: `-w`
+* **default**: off
+* **alias**: `-w`
 
 ## Diagnostics
 
 CLIs created with **unified-args** exit with:
 
-*   `1` on fatal errors
-*   `1` on warnings in [`--frail`][cli-frail] mode, `0` on warnings otherwise
-*   `0` on success
+* `1` on fatal errors
+* `1` on warnings in [`--frail`][cli-frail] mode, `0` on warnings otherwise
+* `0` on success
 
 ## Debugging
 
