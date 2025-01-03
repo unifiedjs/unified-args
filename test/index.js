@@ -1,5 +1,5 @@
 /**
- * @typedef {import('execa').ExecaError<string>} ExecaError
+ * @import {ExecaError} from 'execa'
  */
 
 import assert from 'node:assert/strict'
