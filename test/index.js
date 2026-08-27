@@ -11,6 +11,9 @@ import test from 'node:test'
 import {fileURLToPath} from 'node:url'
 import {execa} from 'execa'
 import stripAnsi from 'strip-ansi'
+import {parseArgv} from '../lib/parse-argv.js'
+import {config} from './fixtures/config.js'
+import {processor} from './fixtures/processor.js'
 
 const base = new URL('fixtures/example/', import.meta.url)
 const binaryUrl = new URL('fixtures/example/cli.js', import.meta.url)
@@ -520,7 +523,11 @@ test('args', async function (t) {
       '--ext',
       'txt,text',
       '--ignore-pattern',
-      'charlie/*,three/*.txt,delta.*'
+      'charlie/*',
+      '--ignore-pattern',
+      'three/*.txt',
+      '--ignore-pattern',
+      'delta.*'
     ])
 
     assert.deepEqual(
@@ -536,6 +543,20 @@ test('args', async function (t) {
       ]
     )
   })
+
+  await t.test(
+    'should not comma-split `--ignore-pattern` (gitignore braces)',
+    async function () {
+      const state = parseArgv(
+        ['--ignore-pattern', '**/{src,dist}/examples/**'],
+        {...config, processor}
+      )
+
+      assert.deepEqual(state.engine.ignorePatterns, [
+        '**/{src,dist}/examples/**'
+      ])
+    }
+  )
 
   await t.test('should support `--ignore-path`', async function () {
     const result = await execa(binaryPath, [
