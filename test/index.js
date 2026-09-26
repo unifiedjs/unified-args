@@ -9,8 +9,8 @@ import {EOL} from 'node:os'
 import {platform} from 'node:process'
 import test from 'node:test'
 import {fileURLToPath} from 'node:url'
+import {stripVTControlCharacters} from 'node:util'
 import {execa} from 'execa'
-import stripAnsi from 'strip-ansi'
 
 const base = new URL('fixtures/example/', import.meta.url)
 const binaryUrl = new URL('fixtures/example/cli.js', import.meta.url)
@@ -814,7 +814,7 @@ test('args', async function (t) {
  */
 function cleanError(value, max) {
   return (
-    stripAnsi(value)
+    stripVTControlCharacters(value)
       // Clean syscal errors
       .replace(/( *Error: [A-Z]+:)[^\n]*/g, '$1…')
 
