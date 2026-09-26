@@ -69,7 +69,7 @@ letting them configure from the file system.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 16+), install with [npm][]:
+In Node.js (version 22+), install with [npm][]:
 
 ```sh
 npm install unified-args
@@ -670,8 +670,8 @@ versions of Node.js.
 
 When we cut a new major release, we drop support for unmaintained versions of
 Node.
-This means we try to keep the current release line, `unified-engine@^11`,
-compatible with Node.js 16.
+This means we try to keep the current release line, `unified-args@^12`,
+compatible with Node.js 22.
 
 ## Security
 
