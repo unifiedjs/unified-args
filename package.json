@@ -12,7 +12,6 @@
     "comma-separated-tokens": "^2.0.0",
     "json5": "^2.0.0",
     "minimist": "^1.0.0",
-    "strip-ansi": "^7.0.0",
     "text-table": "^0.2.0",
     "unified-engine": "^11.0.0"
   },
