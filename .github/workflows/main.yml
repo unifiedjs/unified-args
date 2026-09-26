@@ -15,7 +15,7 @@ jobs:
         os:
           - ubuntu-latest
         node:
-          - lts/hydrogen
+          - lts/jod
           - node
   # Just run quick tests on windows.
   windows:
@@ -33,7 +33,7 @@ jobs:
         os:
           - windows-latest
         node:
-          - lts/hydrogen
+          - lts/jod
           - node
 name: main
 on:
