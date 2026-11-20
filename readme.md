@@ -239,7 +239,7 @@ Examples:
 
 All non-options passed to the cli are seen as input and can be:
 
-* paths (`readme.txt`) and [globs][github-node-glob-primer] (`*.txt`)
+* paths (`readme.txt`) and [globs][nodejs-fs-glob] (`*.txt`)
   pointing to files to load
 * paths (`test`) and globs (`fixtures/{in,out}/`) pointing to folders, which
   are searched for files with known extensions which are not ignored
@@ -278,10 +278,16 @@ cli --no-config input.txt
 
 Whether to load [configuration files][github-unified-engine-config-files].
 
-Searches for files with the [configured][api-options] `rcName`: `$rcName` and
-`$rcName.json` (JSON), `$rcName.yml` and  `$rcName.yaml` (YAML), `$rcName.js`
-(JavaScript), `$rcName.cjs` (CommonJS), and `$rcName.mjs` (ESM); and looks for
-the configured `packageField` in `package.json` files.
+Searches for files with the [configured][api-options] `rcName`:
+`$rcName` and `$rcName.json` (JSON),
+`$rcName.cjs` (CommonJS),
+`$rcName.mjs` (ESM),
+`$rcName.js` (CommonJS or ESM depending on the `type` field of the closest
+`package.json`),
+`$rcName.ts` (TypeScript, loaded with
+[type stripping][nodejs-type-stripping]),
+and `$rcName.yaml` and `$rcName.yml` (YAML);
+and looks for the configured `packageField` in `package.json` files.
 
 * **default**: on
 * **engine**: `options.detectConfig`
@@ -743,8 +749,6 @@ abide by its terms.
 
 [github-json5]: https://github.com/json5/json5
 
-[github-node-glob-primer]: https://github.com/isaacs/node-glob#glob-primer
-
 [github-remark]: https://github.com/remarkjs/remark
 
 [github-remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
@@ -774,6 +778,10 @@ abide by its terms.
 [health-contributing]: https://github.com/unifiedjs/.github/blob/main/contributing.md
 
 [health-support]: https://github.com/unifiedjs/.github/blob/main/support.md
+
+[nodejs-fs-glob]: https://nodejs.org/api/fs.html#fsglobpattern-options-callback
+
+[nodejs-type-stripping]: https://nodejs.org/api/typescript.html#type-stripping
 
 [npmjs-install]: https://docs.npmjs.com/cli/install
 
