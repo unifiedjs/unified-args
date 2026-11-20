@@ -18,8 +18,8 @@ import {platform} from 'node:process'
 import test from 'node:test'
 import {setTimeout as sleep} from 'node:timers/promises'
 import {fileURLToPath} from 'node:url'
+import {stripVTControlCharacters} from 'node:util'
 import {execa} from 'execa'
-import stripAnsi from 'strip-ansi'
 
 const base = new URL('fixtures/example/', import.meta.url)
 const binaryUrl = new URL('fixtures/example/cli.js', import.meta.url)
@@ -803,7 +803,7 @@ async function watchAndChange(url, flags) {
  */
 function cleanError(value, max) {
   return (
-    stripAnsi(value)
+    stripVTControlCharacters(value)
       // Clean syscal errors
       .replace(/( *Error: [A-Z]+:)[^\n]*/g, '$1…')
 
