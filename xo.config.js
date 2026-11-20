@@ -21,6 +21,7 @@ const xoConfig = [
       'jsdoc/require-asterisk-prefix': 'off',
       // Wrong for TypeScript types.
       'jsdoc/valid-types': 'off',
+      'no-await-in-loop': 'off',
       'no-shadow': 'off',
       // Asserts are used to narrow types.
       'node-test/prefer-equality-assertion': 'off',

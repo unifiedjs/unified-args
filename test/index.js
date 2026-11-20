@@ -1,9 +1,22 @@
+/**
+ * @typedef Result
+ *   Result of the run.
+ * @property {number | undefined} exitCode
+ *   Exit code of the process.
+ * @property {string} stderr
+ *   Standard error output.
+ * @property {string} stdout
+ *   Standard output.
+ */
+
 import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import {once} from 'node:events'
 import {EOL} from 'node:os'
 import {platform} from 'node:process'
 import test from 'node:test'
+import {setTimeout as sleep} from 'node:timers/promises'
 import {fileURLToPath} from 'node:url'
 import {execa} from 'execa'
 import stripAnsi from 'strip-ansi'
@@ -642,18 +655,11 @@ test('args', async function (t) {
   await t.test('should support `--watch`', async function () {
     // On Windows, `SIGINT` crashes immediately and results in an error.
     // Hence `reject: false`, `exitCode`, and extra lines when non-windows.
-    const delay = 3000
     const url = new URL('watch.txt', base)
 
     await fs.writeFile(url, 'alpha')
 
-    const processPromise = execa(binaryPath, ['watch.txt', '-w'], {
-      reject: false
-    })
-
-    setTimeout(seeYouLaterAlligator, delay)
-
-    const result = await processPromise
+    const result = await watchAndChange(url, ['watch.txt', '-w'])
 
     await fs.unlink(url)
 
@@ -672,30 +678,14 @@ test('args', async function (t) {
     assert.equal(result.exitCode, platform === 'win32' ? undefined : 0)
     assert.equal(result.stdout, '')
     assert.equal(cleanError(result.stderr), lines.join('\n'))
-
-    async function seeYouLaterAlligator() {
-      await fs.writeFile(url, 'bravo')
-      setTimeout(afterAWhileCrocodile, delay)
-    }
-
-    function afterAWhileCrocodile() {
-      processPromise.kill('SIGINT')
-    }
   })
 
   await t.test('should not regenerate when watching', async function () {
-    const delay = 3000
     const url = new URL('watch.txt', base)
 
     await fs.writeFile(url, 'alpha')
 
-    const processPromise = execa(binaryPath, ['watch.txt', '-w', '-o'], {
-      reject: false
-    })
-
-    setTimeout(seeYouLaterAlligator, delay)
-
-    const result = await processPromise
+    const result = await watchAndChange(url, ['watch.txt', '-w', '-o'])
 
     await fs.unlink(url)
 
@@ -710,15 +700,6 @@ test('args', async function (t) {
     assert.equal(result.exitCode, platform === 'win32' ? undefined : 0)
     assert.equal(result.stdout, '')
     assert.equal(cleanError(result.stderr), lines.join('\n'))
-
-    async function seeYouLaterAlligator() {
-      await fs.writeFile(url, 'bravo')
-      setTimeout(afterAWhileCrocodile, delay)
-    }
-
-    function afterAWhileCrocodile() {
-      processPromise.kill('SIGINT')
-    }
   })
 
   await t.test('should exit on fatal errors when watching', async function () {
@@ -745,6 +726,66 @@ test('args', async function (t) {
     )
   })
 })
+
+/**
+ * Watch, change the watched file once the first report is in,
+ * and stop the CLI when the report of that change is in.
+ *
+ * @param {URL} url
+ *   File to change.
+ * @param {Array<string>} flags
+ *   Flags.
+ * @returns {Promise<Result>}
+ *   Result.
+ */
+async function watchAndChange(url, flags) {
+  const reports = new EventTarget()
+  let count = 0
+
+  const subprocess = execa(binaryPath, flags, {
+    reject: false,
+    stderr: [
+      /**
+       * Count reports.
+       *
+       * @param {string} line
+       *   Line.
+       * @returns {Generator<string, undefined, undefined>}
+       *   Same line.
+       * @yields {string}
+       *   Same line.
+       */
+      function* (line) {
+        if (stripAnsi(line).endsWith(': no issues found')) {
+          count++
+          reports.dispatchEvent(new Event('report'))
+        }
+
+        yield line
+      }
+    ]
+  })
+
+  await Promise.race([once(reports, 'report'), subprocess])
+
+  let attempt = -1
+
+  while (++attempt < 10) {
+    if (count !== 1) {
+      break
+    }
+
+    /** @type {Promise<unknown>} */
+    const report = once(reports, 'report')
+    await fs.writeFile(url, 'bravo')
+    await Promise.race([report, sleep(1000), subprocess])
+  }
+
+  subprocess.kill('SIGINT')
+
+  const {exitCode, stderr, stdout} = await subprocess
+  return {exitCode, stderr, stdout}
+}
 
 /**
  * Clean an error so that it’s easier to test.
