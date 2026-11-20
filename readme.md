@@ -113,7 +113,7 @@ args({
 
 …now running `node example.js --help` yields:
 
-```txt
+```text
 Usage: remark [options] [path | glob ...]
 
   Command line interface to inspect and change markdown files with remark
@@ -185,7 +185,7 @@ Configuration (TypeScript type).
 CLIs created with `unified-args`, such as the [example][] above, have an
 interface similar to the below:
 
-```txt
+```text
 Usage: remark [options] [path | glob ...]
 
   Command line interface to inspect and change markdown files with remark
@@ -628,7 +628,7 @@ cli -qwo .
 
 Yields:
 
-```txt
+```text
 Watching... (press CTRL+C to exit)
 Note: Ignoring `--output` until exit.
 ```
@@ -697,81 +697,21 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://github.com/unifiedjs/unified-args/workflows/main/badge.svg
-
-[build]: https://github.com/unifiedjs/unified-args/actions
-
-[coverage-badge]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
-
-[coverage]: https://codecov.io/github/unifiedjs/unified-args
-
-[downloads-badge]: https://img.shields.io/npm/dm/unified-args.svg
-
-[downloads]: https://www.npmjs.com/package/unified-args
-
-[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
-
-[backers-badge]: https://opencollective.com/unified/backers/badge.svg
-
-[collective]: https://opencollective.com/unified
-
-[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
-
-[chat]: https://github.com/unifiedjs/unified/discussions
-
-[npm]: https://docs.npmjs.com/cli/install
-
-[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
-
-[typescript]: https://www.typescriptlang.org
-
-[health]: https://github.com/unifiedjs/.github
-
-[contributing]: https://github.com/unifiedjs/.github/blob/main/contributing.md
-
-[support]: https://github.com/unifiedjs/.github/blob/main/support.md
-
-[coc]: https://github.com/unifiedjs/.github/blob/main/code-of-conduct.md
-
-[license]: license
-
-[author]: https://wooorm.com
-
-[unified]: https://github.com/unifiedjs/unified
-
-[unified-processor]: https://github.com/unifiedjs/unified#processor
-
-[overview]: https://github.com/unifiedjs/unified#overview
-
-[remark]: https://github.com/remarkjs/remark
-
-[remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
-
-[reporter]: https://github.com/vfile/vfile#reporters
-
-[vfile-reporter]: https://github.com/vfile/vfile-reporter
-
-[unist-util-inspect]: https://github.com/syntax-tree/unist-util-inspect
-
-[debug]: https://github.com/debug-js/debug
-
-[glob]: https://github.com/isaacs/node-glob#glob-primer
-
-[supports-color]: https://github.com/chalk/supports-color
-
-[json5]: https://github.com/json5/json5
-
-[unified-engine]: https://github.com/unifiedjs/unified-engine
-
-[config-file]: https://github.com/unifiedjs/unified-engine#config-files
-
-[ignore-file]: https://github.com/unifiedjs/unified-engine#ignore-files
-
-[example]: #use
-
 [api-args]: #argsoptions
 
 [api-options]: #options
+
+[author]: https://wooorm.com
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[build]: https://github.com/unifiedjs/unified-args/actions
+
+[build-badge]: https://github.com/unifiedjs/unified-args/workflows/main/badge.svg
+
+[chat]: https://github.com/unifiedjs/unified/discussions
+
+[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
 
 [cli-color]: #--color
 
@@ -792,3 +732,63 @@ abide by its terms.
 [cli-silent]: #--silent
 
 [cli-watch]: #--watch
+
+[coc]: https://github.com/unifiedjs/.github/blob/main/code-of-conduct.md
+
+[collective]: https://opencollective.com/unified
+
+[config-file]: https://github.com/unifiedjs/unified-engine#config-files
+
+[contributing]: https://github.com/unifiedjs/.github/blob/main/contributing.md
+
+[coverage]: https://codecov.io/github/unifiedjs/unified-args
+
+[coverage-badge]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
+
+[debug]: https://github.com/debug-js/debug
+
+[downloads]: https://www.npmjs.com/package/unified-args
+
+[downloads-badge]: https://img.shields.io/npm/dm/unified-args.svg
+
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[example]: #use
+
+[glob]: https://github.com/isaacs/node-glob#glob-primer
+
+[health]: https://github.com/unifiedjs/.github
+
+[ignore-file]: https://github.com/unifiedjs/unified-engine#ignore-files
+
+[json5]: https://github.com/json5/json5
+
+[license]: license
+
+[npm]: https://docs.npmjs.com/cli/install
+
+[overview]: https://github.com/unifiedjs/unified#overview
+
+[remark]: https://github.com/remarkjs/remark
+
+[remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
+
+[reporter]: https://github.com/vfile/vfile#reporters
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[support]: https://github.com/unifiedjs/.github/blob/main/support.md
+
+[supports-color]: https://github.com/chalk/supports-color
+
+[typescript]: https://www.typescriptlang.org
+
+[unified]: https://github.com/unifiedjs/unified
+
+[unified-engine]: https://github.com/unifiedjs/unified-engine
+
+[unified-processor]: https://github.com/unifiedjs/unified#processor
+
+[unist-util-inspect]: https://github.com/syntax-tree/unist-util-inspect
+
+[vfile-reporter]: https://github.com/vfile/vfile-reporter
