@@ -756,7 +756,7 @@ async function watchAndChange(url, flags) {
        *   Same line.
        */
       function* (line) {
-        if (stripAnsi(line).endsWith(': no issues found')) {
+        if (stripVTControlCharacters(line).endsWith(': no issues found')) {
           count++
           reports.dispatchEvent(new Event('report'))
         }
