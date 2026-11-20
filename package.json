@@ -6,7 +6,6 @@
     "Christian Murphy <christian.murphy.42@gmail.com"
   ],
   "dependencies": {
-    "chalk": "^5.0.0",
     "chokidar": "^4.0.0",
     "comma-separated-tokens": "^2.0.0",
     "json5": "^2.0.0",
