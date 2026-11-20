@@ -1,14 +1,11 @@
 # unified-args
 
-[![Build][build-badge]][build]
-[![Coverage][coverage-badge]][coverage]
-[![Downloads][downloads-badge]][downloads]
-[![Sponsors][sponsors-badge]][collective]
-[![Backers][backers-badge]][collective]
-[![Chat][chat-badge]][chat]
+[![Build][badge-build-image]][badge-build-url]
+[![Coverage][badge-coverage-image]][badge-coverage-url]
+[![Downloads][badge-downloads-image]][badge-downloads-url]
 
-**[unified][]** engine to create a command line interface from a unified
-processor.
+**[unified][github-unified]** engine to create a command line interface from
+a unified processor.
 
 ## Contents
 
@@ -56,9 +53,9 @@ processor.
 
 ## What is this?
 
-This package wraps [`unified-engine`][unified-engine] so that it can be used
-to create a command line interface.
-It’s what you use underneath when you use [`remark-cli`][remark-cli].
+This package wraps [`unified-engine`][github-unified-engine] so that it can be
+used to create a command line interface.
+It’s what you use underneath when you use [`remark-cli`][github-remark-cli].
 
 ## When should I use this?
 
@@ -67,8 +64,8 @@ letting them configure from the file system.
 
 ## Install
 
-This package is [ESM only][esm].
-In Node.js (version 16+), install with [npm][]:
+This package is [ESM only][github-gist-esm].
+In Node.js (version 16+), install with [npm][npmjs-install]:
 
 ```sh
 npm install unified-args
@@ -76,10 +73,13 @@ npm install unified-args
 
 ## Use
 
-The following example creates a CLI for [remark][], which will search for files
-in folders with a markdown extension, allows [configuration][config-file] from
-`.remarkrc` and `package.json` files, [ignoring files][ignore-file] from
-`.remarkignore` files, and more.
+The following example creates a CLI for [remark][github-remark],
+which will search for files in folders with a markdown extension,
+allows [configuration][github-unified-engine-config-files]
+from `.remarkrc` and `package.json` files,
+[ignoring files][github-unified-engine-ignore-files]
+from `.remarkignore` files,
+and more.
 
 Say our module `example.js` looks as follows:
 
@@ -145,21 +145,22 @@ Configuration (TypeScript type).
   — default file extensions to include
   (engine: `options.extensions`)
 * `ignoreName` (`string`, required)
-  — name of [ignore files][ignore-file] to load
+  — name of [ignore files][github-unified-engine-ignore-files] to load
   (engine: `options.ignoreName`)
 * `name` (`string`, required)
   — name of executable
 * `packageField` (`string`, required)
-  — field where [configuration][config-file] can be found in `package.json`s
+  — field where [configuration][github-unified-engine-config-files] can be
+  found in `package.json`s
   (engine: `options.packageField`)
 * `pluginPrefix` (`string`, required)
   — prefix to use when searching for plugins
   (engine: `options.pluginPrefix`)
-* `processor` ([`Processor`][unified-processor], required)
+* `processor` ([`Processor`][github-unified-processor], required)
   — processor to use
   (engine: `options.processor`)
 * `rcName` (`string`, required)
-  — name of [configuration files][config-file] to load
+  — name of [configuration files][github-unified-engine-config-files] to load
   (engine: `options.rcName`)
 * `version` (`string`, required)
   — version of executable
@@ -182,8 +183,9 @@ Nothing (`undefined`).
 
 ## CLI
 
-CLIs created with `unified-args`, such as the [example][] above, have an
-interface similar to the below:
+CLIs created with `unified-args`,
+such as the [example][section-use] above,
+have an interface similar to the below:
 
 ```text
 Usage: remark [options] [path | glob ...]
@@ -235,10 +237,11 @@ Examples:
 
 All non-options passed to the cli are seen as input and can be:
 
-* paths (`readme.txt`) and [globs][glob] (`*.txt`) pointing to files to load
+* paths (`readme.txt`) and [globs][github-node-glob-primer] (`*.txt`)
+  pointing to files to load
 * paths (`test`) and globs (`fixtures/{in,out}/`) pointing to folders, which
   are searched for files with known extensions which are not ignored
-  by patterns in [ignore files][ignore-file].
+  by patterns in [ignore files][github-unified-engine-ignore-files].
   The default behavior is to exclude files in `node_modules/` unless
   explicitly given
 
@@ -259,7 +262,7 @@ cli --no-color input.txt
 
 Whether to output ANSI color codes in the report.
 
-* **default**: whether the terminal [supports color][supports-color]
+* **default**: whether the terminal [supports color][github-supports-color]
 * **engine**: `options.color`
 
 > 👉 **Note**: This option may not work depending on the reporter given in
@@ -271,7 +274,7 @@ Whether to output ANSI color codes in the report.
 cli --no-config input.txt
 ```
 
-Whether to load [configuration files][config-file].
+Whether to load [configuration files][github-unified-engine-config-files].
 
 Searches for files with the [configured][api-options] `rcName`: `$rcName` and
 `$rcName.json` (JSON), `$rcName.yml` and  `$rcName.yaml` (YAML), `$rcName.js`
@@ -336,7 +339,7 @@ Output short usage information.
 cli --no-ignore .
 ```
 
-Whether to load [ignore files][ignore-file].
+Whether to load [ignore files][github-unified-engine-ignore-files].
 
 Searches for files named [`$ignoreName`][api-options].
 
@@ -349,8 +352,8 @@ Searches for files named [`$ignoreName`][api-options].
 cli --ignore-path .gitignore .
 ```
 
-File path to an [ignore file][ignore-file] to load, regardless of
-[`--ignore`][cli-ignore].
+File path to an [ignore file][github-unified-engine-ignore-files] to load,
+regardless of [`--ignore`][cli-ignore].
 
 * **default**: none
 * **alias**: `-i`
@@ -386,8 +389,8 @@ cli --inspect < input.txt
 ```
 
 Output the transformed syntax tree, formatted with
-[`unist-util-inspect`][unist-util-inspect].
-This does not run the [compilation phase][overview].
+[`unist-util-inspect`][github-unist-util-inspect].
+This does not run the [compilation phase][github-unified-overview].
 
 * **default**: off
 * **engine**: `options.inspect`
@@ -401,7 +404,7 @@ cli --output doc/output.text input.txt
 ```
 
 Whether to write successfully processed files, and where to.
-Can be set from [configuration files][config-file].
+Can be set from [configuration files][github-unified-engine-config-files].
 
 * if output is not given, files are not written to the file system
 * otherwise, if `path` is not given, files are overwritten when successful
@@ -436,8 +439,8 @@ The default behavior is to show a success message.
 cli --rc-path config.json .
 ```
 
-File path to a [configuration file][config-file] to load, regardless of
-[`--config`][cli-config].
+File path to a [configuration file][github-unified-engine-config-files] to
+load, regardless of [`--config`][cli-config].
 
 * **default**: none
 * **alias**: `-r`
@@ -455,8 +458,9 @@ cli --report 'json=pretty:"\t"' input.txt
 cli --report pretty --report json input.txt
 ```
 
-[Reporter][] to load by its name or path, optionally with options, and use to
-report metadata about every processed file.
+[Reporter][github-vfile-reporters] to load by its name or path,
+optionally with options,
+and use to report metadata about every processed file.
 
 To pass options, follow the name by an equals sign (`=`) and settings, which
 have the same in syntax as [`--setting <settings>`][cli-setting].
@@ -466,7 +470,7 @@ Prefixed reporters are preferred over modules without prefix.
 
 If multiple reporters are given, the last one is used.
 
-* **default**: none, which uses [`vfile-reporter`][vfile-reporter]
+* **default**: none, which uses [`vfile-reporter`][github-vfile-reporter]
 * **engine**: `options.reporter` and `options.reporterOptions`
 
 > 👉 **Note**: the [`quiet`][cli-quiet], [`silent`][cli-silent], and
@@ -484,10 +488,10 @@ cli --setting 'golf: false, hotel-india: ["juliet", 1]' input.txt
 ```
 
 Configuration for the parser and compiler of the processor.
-Can be set from [configuration files][config-file].
+Can be set from [configuration files][github-unified-engine-config-files].
 
-The given settings are [JSON5][], with one exception: surrounding braces must
-not be used.
+The given settings are [JSON5][github-json5],
+with one exception: surrounding braces must not be used.
 Instead, use JSON syntax without braces, such as
 `"foo": 1, "bar": "baz"`.
 
@@ -542,7 +546,8 @@ cli --tree < input.json > output.json
 ```
 
 Treat input as a syntax tree in JSON and output the transformed syntax tree.
-This runs neither the [parsing nor the compilation phase][overview].
+This runs neither the
+[parsing nor the compilation phase][github-unified-overview].
 
 * **default**: off
 * **alias**: `-t`
@@ -555,7 +560,7 @@ cli --tree-in < input.json > input.txt
 ```
 
 Treat input as a syntax tree in JSON.
-This does not run the [parsing phase][overview].
+This does not run the [parsing phase][github-unified-overview].
 
 * **default**: same as `--tree`
 * **engine**: `options.treeIn`
@@ -567,7 +572,7 @@ cli --tree-out < input.txt > output.json
 ```
 
 Output the transformed syntax tree.
-This does not run the [compilation phase][overview].
+This does not run the [compilation phase][github-unified-overview].
 
 * **default**: same as `--tree`
 * **engine**: `options.treeOut`
@@ -583,7 +588,7 @@ cli --use ./plugin.js input.txt
 
 Plugin to load by its name or path, optionally with options, and use on every
 processed file.
-Can be set from [configuration files][config-file].
+Can be set from [configuration files][github-unified-engine-config-files].
 
 To pass options, follow the plugin by an equals sign (`=`) and settings, which
 have the same in syntax as [`--setting <settings>`][cli-setting].
@@ -655,8 +660,8 @@ CLIs created with **unified-args** exit with:
 
 ## Debugging
 
-CLIs can be debugged by setting the [`DEBUG`][debug] environment variable to
-`*`, such as `DEBUG="*" cli example.txt`.
+CLIs can be debugged by setting the [`DEBUG`][github-debug] environment variable
+to `*`, such as `DEBUG="*" cli example.txt`.
 
 ## Compatibility
 
@@ -678,17 +683,17 @@ with packages from npm and changes made by contributors.
 
 ## Contribute
 
-See [`contributing.md`][contributing] in [`unifiedjs/.github`][health] for ways
-to get started.
-See [`support.md`][support] for ways to get help.
+See [`contributing.md`][health-contributing] in [`unifiedjs/.github`][health]
+for ways to get started.
+See [`support.md`][health-support] for ways to get help.
 
-This project has a [code of conduct][coc].
+This project has a [code of conduct][health-coc].
 By interacting with this repository, organization, or community you agree to
 abide by its terms.
 
 ## License
 
-[MIT][license] © [Titus Wormer][author]
+[MIT][file-license] © [Titus Wormer][wooorm]
 
 <!-- Definitions -->
 
@@ -696,17 +701,17 @@ abide by its terms.
 
 [api-options]: #options
 
-[author]: https://wooorm.com
+[badge-build-image]: https://github.com/unifiedjs/unified-args/workflows/main/badge.svg
 
-[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+[badge-build-url]: https://github.com/unifiedjs/unified-args/actions
 
-[build]: https://github.com/unifiedjs/unified-args/actions
+[badge-coverage-image]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
 
-[build-badge]: https://github.com/unifiedjs/unified-args/workflows/main/badge.svg
+[badge-coverage-url]: https://codecov.io/github/unifiedjs/unified-args
 
-[chat]: https://github.com/unifiedjs/unified/discussions
+[badge-downloads-image]: https://img.shields.io/npm/dm/unified-args.svg
 
-[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
+[badge-downloads-url]: https://www.npmjs.com/package/unified-args
 
 [cli-color]: #--color
 
@@ -728,62 +733,52 @@ abide by its terms.
 
 [cli-watch]: #--watch
 
-[coc]: https://github.com/unifiedjs/.github/blob/main/code-of-conduct.md
+[file-license]: license
 
-[collective]: https://opencollective.com/unified
+[github-debug]: https://github.com/debug-js/debug
 
-[config-file]: https://github.com/unifiedjs/unified-engine#config-files
+[github-gist-esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 
-[contributing]: https://github.com/unifiedjs/.github/blob/main/contributing.md
+[github-json5]: https://github.com/json5/json5
 
-[coverage]: https://codecov.io/github/unifiedjs/unified-args
+[github-node-glob-primer]: https://github.com/isaacs/node-glob#glob-primer
 
-[coverage-badge]: https://img.shields.io/codecov/c/github/unifiedjs/unified-args.svg
+[github-remark]: https://github.com/remarkjs/remark
 
-[debug]: https://github.com/debug-js/debug
+[github-remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
 
-[downloads]: https://www.npmjs.com/package/unified-args
+[github-supports-color]: https://github.com/chalk/supports-color
 
-[downloads-badge]: https://img.shields.io/npm/dm/unified-args.svg
+[github-unified]: https://github.com/unifiedjs/unified
 
-[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+[github-unified-engine]: https://github.com/unifiedjs/unified-engine
 
-[example]: #use
+[github-unified-engine-config-files]: https://github.com/unifiedjs/unified-engine#config-files
 
-[glob]: https://github.com/isaacs/node-glob#glob-primer
+[github-unified-engine-ignore-files]: https://github.com/unifiedjs/unified-engine#ignore-files
+
+[github-unified-overview]: https://github.com/unifiedjs/unified#overview
+
+[github-unified-processor]: https://github.com/unifiedjs/unified#processor-1
+
+[github-unist-util-inspect]: https://github.com/syntax-tree/unist-util-inspect
+
+[github-vfile-reporter]: https://github.com/vfile/vfile-reporter
+
+[github-vfile-reporters]: https://github.com/vfile/vfile#reporters
 
 [health]: https://github.com/unifiedjs/.github
 
-[ignore-file]: https://github.com/unifiedjs/unified-engine#ignore-files
+[health-coc]: https://github.com/unifiedjs/.github/blob/main/code-of-conduct.md
 
-[json5]: https://github.com/json5/json5
+[health-contributing]: https://github.com/unifiedjs/.github/blob/main/contributing.md
 
-[license]: license
+[health-support]: https://github.com/unifiedjs/.github/blob/main/support.md
 
-[npm]: https://docs.npmjs.com/cli/install
+[npmjs-install]: https://docs.npmjs.com/cli/install
 
-[overview]: https://github.com/unifiedjs/unified#overview
-
-[remark]: https://github.com/remarkjs/remark
-
-[remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
-
-[reporter]: https://github.com/vfile/vfile#reporters
-
-[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
-
-[support]: https://github.com/unifiedjs/.github/blob/main/support.md
-
-[supports-color]: https://github.com/chalk/supports-color
+[section-use]: #use
 
 [typescript]: https://www.typescriptlang.org
 
-[unified]: https://github.com/unifiedjs/unified
-
-[unified-engine]: https://github.com/unifiedjs/unified-engine
-
-[unified-processor]: https://github.com/unifiedjs/unified#processor
-
-[unist-util-inspect]: https://github.com/syntax-tree/unist-util-inspect
-
-[vfile-reporter]: https://github.com/vfile/vfile-reporter
+[wooorm]: https://wooorm.com
