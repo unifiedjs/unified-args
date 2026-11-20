@@ -127,8 +127,10 @@ Options:
 
 ## API
 
-This package exports the identifier [`args`][api-args].
-It export the additional [TypeScript][] type [`Options`][api-options].
+This package exports the identifier
+[`args`][api-args].
+It exports the additional [TypeScript][] type
+[`Options`][api-options].
 There is no default export.
 
 ### `Options`
@@ -670,7 +672,7 @@ versions of Node.js.
 
 When we cut a new major release, we drop support for unmaintained versions of
 Node.
-This means we try to keep the current release line, `unified-engine@^11`,
+This means we try to keep the current release line, `unified-args@11`,
 compatible with Node.js 16.
 
 ## Security
