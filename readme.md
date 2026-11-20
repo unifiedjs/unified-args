@@ -264,7 +264,7 @@ cli --no-color input.txt
 
 Whether to output ANSI color codes in the report.
 
-* **default**: on
+* **default**: whether stderr supports color, respects `FORCE_COLOR`, `NO_COLOR`
 * **engine**: `options.color`
 
 > 👉 **Note**: This option may not work depending on the reporter given in

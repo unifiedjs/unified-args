@@ -187,6 +187,26 @@ test('args', async function (t) {
     )
   })
 
+  await t.test('should not color w/o terminal', async function () {
+    const result = await execa(binaryPath, ['one.txt'])
+
+    assert.deepEqual(
+      [result.stdout, result.stderr],
+      ['one', 'one.txt: no issues found']
+    )
+  })
+
+  await t.test('should support `FORCE_COLOR`', async function () {
+    const result = await execa(binaryPath, ['one.txt'], {
+      env: {FORCE_COLOR: '1'}
+    })
+
+    assert.deepEqual(
+      [result.stdout, result.stderr],
+      ['one', '\u001B[4m\u001B[32mone.txt\u001B[39m\u001B[24m: no issues found']
+    )
+  })
+
   await t.test('should support `--no-color`', async function () {
     const result = await execa(binaryPath, ['--no-color', 'one.txt'])
 
