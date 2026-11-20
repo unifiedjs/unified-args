@@ -399,6 +399,7 @@ cli --inspect < input.txt
 Output the transformed syntax tree, formatted with
 [`unist-util-inspect`][github-unist-util-inspect].
 This does not run the [compilation phase][github-unified-overview].
+Changes the extension of files to `.txt`.
 
 * **default**: off
 * **engine**: `options.inspect`
@@ -556,6 +557,7 @@ cli --tree < input.json > output.json
 Treat input as a syntax tree in JSON and output the transformed syntax tree.
 This runs neither the
 [parsing nor the compilation phase][github-unified-overview].
+Changes the extension of files to `.json`.
 
 * **default**: off
 * **alias**: `-t`
@@ -581,6 +583,7 @@ cli --tree-out < input.txt > output.json
 
 Output the transformed syntax tree.
 This does not run the [compilation phase][github-unified-overview].
+Changes the extension of files to `.json`.
 
 * **default**: same as `--tree`
 * **engine**: `options.treeOut`
