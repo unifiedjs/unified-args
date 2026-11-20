@@ -5,27 +5,40 @@
 
 import {unified} from 'unified'
 
-export const processor = unified()
-  .use(
-    /** @type {Plugin<[], string, Node>} */
-    // @ts-expect-error: TS is wrong about `this`.
-    function () {
-      /** @type {Parser<Node>} */
-      this.parser = function (value) {
-        /** @type {Literal} */
-        const node = {type: 'text', value}
-        return node
-      }
-    }
-  )
-  .use(
-    /** @type {Plugin<[], Node, string>} */
-    // @ts-expect-error: TS is wrong about `this`.
-    function () {
-      /** @type {Compiler<Node, string>} */
-      this.compiler = function (tree) {
-        const node = /** @type {Literal} */ (tree)
-        return String(node.value)
-      }
-    }
-  )
+export const processor = unified().use(parse).use(compile)
+
+/**
+ * Add a parser.
+ *
+ * @type {Plugin<[], string, Literal>}
+ */
+function parse() {
+  this.parser = parser
+}
+
+/**
+ * Add a compiler.
+ *
+ * @type {Plugin<[], Node, string>}
+ */
+function compile() {
+  this.compiler = compiler
+}
+
+/**
+ * Parse a value into a text node.
+ *
+ * @type {Parser<Literal>}
+ */
+function parser(value) {
+  return {type: 'text', value}
+}
+
+/**
+ * Compile a literal into its value.
+ *
+ * @type {Compiler<Node, string>}
+ */
+function compiler(tree) {
+  return 'value' in tree ? String(tree.value) : ''
+}
