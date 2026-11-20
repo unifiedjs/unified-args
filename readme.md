@@ -17,8 +17,8 @@ processor.
 * [Install](#install)
 * [Use](#use)
 * [API](#api)
-  * [`args(options)`](#argsoptions)
   * [`Options`](#options)
+  * [`args(options)`](#argsoptions)
 * [CLI](#cli)
   * [Files](#files)
   * [`--color`](#--color)
@@ -49,7 +49,6 @@ processor.
   * [`--watch`](#--watch)
 * [Diagnostics](#diagnostics)
 * [Debugging](#debugging)
-* [Types](#types)
 * [Compatibility](#compatibility)
 * [Security](#security)
 * [Contribute](#contribute)
@@ -129,23 +128,8 @@ Options:
 ## API
 
 This package exports the identifier [`args`][api-args].
+It export the additional [TypeScript][] type [`Options`][api-options].
 There is no default export.
-
-### `args(options)`
-
-Start the CLI.
-
-> 👉 **Note**: this takes over the entire process.
-> It parses `process.argv`, exits when its done, etc.
-
-###### Parameters
-
-* `options` ([`Options`][api-options], required)
-  — configuration
-
-###### Returns
-
-Nothing (`undefined`).
 
 ### `Options`
 
@@ -179,6 +163,22 @@ Configuration (TypeScript type).
   (engine: `options.rcName`)
 * `version` (`string`, required)
   — version of executable
+
+### `args(options)`
+
+Start the CLI.
+
+> 👉 **Note**: this takes over the entire process.
+> It parses `process.argv`, exits when its done, etc.
+
+###### Parameters
+
+* `options` ([`Options`][api-options], required)
+  — configuration
+
+###### Returns
+
+Nothing (`undefined`).
 
 ## CLI
 
@@ -657,11 +657,6 @@ CLIs created with **unified-args** exit with:
 
 CLIs can be debugged by setting the [`DEBUG`][debug] environment variable to
 `*`, such as `DEBUG="*" cli example.txt`.
-
-## Types
-
-This package is fully typed with [TypeScript][].
-It export the additional type [`Options`][api-options].
 
 ## Compatibility
 
