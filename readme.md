@@ -264,7 +264,7 @@ cli --no-color input.txt
 
 Whether to output ANSI color codes in the report.
 
-* **default**: whether the terminal [supports color][github-supports-color]
+* **default**: on
 * **engine**: `options.color`
 
 > 👉 **Note**: This option may not work depending on the reporter given in
@@ -748,8 +748,6 @@ abide by its terms.
 [github-remark]: https://github.com/remarkjs/remark
 
 [github-remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
-
-[github-supports-color]: https://github.com/chalk/supports-color
 
 [github-unified]: https://github.com/unifiedjs/unified
 
