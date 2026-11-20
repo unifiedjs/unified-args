@@ -770,7 +770,7 @@ async function watchAndChange(url, flags) {
 
   let attempt = -1
 
-  while (++attempt < 10) {
+  while (++attempt < 20) {
     if (count !== 1) {
       break
     }
@@ -778,7 +778,7 @@ async function watchAndChange(url, flags) {
     /** @type {Promise<unknown>} */
     const report = once(reports, 'report')
     await fs.writeFile(url, 'bravo')
-    await Promise.race([report, sleep(1000), subprocess])
+    await Promise.race([report, sleep(250), subprocess])
   }
 
   subprocess.kill('SIGINT')
